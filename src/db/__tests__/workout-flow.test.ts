@@ -22,7 +22,7 @@ jest.mock('@/db/client', () => {
   return { db: drizzle(sqlite, { schema }), useDatabaseMigrations: () => ({ success: true }) };
 });
 
-import { getExercise, listExercises, recentExerciseIds, toggleFavourite } from '@/db/repositories/exercises';
+import { createCustomExercise, getExercise, listExercises, recentExerciseIds, shortCodeFor, toggleFavourite } from '@/db/repositories/exercises';
 import { createProfile, getProfile } from '@/db/repositories/profile';
 import {
   addExerciseToWorkout,
@@ -274,5 +274,36 @@ describe('planning and fast set entry', () => {
       ['barbell_row', 55, 8, null],
       ['barbell_row', 55, 6, null],
     ]);
+  });
+});
+
+describe('custom exercises', () => {
+  it('short codes avoid clashes', () => {
+    expect(shortCodeFor('Belt squat', new Set())).toBe('BS');
+    expect(shortCodeFor('Belt squat', new Set(['BS']))).not.toBe('BS');
+    expect(shortCodeFor('Belt squat', new Set(['BS']))).toMatch(/^BS./);
+  });
+
+  it('creates an exercise with a unique code that survives re-seeding', () => {
+    const before = listExercises().length;
+    const ex = createCustomExercise({ name: 'Belt squat', category: 'machine', trackingType: 'weight_reps' });
+    expect(ex).toMatchObject({ isBuiltin: false, category: 'machine', benchmarkId: null });
+    expect(listExercises().filter((e) => e.shortName === ex.shortName)).toHaveLength(1);
+    seedExercises();
+    expect(listExercises()).toHaveLength(before + 1);
+  });
+
+  it('earns normal XP when logged', () => {
+    const custom = listExercises().find((e) => e.name === 'Belt squat')!;
+    const active = getActiveWorkout();
+    if (active) discardWorkout(active.id);
+    at(MONDAY + 20 * DAY);
+    const id = startWorkout();
+    addExerciseToWorkout(id, custom);
+    for (const s of setsForWorkout(id)) setCompleted(s.id, true);
+    at(MONDAY + 20 * DAY + 30 * 60_000);
+    const summary = finishWorkout(id)!;
+    expect(summary.events.find((e) => e.reason === 'first_exercise')).toMatchObject({ sourceId: custom.id, amount: 20 });
+    expect(summary.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
   });
 });

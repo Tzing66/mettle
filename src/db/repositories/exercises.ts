@@ -3,6 +3,7 @@ import { asc, desc, eq, isNotNull, sql } from 'drizzle-orm';
 import type { ExerciseInfo } from '@/engine/types';
 
 import { db } from '../client';
+import { newId } from '../ids';
 import { exercises, workoutSets } from '../schema';
 
 export type ExerciseRow = typeof exercises.$inferSelect;
@@ -47,4 +48,40 @@ export function recentExerciseIds(limit = 8): string[] {
     .limit(limit)
     .all()
     .map((r) => r.id);
+}
+
+/** Initials of the name (max 3 letters), extended until it doesn't clash with an existing code. */
+export function shortCodeFor(name: string, taken: Set<string>): string {
+  const words = name.replace(/[^A-Za-z0-9 ]+/g, ' ').trim().split(/\s+/).filter(Boolean);
+  const initials = words.map((w) => w[0].toUpperCase()).join('').slice(0, 3) || 'EX';
+  const pool = words.join('').toUpperCase() || 'EX';
+  let code = initials.length >= 2 ? initials : pool.slice(0, 2);
+  for (let i = 0; taken.has(code); i++) code = i < pool.length ? initials.slice(0, 2) + pool[i] : `${initials.slice(0, 2)}${i}`;
+  return code;
+}
+
+export interface CustomExerciseInput {
+  name: string;
+  category: ExerciseRow['category'];
+  trackingType: ExerciseRow['trackingType'];
+}
+
+/** User-created exercise. Never touched by the catalogue seed; earns normal XP but no benchmarks. */
+export function createCustomExercise({ name, category, trackingType }: CustomExerciseInput): ExerciseRow {
+  const taken = new Set(listExercises().map((e) => e.shortName));
+  const row = {
+    id: `custom_${newId()}`,
+    name: name.trim(),
+    shortName: shortCodeFor(name, taken),
+    category,
+    trackingType,
+    equipment: null,
+    primaryMuscles: [],
+    activity: null,
+    benchmarkId: null,
+    isFavourite: false,
+    isBuiltin: false,
+  };
+  db.insert(exercises).values(row).run();
+  return getExercise(row.id)!;
 }

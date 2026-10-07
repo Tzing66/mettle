@@ -9,7 +9,7 @@ import { addExerciseToWorkout, getActiveWorkout, setsForWorkout, startWorkout } 
 import { useDbQuery } from '@/db/useDbQuery';
 import { Button, ExerciseTile, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { CheckIcon, SearchIcon } from '@/design/icons/Icons';
+import { CheckIcon, PlusIcon, SearchIcon } from '@/design/icons/Icons';
 import { colors, motion, radii, space, type } from '@/design/tokens';
 import type { ExerciseCategory } from '@/engine';
 
@@ -101,9 +101,17 @@ export default function Picker() {
 
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {searchResults ? (
-          <Animated.View entering={FadeIn.duration(motion.duration.fast)} style={styles.grid}>
-            {searchResults.length ? searchResults.map((e) => tile(e)) : <Text color="inkMuted">No matches for “{query}”.</Text>}
-          </Animated.View>
+          <>
+            <Animated.View entering={FadeIn.duration(motion.duration.fast)} style={styles.grid}>
+              {searchResults.length ? searchResults.map((e) => tile(e)) : <Text color="inkMuted">No matches for “{query.trim()}”.</Text>}
+            </Animated.View>
+            <Button
+              label={`Create “${query.trim()}”`}
+              variant={searchResults.length ? 'ghost' : 'secondary'}
+              icon={<PlusIcon color={searchResults.length ? colors.accentInk : colors.ink} size={18} />}
+              onPress={() => router.push({ pathname: '/exercise/new', params: { name: query.trim() } })}
+            />
+          </>
         ) : (
           <>
             {row('Favourites', favourites)}
@@ -115,6 +123,7 @@ export default function Picker() {
             <Text variant="caption" color="inkFaint" align="center">
               Long-press a tile to favourite it
             </Text>
+            <Button label="Can’t find it? Create your own" variant="ghost" onPress={() => router.push('/exercise/new')} />
           </>
         )}
       </ScrollView>
