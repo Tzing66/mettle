@@ -31,7 +31,3 @@ export function listBodyweight(): BodyweightRow[] {
 export function addBodyweight(weightKg: number, at = new Date()) {
   db.insert(bodyweightLogs).values({ id: newId(), weightKg, loggedAt: at }).run();
 }
-
-export function deleteBodyweight(id: string) {
-  db.delete(bodyweightLogs).where(eq(bodyweightLogs.id, id)).run();
-}

@@ -2,7 +2,7 @@
 
 export type UnitPref = 'kg' | 'lb';
 
-export const LB_PER_KG = 2.2046226218;
+const LB_PER_KG = 2.2046226218;
 
 export function kgToLb(kg: number): number {
   return kg * LB_PER_KG;

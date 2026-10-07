@@ -32,7 +32,7 @@ export function findBenchmark(
 }
 
 /** Does this exercise feed this benchmark? */
-export function exerciseFeeds(benchmark: BenchmarkDef, exercise: ExerciseInfo | undefined): boolean {
+function exerciseFeeds(benchmark: BenchmarkDef, exercise: ExerciseInfo | undefined): boolean {
   const tag = exercise?.benchmarkId;
   return !!tag && (tag === benchmark.id || (benchmark.matches?.includes(tag) ?? false));
 }
@@ -59,7 +59,7 @@ export function ageStandardSeconds(
   return byAge[String(clamped)] ?? null;
 }
 
-export function ageAt(birthYear: number, at: number): number {
+function ageAt(birthYear: number, at: number): number {
   return new Date(at).getFullYear() - birthYear;
 }
 

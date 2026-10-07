@@ -4,7 +4,7 @@ import { totalXpFromDb, weeklyGoalWeeks, xpByWorkout } from '@/db/repositories/x
 import { useDbQuery } from '@/db/useDbQuery';
 import { dayKey, qualifiesAsWorkout, rankFor, streakWeeks, weekKey, weekStart } from '@/engine';
 
-export function readHomeStats() {
+function readHomeStats() {
   const now = Date.now();
   const exercises = exerciseInfoMap();
   const names = new Map(listExercises().map((e) => [e.id, e.name]));

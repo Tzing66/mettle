@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 import type { WorkoutSummary } from './finishWorkout';
 
-export const DEFAULT_REST_S = 90;
+const DEFAULT_REST_S = 90;
 
 interface RestTimer {
   endsAt: number;

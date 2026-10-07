@@ -8,7 +8,7 @@ import xpRulesJson from '@config/xp-rules.v1.json';
 
 import type { BenchmarkTier, Sex } from './types';
 
-export interface CardioBand {
+interface CardioBand {
   upToMinutes: number;
   xpPerMinute: number;
 }

@@ -5,7 +5,7 @@
 import type { RankLetter } from '@/engine/config';
 import type { ExerciseCategory } from '@/engine/types';
 
-export const palette = {
+const palette = {
   stone: '#F6F6F3',
   white: '#FFFFFF',
   ink: '#16181D',

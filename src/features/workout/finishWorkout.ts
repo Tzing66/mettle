@@ -1,7 +1,7 @@
 // Loads everything the engine needs, runs finishSession, and writes the
 // results in one transaction. All game logic lives in src/engine.
 
-import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 
 import { db } from '@/db/client';
 import { newId } from '@/db/ids';
@@ -132,7 +132,3 @@ export function finishWorkout(workoutId: string): WorkoutSummary | null {
   };
 }
 
-/** Workout count, for the "first workout" empty states. */
-export function finishedWorkoutCount(): number {
-  return db.select({ n: sql<number>`count(*)` }).from(workouts).where(sql`${workouts.endedAt} is not null`).get()?.n ?? 0;
-}

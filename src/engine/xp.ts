@@ -54,11 +54,11 @@ export interface WorkoutXpResult {
   capped: boolean;
 }
 
-export function isCardio(exercise: ExerciseInfo | undefined): boolean {
+function isCardio(exercise: ExerciseInfo | undefined): boolean {
   return exercise?.category === 'cardio';
 }
 
-export function countWorkingSets(sets: SetInput[], exercises: Record<string, ExerciseInfo>): number {
+function countWorkingSets(sets: SetInput[], exercises: Record<string, ExerciseInfo>): number {
   return sets.filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId]))
     .length;
 }

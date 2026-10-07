@@ -13,6 +13,7 @@ import { and, eq, inArray, isNotNull, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/db/client';
 import { rebuildDerivedData } from '@/db/repositories/derived';
+import { PROFILE_ID } from '@/db/repositories/profile';
 import { bodyweightLogs, exercises, profile, syncOutbox, syncState, workoutSets, workouts } from '@/db/schema';
 
 import {
@@ -34,7 +35,6 @@ import {
 export type SyncClient = Pick<SupabaseClient, 'from'>;
 
 const PAGE = 500;
-const PROFILE_ID = 'me';
 /** Re-read a few seconds before the cursor: commits can land slightly out of order. Upserts are idempotent. */
 const CURSOR_OVERLAP_MS = 5000;
 
@@ -152,7 +152,7 @@ async function softDelete(client: SyncClient, table: CloudTable, ids: string[]) 
   }
 }
 
-export async function pushChanges(client: SyncClient, userId: string): Promise<{ pushed: number; deferred: number }> {
+async function pushChanges(client: SyncClient, userId: string): Promise<{ pushed: number; deferred: number }> {
   const { maxId, byTable } = queuedIds();
   if (maxId === 0) return { pushed: 0, deferred: 0 };
   const deferred: { table: CloudTable; id: string }[] = [];
@@ -226,7 +226,7 @@ async function fetchChanged(client: SyncClient, table: CloudTable, since: string
   }
 }
 
-export async function pullChanges(
+async function pullChanges(
   client: SyncClient,
   { remoteProfileWins = false }: { remoteProfileWins?: boolean } = {},
 ): Promise<{ pulled: number; historyChanged: boolean }> {

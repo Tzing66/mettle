@@ -24,7 +24,7 @@ export function formatWeight(kg: number, unit: UnitPref): string {
   return `${displayWeight(kg, unit)} ${unit}`;
 }
 
-export function formatKm(m: number): string {
+function formatKm(m: number): string {
   return m >= 1000 ? `${(m / 1000).toFixed(m % 1000 === 0 ? 0 : 2)} km` : `${Math.round(m)} m`;
 }
 

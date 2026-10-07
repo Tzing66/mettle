@@ -25,9 +25,6 @@ export const PlusIcon = ({ color, size, strokeWidth }: IconProps) => (
 export const CheckIcon = ({ color, size, strokeWidth = 2.4 }: IconProps) => (
   <Icon size={size}><Path d="m5 12.5 4.5 4.5L19 7.5" {...s(color, strokeWidth)} /></Icon>
 );
-export const CloseIcon = ({ color, size, strokeWidth }: IconProps) => (
-  <Icon size={size}><Path d="M6 6l12 12M18 6 6 18" {...s(color, strokeWidth)} /></Icon>
-);
 export const ChevronRightIcon = ({ color, size, strokeWidth }: IconProps) => (
   <Icon size={size}><Path d="m9 5 7 7-7 7" {...s(color, strokeWidth)} /></Icon>
 );
@@ -48,9 +45,6 @@ export const StarIcon = ({ color, size, filled }: IconProps & { filled?: boolean
       fill={filled ? color : 'none'}
     />
   </Icon>
-);
-export const TrashIcon = ({ color, size, strokeWidth }: IconProps) => (
-  <Icon size={size}><Path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" {...s(color, strokeWidth)} /></Icon>
 );
 export const TimerIcon = ({ color, size, strokeWidth }: IconProps) => (
   <Icon size={size}>

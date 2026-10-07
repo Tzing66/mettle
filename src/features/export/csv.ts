@@ -40,7 +40,7 @@ export function csvEscape(value: string | number | boolean | null | undefined): 
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-export function toCsv(header: readonly string[], rows: (string | number | boolean | null)[][]): string {
+function toCsv(header: readonly string[], rows: (string | number | boolean | null)[][]): string {
   return [header, ...rows].map((r) => r.map(csvEscape).join(',')).join('\n') + '\n';
 }
 
