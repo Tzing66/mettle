@@ -37,3 +37,14 @@ export function ProfileIcon({ color, size = 26 }: IconProps) {
     </Svg>
   );
 }
+
+export function FriendsIcon({ color, size = 26 }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Circle cx={9} cy={9} r={3.2} stroke={color} {...stroke} />
+      <Path d="M3.5 19c.9-3 3-4.6 5.5-4.6s4.6 1.6 5.5 4.6" stroke={color} {...stroke} />
+      <Circle cx={16.5} cy={8} r={2.6} stroke={color} {...stroke} />
+      <Path d="M16 12.6c2.2 0 3.8 1.3 4.5 3.9" stroke={color} {...stroke} />
+    </Svg>
+  );
+}

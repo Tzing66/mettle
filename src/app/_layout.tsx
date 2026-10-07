@@ -64,6 +64,8 @@ export default function RootLayout() {
         <Stack.Screen name="exercise/[id]" />
         <Stack.Screen name="exercise/new" options={{ presentation: 'modal' }} />
         <Stack.Screen name="account/sign-in" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="group/add" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="group/[id]" />
       </Stack>
     </>
   );

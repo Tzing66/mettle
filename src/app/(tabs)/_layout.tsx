@@ -1,7 +1,7 @@
 import { Redirect, Tabs } from 'expo-router';
 
 import { haptics } from '@/design/haptics';
-import { HistoryIcon, HomeIcon, ProfileIcon } from '@/design/icons/TabIcons';
+import { FriendsIcon, HistoryIcon, HomeIcon, ProfileIcon } from '@/design/icons/TabIcons';
 import { colors, fonts } from '@/design/tokens';
 import { useProfile } from '@/features/profile/useProfile';
 
@@ -26,6 +26,7 @@ export default function TabsLayout() {
       }}>
       <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color }) => <HomeIcon color={color} /> }} />
       <Tabs.Screen name="history" options={{ title: 'History', tabBarIcon: ({ color }) => <HistoryIcon color={color} /> }} />
+      <Tabs.Screen name="friends" options={{ title: 'Friends', tabBarIcon: ({ color }) => <FriendsIcon color={color} /> }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color }) => <ProfileIcon color={color} /> }} />
     </Tabs>
   );
