@@ -45,3 +45,7 @@ example
 # Local planning docs (never pushed)
 plan.md
 *.plan.md
+
+# OAuth client secrets downloaded from Google Cloud: never commit
+client_secret_*.json
+*.apps.googleusercontent.com.json

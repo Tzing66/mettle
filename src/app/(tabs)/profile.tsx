@@ -18,6 +18,7 @@ import {
 } from '@/engine';
 import { formatDay, formatNumber, formatWeight, REASON_LABELS, TIER_LABELS } from '@/features/format';
 import { shareWorkoutExport } from '@/features/export/exportData';
+import { AccountCard } from '@/features/account/AccountCard';
 import { useProfile } from '@/features/profile/useProfile';
 
 const REST_OPTIONS = [
@@ -100,6 +101,8 @@ export default function Profile() {
           </Text>
         </View>
       </View>
+
+      <AccountCard />
 
       <Card style={styles.card}>
         <Text variant="overline" color="inkMuted">
