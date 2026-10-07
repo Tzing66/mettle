@@ -4,6 +4,8 @@ import { getQueryParams } from 'expo-auth-session/build/QueryParams';
 import * as WebBrowser from 'expo-web-browser';
 import { useSyncExternalStore } from 'react';
 
+import { unlinkAccount } from '@/features/sync/sync';
+
 import { cloudConfigured, supabase } from './supabase';
 
 // ---- Session store ----------------------------------------------------------
@@ -102,6 +104,18 @@ export async function sendEmailCode(email: string) {
 export async function verifyEmailCode(email: string, code: string) {
   const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'email' });
   if (error) throw error;
+}
+
+/**
+ * Permanently deletes the account and all cloud data (delete-account Edge
+ * Function), then returns this phone to offline-only use. Workouts on the
+ * phone are kept.
+ */
+export async function deleteAccount() {
+  const { error } = await supabase.functions.invoke('delete-account', { method: 'POST' });
+  if (error) throw new Error(error.message);
+  unlinkAccount();
+  await supabase.auth.signOut({ scope: 'local' });
 }
 
 export async function signOut() {

@@ -101,6 +101,20 @@ export function linkAccount(userId: string): LinkResult {
   return 'linked';
 }
 
+/**
+ * Detaches this phone from its account (after the account was deleted): stops
+ * queueing changes and forgets the sync cursor. Workouts stay on the phone.
+ */
+export function unlinkAccount() {
+  db.transaction((tx) => {
+    tx.delete(syncOutbox).run();
+    tx.insert(syncState)
+      .values({ id: 1, userId: null, cursor: null, lastSyncedAt: null })
+      .onConflictDoUpdate({ target: syncState.id, set: { userId: null, cursor: null, lastSyncedAt: null } })
+      .run();
+  });
+}
+
 /** Wipes this phone's synced and derived data, then links it to `userId` (for account switches). */
 export function resetLocalForAccount(userId: string) {
   applying(() =>

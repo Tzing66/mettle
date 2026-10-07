@@ -6,7 +6,7 @@ import { colors, radii, space } from '@/design/tokens';
 
 import { replaceLocalWithAccountData, syncNow, useSyncStore } from '@/features/sync/useSync';
 
-import { accountLabel, signOut, useSession } from './auth';
+import { accountLabel, deleteAccount, signOut, useSession } from './auth';
 import { cloudConfigured } from './supabase';
 
 export function AccountCard() {
@@ -64,6 +64,27 @@ export function AccountCard() {
             { text: 'Cancel', style: 'cancel' },
             { text: 'Sign out', style: 'destructive', onPress: () => signOut().catch((e) => Alert.alert('Sign out failed', String(e))) },
           ])
+        }
+      />
+      <Button
+        label="Delete account"
+        variant="ghost"
+        onPress={() =>
+          Alert.alert(
+            'Delete your account?',
+            'This permanently deletes your account, your backed-up workouts and your leaderboard XP, and removes you from your groups. Workouts on this phone stay here. This can’t be undone.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              {
+                text: 'Delete account',
+                style: 'destructive',
+                onPress: () =>
+                  deleteAccount()
+                    .then(() => Alert.alert('Account deleted', 'Mettle keeps working offline on this phone.'))
+                    .catch((e) => Alert.alert('Couldn’t delete account', e instanceof Error ? e.message : String(e))),
+              },
+            ],
+          )
         }
       />
     </Card>

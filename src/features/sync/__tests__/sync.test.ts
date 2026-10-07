@@ -25,7 +25,7 @@ import { finishWorkout } from '@/features/workout/finishWorkout';
 import { computeServerLedger, type CloudProfile } from '@/server/recompute';
 import { FakeCloud } from '@/test/fakeCloud';
 
-import { getSyncState, linkAccount, pendingChangeCount, resetLocalForAccount, syncAccount, type SyncClient } from '../sync';
+import { getSyncState, linkAccount, pendingChangeCount, resetLocalForAccount, syncAccount, unlinkAccount, type SyncClient } from '../sync';
 
 const USER = '11111111-1111-1111-1111-111111111111';
 const OTHER = '22222222-2222-2222-2222-222222222222';
@@ -188,5 +188,17 @@ describe('server-side XP', () => {
     expect(cloud.rows('profiles')[0].utc_offset_minutes).toBe(0);
     expect(server.totalXp).toBe(totalXpFromDb());
     expect(server.events.length).toBe(listLedger().length);
+  });
+});
+
+describe('after the account is deleted', () => {
+  it('unlinking returns the phone to offline-only: nothing is queued, workouts stay', () => {
+    const workouts = listFinishedWorkouts().length;
+    unlinkAccount();
+    expect(getSyncState().userId).toBeNull();
+    addBodyweight(79);
+    expect(pendingChangeCount()).toBe(0);
+    expect(listFinishedWorkouts()).toHaveLength(workouts);
+    expect(linkAccount(OTHER)).toBe('linked'); // a new account can now be linked
   });
 });
