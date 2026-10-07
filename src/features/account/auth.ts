@@ -53,8 +53,16 @@ export function useSession(): { session: Session | null; ready: boolean } {
 
 // ---- Sign-in methods --------------------------------------------------------
 
-/** Deep link Supabase sends the browser back to. In Expo Go this is exp://…/--/auth-callback. */
-export const authRedirectUri = makeRedirectUri({ scheme: 'mettle', path: 'auth-callback' });
+/**
+ * Deep link Supabase sends the browser back to: mettle://auth-callback in real
+ * builds, exp://localhost:8081/--/auth-callback in Expo Go.
+ *
+ * preferLocalhost matters: Supabase's redirect allow-list rejects addresses
+ * with a LAN IP (exp://192.168.x.x…) even against exp://** — the dots break
+ * its wildcard matching — and silently falls back to the Site URL. The auth
+ * session intercepts the redirect by scheme, so the host is never visited.
+ */
+export const authRedirectUri = makeRedirectUri({ scheme: 'mettle', path: 'auth-callback', preferLocalhost: true });
 
 /**
  * Google via the system browser (works in Expo Go). Returns false if the user

@@ -8,7 +8,7 @@ import { Button, KEYBOARD_DONE_ID, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { CheckIcon } from '@/design/icons/Icons';
 import { colors, motion, radii, space, type } from '@/design/tokens';
-import { sendEmailCode, signInWithGoogle, verifyEmailCode } from '@/features/account/auth';
+import { authRedirectUri, sendEmailCode, signInWithGoogle, verifyEmailCode } from '@/features/account/auth';
 
 const BENEFITS = ['Back up every workout', 'Keep your rank across phones', 'Friends and weekly leaderboards'];
 
@@ -75,6 +75,12 @@ export default function SignIn() {
           </View>
 
           <Button label={busy === 'google' ? 'Opening Google…' : 'Continue with Google'} size="lg" onPress={google} disabled={!!busy} silent />
+          {__DEV__ ? (
+            // Dev aid: must be accepted by Supabase → Auth → URL Configuration → Redirect URLs.
+            <Text variant="caption" color="inkFaint" selectable align="center">
+              Return address: {authRedirectUri}
+            </Text>
+          ) : null}
 
           <View style={styles.divider}>
             <View style={styles.rule} />
