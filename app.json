@@ -13,7 +13,8 @@
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.tanzini.mettle"
     },
     "plugins": [
       "expo-router",
@@ -32,6 +33,23 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#F6F6F3"
+    "backgroundColor": "#F6F6F3",
+    "owner": "tanzinis-team",
+    "ios": {
+      "bundleIdentifier": "com.tanzini.mettle",
+      "supportsTablet": false
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "360740e1-7589-4be7-81df-159aca0ccf36"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/360740e1-7589-4be7-81df-159aca0ccf36"
+    }
   }
 }
