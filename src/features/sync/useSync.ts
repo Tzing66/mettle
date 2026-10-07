@@ -16,6 +16,8 @@ interface SyncStore {
   status: Status;
   error: string | null;
   lastSyncedAt: Date | null;
+  /** Server-verified XP (leaderboard XP excludes pending). Null until computed this session. */
+  serverXp: { total: number; granted: number } | null;
 }
 
 export const useSyncStore = create<SyncStore>(() => ({
@@ -23,7 +25,15 @@ export const useSyncStore = create<SyncStore>(() => ({
   error: null,
   // Read lazily (SyncController) — at import time the database may not be migrated yet.
   lastSyncedAt: null,
+  serverXp: null,
 }));
+
+/** Asks the server to re-score this account's synced history (recompute-xp Edge Function). */
+async function recomputeServerXp() {
+  const { data, error } = await supabase.functions.invoke<{ totalXp: number; grantedXp: number }>('recompute-xp', { method: 'POST' });
+  if (error || !data) throw new Error(`Server XP: ${error?.message ?? 'no response'}`);
+  useSyncStore.setState({ serverXp: { total: data.totalXp, granted: data.grantedXp } });
+}
 
 let running: Promise<void> | null = null;
 let again = false;
@@ -43,9 +53,13 @@ export function syncNow(): Promise<void> {
       useSyncStore.setState({ status: 'syncing', error: null });
       try {
         const res = await syncAccount(supabase, userId);
-        useSyncStore.setState(
-          res.status === 'mismatch' ? { status: 'mismatch' } : { status: 'idle', lastSyncedAt: new Date() },
-        );
+        if (res.status === 'mismatch') {
+          useSyncStore.setState({ status: 'mismatch' });
+        } else {
+          // Re-score on the server when history changed, and once per session.
+          if (res.pushed > 0 || useSyncStore.getState().serverXp === null) await recomputeServerXp();
+          useSyncStore.setState({ status: 'idle', lastSyncedAt: new Date() });
+        }
       } catch (e) {
         useSyncStore.setState({ status: 'error', error: e instanceof Error ? e.message : String(e) });
       }

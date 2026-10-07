@@ -32,6 +32,8 @@ export function profileToCloud(p: ProfileRow, userId: string, favouriteIds: stri
     weekly_target_days: p.weeklyTargetDays,
     rest_seconds: p.restSeconds,
     favourite_exercise_ids: favouriteIds,
+    // Lets the server count days and weeks in the user's local time.
+    utc_offset_minutes: -new Date().getTimezoneOffset() || 0, // `|| 0` avoids -0 at UTC
   };
 }
 

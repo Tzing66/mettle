@@ -5,7 +5,7 @@ const expoConfig = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', 'src/db/migrations/*'],
+    ignores: ['dist/*', 'src/db/migrations/*', 'supabase/functions/**'],
   },
   {
     // jest.mock factories must use require() and run before imports.

@@ -48,6 +48,14 @@ export function AccountCard() {
         </View>
       </View>
       <SyncStatus status={sync.status} error={sync.error} lastSyncedAt={sync.lastSyncedAt} />
+      {sync.serverXp ? (
+        <Text variant="caption" color="inkMuted" tabular>
+          Leaderboard XP: {sync.serverXp.granted.toLocaleString()}
+          {sync.serverXp.total > sync.serverXp.granted
+            ? ` (+${(sync.serverXp.total - sync.serverXp.granted).toLocaleString()} pending)`
+            : ''}
+        </Text>
+      ) : null}
       <Button
         label="Sign out"
         variant="ghost"

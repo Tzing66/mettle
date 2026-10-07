@@ -63,7 +63,9 @@
     "lint": "expo lint",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "build:edge": "node scripts/build-edge.mjs",
+    "deploy:edge": "node scripts/build-edge.mjs && supabase functions deploy recompute-xp --use-api"
   },
   "private": true
 }

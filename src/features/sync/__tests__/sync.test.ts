@@ -22,6 +22,7 @@ import { listLedger, totalXpFromDb } from '@/db/repositories/xp';
 import { syncOutbox } from '@/db/schema';
 import { ensureSeeded } from '@/db/seed';
 import { finishWorkout } from '@/features/workout/finishWorkout';
+import { computeServerLedger, type CloudProfile } from '@/server/recompute';
 import { FakeCloud } from '@/test/fakeCloud';
 
 import { getSyncState, linkAccount, pendingChangeCount, resetLocalForAccount, syncAccount, type SyncClient } from '../sync';
@@ -171,5 +172,21 @@ describe('switching accounts', () => {
     expect(linkAccount(OTHER)).toBe('mismatch');
     expect((await syncAccount(client(), OTHER)).status).toBe('mismatch');
     expect(getSyncState().userId).toBe(USER);
+  });
+});
+
+describe('server-side XP', () => {
+  it('recomputing from the synced cloud rows gives the same XP as the phone', () => {
+    const live = (rows: Record<string, unknown>[]) => rows.filter((r) => !r.deleted_at);
+    const server = computeServerLedger({
+      profile: cloud.rows('profiles')[0] as unknown as CloudProfile,
+      workouts: live(cloud.rows('workouts')) as never,
+      sets: live(cloud.rows('workout_sets')) as never,
+      bodyweight: live(cloud.rows('bodyweight_logs')) as never,
+      customExercises: live(cloud.rows('custom_exercises')) as never,
+    });
+    expect(cloud.rows('profiles')[0].utc_offset_minutes).toBe(0);
+    expect(server.totalXp).toBe(totalXpFromDb());
+    expect(server.events.length).toBe(listLedger().length);
   });
 });
