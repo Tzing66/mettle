@@ -34,6 +34,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/better-sqlite3": "^9.6.0",
     "@types/jest": "29.5.14",
     "@types/node": "^26.6.4",
@@ -58,7 +59,8 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "build:edge": "node scripts/build-edge.mjs",
-    "deploy:edge": "node scripts/build-edge.mjs && supabase functions deploy recompute-xp --use-api"
+    "deploy:edge": "node scripts/build-edge.mjs && supabase functions deploy recompute-xp --use-api",
+    "build:icons": "node scripts/build-icons.mjs"
   },
   "private": true
 }
