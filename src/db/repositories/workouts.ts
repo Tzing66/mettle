@@ -316,3 +316,11 @@ export function exerciseHistory(exerciseId: string): (SetRow & { endedAt: Date }
     .all()
     .map((r) => ({ ...r.set, endedAt: r.endedAt! }));
 }
+
+/**
+ * Deletes a workout and (by cascade) its sets. Sync triggers queue the
+ * deletion. Callers rebuild derived data afterwards (features/workout/deleteWorkout).
+ */
+export function deleteWorkout(id: string) {
+  db.delete(workouts).where(eq(workouts.id, id)).run();
+}

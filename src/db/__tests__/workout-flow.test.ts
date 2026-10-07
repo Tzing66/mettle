@@ -15,6 +15,7 @@ import {
   addExerciseToWorkout,
   addSet,
   beginWorkout,
+  deleteWorkout,
   discardWorkout,
   exerciseHistory,
   getActiveWorkout,
@@ -28,7 +29,7 @@ import {
   updateSet,
   updateSetCascade,
 } from '@/db/repositories/workouts';
-import { listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
+import { eventsForWorkout, listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { ensureSeeded, seedExercises } from '@/db/seed';
 import { rebuildDerivedData } from '@/db/repositories/derived';
 import { buildWorkoutExport } from '@/features/export/exportData';
@@ -328,5 +329,26 @@ describe('rebuilding derived data from history', () => {
     const result = rebuildDerivedData();
     expect(result.xp).toBe(live.total);
     expect(snapshot()).toEqual(live);
+  });
+});
+
+describe('deleting a workout', () => {
+  it('removes its sets and XP, and rebuilds records from what is left', () => {
+    at(MONDAY + 30 * DAY);
+    const easy = logLifts(MONDAY + 30 * DAY, 'dip', [[0, 10], [0, 10], [0, 10]]);
+    const big = logLifts(MONDAY + 31 * DAY, 'dip', [[0, 15], [0, 15], [0, 15]]);
+    // 'dip' tracks reps; the second session was a PR.
+    expect(eventsForWorkout(big.id).some((e) => e.reason === 'personal_record')).toBe(true);
+    const before = totalXpFromDb();
+    const bigXp = xpByWorkout([big.id]).get(big.id)!;
+
+    deleteWorkout(big.id);
+    rebuildDerivedData();
+
+    expect(setsForWorkout(big.id)).toEqual([]);
+    expect(eventsForWorkout(big.id)).toEqual([]);
+    expect(totalXpFromDb()).toBe(before - bigXp);
+    expect(listRecords().find((r) => r.exerciseId === 'dip')?.value).toBe(10);
+    expect(eventsForWorkout(easy.id).length).toBeGreaterThan(0);
   });
 });

@@ -18,7 +18,7 @@ describe('rankLeaderboard', () => {
       ['Asha', 1, 120],
       ['Ben', 1, 120],
       ['Cy', 3, 50],
-      ['Dev', 4, 0],
+      ['Dev', null, 0],
     ]);
   });
 
@@ -34,5 +34,12 @@ describe('rankLeaderboard', () => {
   it('handles bigint-as-string values from Postgres', () => {
     const ranked = rankLeaderboard([{ ...e('X', 0, 0), week_xp: '15' as unknown as number, total_xp: '2100' as unknown as number }], 'week');
     expect([ranked[0].xp, ranked[0].rank]).toEqual([15, 'D']);
+  });
+});
+
+describe('members without XP', () => {
+  it('are unranked (shown as a dash), even when everyone is at 0', () => {
+    const fresh = rankLeaderboard([e('A', 0, 0), e('B', 0, 0)], 'week');
+    expect(fresh.map((r) => r.place)).toEqual([null, null]);
   });
 });

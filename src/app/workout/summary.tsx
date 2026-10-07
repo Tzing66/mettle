@@ -7,28 +7,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Card, Text } from '@/design/components';
 import { FlameIcon, TrophyIcon } from '@/design/icons/Icons';
 import { radii, space } from '@/design/tokens';
-import { kgToLb, type XpEventDraft, type XpReason } from '@/engine';
+import { kgToLb } from '@/engine';
 import { formatDurationMs, formatMetric, formatNumber, TIER_LABELS } from '@/features/format';
 import { useProfile } from '@/features/profile/useProfile';
 import { CountUp } from '@/features/workout/CountUp';
 import { LevelProgress } from '@/features/workout/LevelProgress';
 import { RankUpMoment } from '@/features/workout/RankUpMoment';
 import { useWorkoutUi } from '@/features/workout/store';
+import { xpBreakdown } from '@/features/xpBreakdown';
 import { makeStyles, useTheme } from '@/design/theme';
 
 const STEP_MS = 220;
-
-/** Summary lines in tally order: base → sets → cardio → PRs → firsts → benchmarks → streak → weekly goal. */
-const LINES: { label: string; reasons: XpReason[] }[] = [
-  { label: 'Workout complete', reasons: ['workout_complete'] },
-  { label: 'Working sets', reasons: ['working_sets'] },
-  { label: 'Cardio', reasons: ['cardio_minutes'] },
-  { label: 'Personal records', reasons: ['personal_record'] },
-  { label: 'Firsts', reasons: ['first_exercise', 'first_activity'] },
-  { label: 'Benchmarks', reasons: ['benchmark_tier'] },
-  { label: 'Streak bonus', reasons: ['streak_bonus'] },
-  { label: 'Weekly goal', reasons: ['weekly_goal'] },
-];
 
 export default function Summary() {
   const styles = useStyles();
@@ -38,9 +27,7 @@ export default function Summary() {
   const unit = profile?.unitPref ?? 'kg';
   const [showRankUp, setShowRankUp] = useState(false);
 
-  const lines = summary
-    ? LINES.map((l) => ({ ...l, amount: sum(summary.events.filter((e) => l.reasons.includes(e.reason))) })).filter((l) => l.amount > 0)
-    : [];
+  const lines = summary ? xpBreakdown(summary.events) : [];
   const totalDelay = lines.length * STEP_MS;
 
   if (!summary) {
@@ -166,7 +153,6 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-const sum = (events: XpEventDraft[]) => events.reduce((s, e) => s + e.amount, 0);
 
 const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },

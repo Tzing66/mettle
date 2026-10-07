@@ -86,8 +86,8 @@ export default function GroupScreen() {
                 layout={LinearTransition.duration(motion.duration.slow)}
                 entering={FadeInDown.delay(i * 40).duration(240)}
                 style={[styles.row, i > 0 && styles.divider, r.is_me && styles.me]}>
-                <Text variant="heading" color={r.place <= 3 ? 'ink' : 'inkMuted'} tabular style={styles.place}>
-                  {r.place}
+                <Text variant="heading" color={r.place !== null && r.place <= 3 ? 'ink' : 'inkMuted'} tabular style={styles.place}>
+                  {r.place ?? '–'}
                 </Text>
                 <RankBadge rank={r.rank} size={36} />
                 <View style={styles.flex}>
@@ -101,7 +101,7 @@ export default function GroupScreen() {
                   </Text>
                 </View>
                 <Text variant="label" tabular>
-                  {formatNumber(r.xp)} XP
+                  {r.xp > 0 ? `${formatNumber(r.xp)} XP` : '–'}
                 </Text>
               </Animated.View>
             ))}

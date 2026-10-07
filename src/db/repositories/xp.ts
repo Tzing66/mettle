@@ -57,3 +57,13 @@ export function xpByDay(since: Date): Map<string, number> {
     .all();
   return new Map(rows.map((r) => [r.day, r.total]));
 }
+
+/** XP events earned by one workout (tagged with meta.workoutId). */
+export function eventsForWorkout(workoutId: string): XpEventRow[] {
+  return db
+    .select()
+    .from(xpEvents)
+    .where(sql`json_extract(${xpEvents.meta}, '$.workoutId') = ${workoutId}`)
+    .orderBy(xpEvents.createdAt)
+    .all();
+}

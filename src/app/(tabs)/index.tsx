@@ -106,6 +106,9 @@ export default function Home() {
           Last workout
         </Text>
         {stats.lastWorkout ? (
+          <PressableScale
+            accessibilityLabel="Open last workout"
+            onPress={() => router.push({ pathname: '/workout/[id]', params: { id: stats.lastWorkout!.id } })}>
           <Card style={styles.last}>
             <View style={styles.lastTop}>
               <Text variant="heading">{formatDay(stats.lastWorkout.endedAt)}</Text>
@@ -120,6 +123,7 @@ export default function Home() {
               {stats.lastWorkout.exercises.join(' · ')}
             </Text>
           </Card>
+          </PressableScale>
         ) : (
           <Card>
             <Text color="inkMuted">Your first workout will show up here. Every set counts.</Text>

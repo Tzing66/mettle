@@ -109,6 +109,7 @@ export default function History() {
         ) : (
           data.workouts.map((w, i) => (
             <Animated.View key={w.id} entering={FadeInDown.delay(Math.min(i, 8) * 40).duration(280)}>
+              <PressableScale accessibilityLabel={`Open workout from ${formatDay(w.endedAt)}`} onPress={() => router.push({ pathname: '/workout/[id]', params: { id: w.id } })}>
               <Card style={styles.workout}>
                 <View style={styles.workoutTop}>
                   <Text variant="heading">{formatDay(w.endedAt)}</Text>
@@ -123,6 +124,7 @@ export default function History() {
                   {w.exercises.join(' · ')}
                 </Text>
               </Card>
+              </PressableScale>
             </Animated.View>
           ))
         )}
