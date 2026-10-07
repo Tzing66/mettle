@@ -14,7 +14,6 @@ export const profile = sqliteTable('profile', {
   displayName: text('display_name').notNull(),
   sexForStandards: text('sex_for_standards').$type<Sex>().notNull(),
   birthYear: integer('birth_year').notNull(),
-  heightCm: real('height_cm'),
   unitPref: text('unit_pref').$type<'kg' | 'lb'>().notNull().default('kg'),
   weeklyTargetDays: integer('weekly_target_days').notNull().default(3),
   /** Rest timer after a working set; 0 turns it off. */

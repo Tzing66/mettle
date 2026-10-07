@@ -52,7 +52,7 @@ beforeAll(() => {
   jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] });
   jest.setSystemTime(T0 - DAY);
   ensureSeeded();
-  createProfile({ displayName: 'Offline me', sexForStandards: 'male', birthYear: 1995, heightCm: 180, unitPref: 'kg', weeklyTargetDays: 3 }, 80);
+  createProfile({ displayName: 'Offline me', sexForStandards: 'male', birthYear: 1995, unitPref: 'kg', weeklyTargetDays: 3 }, 80);
   cloud = new FakeCloud();
 });
 afterAll(() => jest.useRealTimers());

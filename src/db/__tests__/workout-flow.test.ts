@@ -63,7 +63,7 @@ beforeAll(() => {
   at(MONDAY - DAY);
   ensureSeeded();
   createProfile(
-    { displayName: 'Test', sexForStandards: 'male', birthYear: 1998, heightCm: 180, unitPref: 'kg', weeklyTargetDays: 3 },
+    { displayName: 'Test', sexForStandards: 'male', birthYear: 1998, unitPref: 'kg', weeklyTargetDays: 3 },
     75,
   );
 });

@@ -43,6 +43,13 @@
       "when": 1791377727255,
       "tag": "0005_sync_triggers",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1791382511760,
+      "tag": "0006_drop_height",
+      "breakpoints": true
     }
   ]
 }

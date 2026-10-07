@@ -20,7 +20,6 @@ export default function Onboarding() {
   const [step, setStep] = useState(0);
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<UnitPref>('kg');
-  const [heightCm, setHeightCm] = useState(175);
   const [weightKg, setWeightKg] = useState(75);
   const [birthYear, setBirthYear] = useState(THIS_YEAR - 25);
   const [sex, setSex] = useState<Sex | null>(null);
@@ -41,7 +40,6 @@ export default function Onboarding() {
         displayName: name.trim(),
         sexForStandards: sex!,
         birthYear,
-        heightCm,
         unitPref: unit,
         weeklyTargetDays: weeklyDays,
       },
@@ -94,10 +92,7 @@ export default function Onboarding() {
           )}
 
           {key === 'body' && (
-            <Step title="Height and weight" subtitle="Benchmarks compare lifts to your bodyweight, so a 60 kg and a 110 kg lifter are judged fairly.">
-              <Field label="Height">
-                <Stepper value={heightCm} onChange={setHeightCm} step={1} min={120} max={230} decimals={0} unit="cm" />
-              </Field>
+            <Step title="Your bodyweight" subtitle="Benchmarks compare lifts to your bodyweight, so a 60 kg and a 110 kg lifter are judged fairly.">
               <Field label="Weight">
                 <Stepper
                   value={displayWeight(weightKg, unit)}
