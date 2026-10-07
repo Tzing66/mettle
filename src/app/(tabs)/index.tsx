@@ -37,7 +37,7 @@ export default function Home() {
       </Animated.View>
 
       <Animated.View entering={enter(1)}>
-        <PressableScale onPress={() => router.push('/profile')} accessibilityLabel="Rank details">
+        <PressableScale onPress={() => router.push('/progress')} accessibilityLabel="Progression ladder">
           <Card style={styles.rankCard}>
             <View style={styles.rankTop}>
               <RankBadge rank={rank.rank} size={64} />

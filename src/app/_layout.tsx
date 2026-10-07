@@ -79,6 +79,7 @@ function App() {
         <Stack.Screen name="workout/picker" options={{ presentation: 'modal' }} />
         <Stack.Screen name="workout/[id]" />
         <Stack.Screen name="workout/summary" options={{ gestureEnabled: false, animation: 'fade' }} />
+        <Stack.Screen name="progress" />
         <Stack.Screen name="exercise/[id]" />
         <Stack.Screen name="exercise/new" options={{ presentation: 'modal' }} />
         <Stack.Screen name="account/sign-in" options={{ presentation: 'modal' }} />

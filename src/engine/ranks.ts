@@ -103,3 +103,40 @@ export function levelSteps(change: Pick<RankChange, 'before' | 'after'>, maxStep
   steps.push({ levelXp: after.totalXp, from: 0, to: after.levelProgress });
   return steps;
 }
+
+export interface LadderLevel {
+  label: string;
+  startXp: number;
+  endXp: number;
+  state: 'done' | 'current' | 'ahead';
+  /** XP still needed to reach the start of this level (0 when reached). */
+  xpAway: number;
+}
+
+export interface LadderRank {
+  rank: RankLetter;
+  minXp: number;
+  levels: LadderLevel[];
+  reached: boolean;
+  xpAway: number;
+}
+
+/**
+ * The whole progression ladder from E1 upward, with where `totalXp` sits.
+ * S shows `sLevels` levels (it keeps going beyond them).
+ */
+export function rankLadder(totalXp: number, sLevels = 5, config: RanksConfig = ranksConfig): LadderRank[] {
+  const xp = Math.max(0, totalXp);
+  return config.ranks.map((r, i) => {
+    const next = config.ranks[i + 1];
+    const span = next ? (next.minXp - r.minXp) / config.levelsPerRank : config.sLevelSpanXp;
+    const count = next ? config.levelsPerRank : sLevels;
+    const levels: LadderLevel[] = Array.from({ length: count }, (_, l) => {
+      const startXp = Math.round(r.minXp + l * span);
+      const endXp = Math.round(r.minXp + (l + 1) * span);
+      const state = xp >= endXp ? 'done' : xp >= startXp ? 'current' : 'ahead';
+      return { label: `${r.rank}${l + 1}`, startXp, endXp, state, xpAway: Math.max(0, startXp - xp) };
+    });
+    return { rank: r.rank, minXp: r.minXp, levels, reached: xp >= r.minXp, xpAway: Math.max(0, r.minXp - xp) };
+  });
+}

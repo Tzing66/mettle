@@ -1,4 +1,4 @@
-import { levelSteps, rankChange, rankFor, totalXp } from '../ranks';
+import { levelSteps, rankChange, rankFor, rankLadder, totalXp } from '../ranks';
 
 describe('rank thresholds (§6.1)', () => {
   it.each([
@@ -93,5 +93,28 @@ describe('levelSteps (level-up animation)', () => {
   it('crosses rank boundaries (E5 → D1)', () => {
     const steps = levelSteps(rankChange(1900, 2100));
     expect(steps.map((s) => rankFor(s.levelXp).label)).toEqual(['E5', 'D1']);
+  });
+});
+
+describe('rankLadder (progression screen)', () => {
+  it('lists every rank with five levels and marks where you are', () => {
+    const ladder = rankLadder(3800); // D2
+    expect(ladder.map((r) => r.rank)).toEqual(['E', 'D', 'C', 'B', 'A', 'S']);
+    expect(ladder[0].levels.every((l) => l.state === 'done')).toBe(true);
+    expect(ladder[1].levels.map((l) => l.state)).toEqual(['done', 'current', 'ahead', 'ahead', 'ahead']);
+    expect(ladder[1].levels[1]).toMatchObject({ label: 'D2', startXp: 3200, endXp: 4400 });
+  });
+
+  it('says how far each rank and level is', () => {
+    const ladder = rankLadder(3800);
+    expect(ladder.find((r) => r.rank === 'C')?.xpAway).toBe(4200);
+    expect(ladder[1].levels[2].xpAway).toBe(600);
+    expect(ladder[1].xpAway).toBe(0);
+  });
+
+  it('S keeps counting past S5 but shows five levels', () => {
+    const s = rankLadder(0).find((r) => r.rank === 'S')!;
+    expect(s.levels.map((l) => l.label)).toEqual(['S1', 'S2', 'S3', 'S4', 'S5']);
+    expect(s.levels[1].startXp).toBe(125000);
   });
 });
