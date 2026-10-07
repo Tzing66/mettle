@@ -136,3 +136,29 @@ export const benchmarkUnlocks = sqliteTable(
   // Each tier pays once.
   (t) => [uniqueIndex('benchmark_unlocks_benchmark_tier_uq').on(t.benchmarkId, t.tier)],
 );
+
+// ---------------------------------------------------------------- sync (Phase 2)
+
+/**
+ * Rows changed locally that still need uploading. Filled by SQLite triggers
+ * (migration 0005) whenever a signed-in user changes synced data, so the
+ * repositories don't need to know about sync at all.
+ */
+export const syncOutbox = sqliteTable('sync_outbox', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  tableName: text('table_name').notNull(),
+  rowId: text('row_id').notNull(),
+  queuedAt: integer('queued_at').notNull().default(sql`(unixepoch() * 1000)`),
+});
+
+/** Single row (id = 1). */
+export const syncState = sqliteTable('sync_state', {
+  id: integer('id').primaryKey(),
+  /** Account this phone's data belongs to; null until first sign-in. Triggers only queue when set. */
+  userId: text('user_id'),
+  /** 1 while applying pulled rows, so triggers don't echo them back into the outbox. */
+  applying: integer('applying').notNull().default(0),
+  /** Highest server updated_at pulled so far (ISO). */
+  cursor: text('cursor'),
+  lastSyncedAt: integer('last_synced_at', { mode: 'timestamp_ms' }),
+});

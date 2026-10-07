@@ -4,11 +4,14 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { Button, Card, Text } from '@/design/components';
 import { colors, radii, space } from '@/design/tokens';
 
+import { replaceLocalWithAccountData, syncNow, useSyncStore } from '@/features/sync/useSync';
+
 import { accountLabel, signOut, useSession } from './auth';
 import { cloudConfigured } from './supabase';
 
 export function AccountCard() {
   const { session, ready } = useSession();
+  const sync = useSyncStore();
   if (!cloudConfigured || !ready) return null;
 
   if (!session) {
@@ -44,6 +47,7 @@ export function AccountCard() {
           </Text>
         </View>
       </View>
+      <SyncStatus status={sync.status} error={sync.error} lastSyncedAt={sync.lastSyncedAt} />
       <Button
         label="Sign out"
         variant="ghost"
@@ -58,7 +62,60 @@ export function AccountCard() {
   );
 }
 
+function SyncStatus({ status, error, lastSyncedAt }: { status: string; error: string | null; lastSyncedAt: Date | null }) {
+  if (status === 'mismatch') {
+    return (
+      <View style={styles.notice}>
+        <Text variant="label">This phone holds another account’s workouts</Text>
+        <Text variant="caption" color="inkMuted">
+          To protect them, nothing was synced. You can replace what’s on this phone with this account’s data, or sign out.
+        </Text>
+        <Button
+          label="Use this account’s data"
+          variant="secondary"
+          onPress={() =>
+            Alert.alert('Replace this phone’s data?', 'Workouts on this phone that belong to the other account will be removed from this phone.', [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Replace', style: 'destructive', onPress: () => replaceLocalWithAccountData() },
+            ])
+          }
+        />
+      </View>
+    );
+  }
+  const label =
+    status === 'syncing'
+      ? 'Backing up…'
+      : status === 'error'
+        ? `Backup failed: ${error ?? 'unknown error'}`
+        : lastSyncedAt
+          ? `Backed up ${timeAgo(lastSyncedAt)}`
+          : 'Not backed up yet';
+  return (
+    <View style={styles.statusRow}>
+      <View style={[styles.dot, { backgroundColor: status === 'error' ? colors.pr : status === 'syncing' ? colors.xp : colors.accent }]} />
+      <Text variant="caption" color={status === 'error' ? 'prInk' : 'inkMuted'} style={styles.flex} numberOfLines={2}>
+        {label}
+      </Text>
+      {status === 'error' || status === 'idle' ? (
+        <Button label="Sync now" variant="ghost" onPress={() => syncNow()} />
+      ) : null}
+    </View>
+  );
+}
+
+function timeAgo(d: Date): string {
+  const s = Math.round((Date.now() - d.getTime()) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return `${Math.round(s / 60)} min ago`;
+  if (s < 86400) return `${Math.round(s / 3600)} h ago`;
+  return d.toLocaleDateString();
+}
+
 const styles = StyleSheet.create({
+  statusRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
+  dot: { width: 8, height: 8, borderRadius: radii.pill },
+  notice: { gap: space.sm, padding: space.md, borderRadius: radii.md, backgroundColor: colors.sunken },
   card: { gap: space.md },
   row: { flexDirection: 'row', alignItems: 'center', gap: space.md },
   avatar: {

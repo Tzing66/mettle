@@ -29,6 +29,20 @@
       "when": 1791373666188,
       "tag": "0003_rest_seconds",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1791377726605,
+      "tag": "0004_sync_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1791377727255,
+      "tag": "0005_sync_triggers",
+      "breakpoints": true
     }
   ]
 }

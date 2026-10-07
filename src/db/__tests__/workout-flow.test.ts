@@ -7,22 +7,7 @@ jest.mock('expo-crypto', () => ({ randomUUID: () => require('node:crypto').rando
 jest.mock('expo-file-system', () => ({}));
 jest.mock('expo-sharing', () => ({}));
 
-jest.mock('@/db/client', () => {
-  const Database = require('better-sqlite3');
-  const { drizzle } = require('drizzle-orm/better-sqlite3');
-  const schema = require('@/db/schema');
-  const sqlite = new Database(':memory:');
-  sqlite.pragma('foreign_keys = ON');
-  const fs = require('node:fs');
-  const path = require('node:path');
-  const dir = path.join(__dirname, '..', 'migrations');
-  for (const file of fs.readdirSync(dir).filter((f: string) => f.endsWith('.sql')).sort()) {
-    for (const stmt of fs.readFileSync(path.join(dir, file), 'utf8').split('--> statement-breakpoint')) {
-      if (stmt.trim()) sqlite.exec(stmt);
-    }
-  }
-  return { db: drizzle(sqlite, { schema }), useDatabaseMigrations: () => ({ success: true }) };
-});
+jest.mock('@/db/client', () => require('@/test/sqliteDb').createTestDbModule());
 
 import { createCustomExercise, getExercise, listExercises, recentExerciseIds, shortCodeFor, toggleFavourite } from '@/db/repositories/exercises';
 import { createProfile, getProfile } from '@/db/repositories/profile';
@@ -45,6 +30,7 @@ import {
 } from '@/db/repositories/workouts';
 import { listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { ensureSeeded, seedExercises } from '@/db/seed';
+import { rebuildDerivedData } from '@/db/repositories/derived';
 import { buildWorkoutExport } from '@/features/export/exportData';
 import { finishWorkout } from '@/features/workout/finishWorkout';
 
@@ -320,5 +306,27 @@ describe('CSV export', () => {
     expect(lines[1]).toContain('Bench press');
     const started = lines.slice(1).map((l) => l.split(',')[1]);
     expect([...started].sort()).toEqual(started);
+  });
+});
+
+describe('rebuilding derived data from history', () => {
+  it('replaying every workout reproduces the ledger, records and unlocks earned live', () => {
+    const snapshot = () => ({
+      total: totalXpFromDb(),
+      reasons: listLedger()
+        .map((e) => `${e.reason}:${e.amount}:${e.status}:${String(e.meta?.workoutId)}`)
+        .sort(),
+      records: listRecords()
+        .map((r) => `${r.exerciseId}|${r.metric}|${r.value.toFixed(3)}|${r.setId}`)
+        .sort(),
+      unlocks: listBenchmarkUnlocks()
+        .map((u) => `${u.benchmarkId}:${u.tier}:${u.status}`)
+        .sort(),
+    });
+    const live = snapshot();
+    expect(live.total).toBeGreaterThan(0);
+    const result = rebuildDerivedData();
+    expect(result.xp).toBe(live.total);
+    expect(snapshot()).toEqual(live);
   });
 });

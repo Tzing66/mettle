@@ -32,6 +32,7 @@ import { useProfile } from '@/features/profile/useProfile';
 import { ExerciseCard } from '@/features/workout/ExerciseCard';
 import { finishWorkout } from '@/features/workout/finishWorkout';
 import { RestTimerBar } from '@/features/workout/RestTimerBar';
+import { requestSync } from '@/features/sync/useSync';
 import { useWorkoutUi } from '@/features/workout/store';
 
 export default function ActiveWorkout() {
@@ -92,6 +93,7 @@ export default function ActiveWorkout() {
         return;
       }
       haptics.success();
+      requestSync();
       setLastSummary(summary);
       router.replace('/workout/summary');
     };
