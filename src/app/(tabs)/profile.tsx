@@ -17,6 +17,7 @@ import {
   type XpReason,
 } from '@/engine';
 import { formatDay, formatNumber, formatWeight, REASON_LABELS, TIER_LABELS } from '@/features/format';
+import { shareWorkoutExport } from '@/features/export/exportData';
 import { useProfile } from '@/features/profile/useProfile';
 
 const GROUPS: { label: string; reasons: XpReason[] }[] = [
@@ -42,6 +43,7 @@ export default function Profile() {
   const data = useDbQuery(readProfileData, ['bodyweight_logs', 'xp_events', 'benchmark_unlocks']);
   const latest = data.logs[data.logs.length - 1];
   const [draftKg, setDraftKg] = useState(latest?.weightKg ?? 75);
+  const [exporting, setExporting] = useState(false);
 
   if (!profile) return null;
   const unit = profile.unitPref;
@@ -51,6 +53,17 @@ export default function Profile() {
     total: data.ledger.filter((e) => g.reasons.includes(e.reason)).reduce((s, e) => s + e.amount, 0),
   }));
   const maxGroup = Math.max(1, ...groupTotals.map((g) => g.total));
+
+  const exportCsv = async () => {
+    setExporting(true);
+    try {
+      await shareWorkoutExport();
+    } catch (e) {
+      Alert.alert('Export failed', e instanceof Error ? e.message : String(e));
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const logWeight = () => {
     const save = () => {
@@ -220,6 +233,14 @@ export default function Profile() {
           )}
         </Card>
       </View>
+
+      <Card style={styles.card}>
+        <Text variant="overline" color="inkMuted">
+          Your data
+        </Text>
+        <Text color="inkMuted">Everything lives on this phone. Export every set you’ve logged as a spreadsheet (CSV).</Text>
+        <Button label={exporting ? 'Preparing…' : 'Export workouts'} variant="secondary" onPress={exportCsv} disabled={exporting} />
+      </Card>
 
       <Text variant="caption" color="inkFaint" align="center">
         Mettle is a training log, not medical advice.

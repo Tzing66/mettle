@@ -4,6 +4,8 @@
  * both use drizzle's synchronous SQLite API and the same migrations).
  */
 jest.mock('expo-crypto', () => ({ randomUUID: () => require('node:crypto').randomUUID() }));
+jest.mock('expo-file-system', () => ({}));
+jest.mock('expo-sharing', () => ({}));
 
 jest.mock('@/db/client', () => {
   const Database = require('better-sqlite3');
@@ -43,6 +45,7 @@ import {
 } from '@/db/repositories/workouts';
 import { listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { ensureSeeded, seedExercises } from '@/db/seed';
+import { buildWorkoutExport } from '@/features/export/exportData';
 import { finishWorkout } from '@/features/workout/finishWorkout';
 
 const DAY = 86_400_000;
@@ -305,5 +308,17 @@ describe('custom exercises', () => {
     const summary = finishWorkout(id)!;
     expect(summary.events.find((e) => e.reason === 'first_exercise')).toMatchObject({ sourceId: custom.id, amount: 20 });
     expect(summary.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
+  });
+});
+
+describe('CSV export', () => {
+  it('includes every completed set from finished workouts, oldest first', () => {
+    const { csv, setCount } = buildWorkoutExport();
+    const lines = csv.trim().split('\n');
+    expect(lines).toHaveLength(setCount + 1);
+    expect(setCount).toBeGreaterThan(10);
+    expect(lines[1]).toContain('Bench press');
+    const started = lines.slice(1).map((l) => l.split(',')[1]);
+    expect([...started].sort()).toEqual(started);
   });
 });
