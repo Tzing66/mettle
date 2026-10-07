@@ -19,7 +19,9 @@ import {
 import { formatDay, formatNumber, formatWeight, TIER_LABELS } from '@/features/format';
 import { shareWorkoutExport } from '@/features/export/exportData';
 import { AccountCard } from '@/features/account/AccountCard';
+import { resetTrainingData } from '@/features/profile/resetData';
 import { XpLedger } from '@/features/profile/XpLedger';
+import { requestSync } from '@/features/sync/useSync';
 import { useProfile } from '@/features/profile/useProfile';
 import { makeStyles, useTheme, useThemePreference } from '@/design/theme';
 
@@ -68,6 +70,25 @@ export default function Profile() {
     total: data.ledger.filter((e) => g.reasons.includes(e.reason)).reduce((s, e) => s + e.amount, 0),
   }));
   const maxGroup = Math.max(1, ...groupTotals.map((g) => g.total));
+
+  const confirmReset = () =>
+    Alert.alert(
+      'Reset all your training data?',
+      'This permanently deletes every workout, your XP, records, benchmark unlocks and bodyweight history, on this phone and in your backup. Your account, profile and groups stay. You may want to export your workouts first.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset everything',
+          style: 'destructive',
+          onPress: () => {
+            resetTrainingData();
+            requestSync();
+            haptics.success();
+            Alert.alert('Data reset', 'You’re starting fresh at E1.');
+          },
+        },
+      ],
+    );
 
   const exportCsv = async () => {
     setExporting(true);
@@ -254,6 +275,7 @@ export default function Profile() {
         </Text>
         <Text color="inkMuted">Everything lives on this phone. Export every set you’ve logged as a spreadsheet (CSV).</Text>
         <Button label={exporting ? 'Preparing…' : 'Export workouts'} variant="secondary" onPress={exportCsv} disabled={exporting} />
+        <Button label="Reset my data" variant="ghost" onPress={confirmReset} />
       </Card>
 
       <Text variant="caption" color="inkFaint" align="center">

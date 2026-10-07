@@ -23,6 +23,7 @@ import { syncOutbox } from '@/db/schema';
 import { ensureSeeded } from '@/db/seed';
 import { finishWorkout } from '@/features/workout/finishWorkout';
 import { computeServerLedger, type CloudProfile } from '@/server/recompute';
+import { resetTrainingData } from '@/features/profile/resetData';
 import { FakeCloud } from '@/test/fakeCloud';
 
 import { getSyncState, linkAccount, pendingChangeCount, resetLocalForAccount, syncAccount, unlinkAccount, type SyncClient } from '../sync';
@@ -188,6 +189,30 @@ describe('server-side XP', () => {
     expect(cloud.rows('profiles')[0].utc_offset_minutes).toBe(0);
     expect(server.totalXp).toBe(totalXpFromDb());
     expect(server.events.length).toBe(listLedger().length);
+  });
+});
+
+describe('reset my data', () => {
+  it('wipes training data locally and in the cloud, keeping the profile and current bodyweight', async () => {
+    const weight = listBodyweight().at(-1)!.weightKg;
+    resetTrainingData();
+    expect(listFinishedWorkouts()).toHaveLength(0);
+    expect(totalXpFromDb()).toBe(0);
+    expect(listLedger()).toHaveLength(0);
+    expect(listBodyweight().map((b) => b.weightKg)).toEqual([weight]);
+    expect(getProfile()?.displayName).toBe('Phone name');
+
+    await syncAccount(client(), USER);
+    const live = (t: string) => cloud.rows(t).filter((r) => !r.deleted_at);
+    expect(live('workouts')).toHaveLength(0);
+    expect(live('workout_sets')).toHaveLength(0);
+    expect(live('bodyweight_logs')).toHaveLength(1);
+    expect(cloud.rows('profiles')).toHaveLength(1);
+  });
+
+  it('a reset phone does not pull the old workouts back', async () => {
+    await syncAccount(client(), USER);
+    expect(listFinishedWorkouts()).toHaveLength(0);
   });
 });
 
