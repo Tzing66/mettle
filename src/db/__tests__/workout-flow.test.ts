@@ -1,0 +1,202 @@
+/**
+ * Integration test: the real repositories and finishWorkout against a real
+ * SQLite database (better-sqlite3 in Node instead of expo-sqlite on device;
+ * both use drizzle's synchronous SQLite API and the same migrations).
+ */
+jest.mock('expo-crypto', () => ({ randomUUID: () => require('node:crypto').randomUUID() }));
+
+jest.mock('@/db/client', () => {
+  const Database = require('better-sqlite3');
+  const { drizzle } = require('drizzle-orm/better-sqlite3');
+  const schema = require('@/db/schema');
+  const sqlite = new Database(':memory:');
+  sqlite.pragma('foreign_keys = ON');
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const dir = path.join(__dirname, '..', 'migrations');
+  for (const file of fs.readdirSync(dir).filter((f: string) => f.endsWith('.sql')).sort()) {
+    for (const stmt of fs.readFileSync(path.join(dir, file), 'utf8').split('--> statement-breakpoint')) {
+      if (stmt.trim()) sqlite.exec(stmt);
+    }
+  }
+  return { db: drizzle(sqlite, { schema }), useDatabaseMigrations: () => ({ success: true }) };
+});
+
+import { getExercise, listExercises, recentExerciseIds, toggleFavourite } from '@/db/repositories/exercises';
+import { createProfile, getProfile } from '@/db/repositories/profile';
+import {
+  addExerciseToWorkout,
+  addSet,
+  exerciseHistory,
+  getActiveWorkout,
+  listRecords,
+  setCompleted,
+  setsForWorkout,
+  startWorkout,
+  updateSet,
+} from '@/db/repositories/workouts';
+import { listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
+import { ensureSeeded, seedExercises } from '@/db/seed';
+import { finishWorkout } from '@/features/workout/finishWorkout';
+
+const DAY = 86_400_000;
+// Monday 2026-10-05, 18:00 UTC (tests run with TZ=UTC).
+const MONDAY = Date.UTC(2026, 9, 5, 18);
+
+function at(ms: number) {
+  jest.setSystemTime(ms);
+}
+
+/** Logs a workout of `sets` [kg, reps] for one exercise at time `t`, completing every set. */
+function logLifts(t: number, exerciseId: string, sets: [number, number][]) {
+  at(t);
+  const id = startWorkout();
+  addExerciseToWorkout(id, getExercise(exerciseId)!);
+  const rows = setsForWorkout(id);
+  sets.forEach(([kg, reps], i) => {
+    const setId = rows[i]?.id ?? addSet(id, exerciseId);
+    updateSet(setId, { weightKg: kg, reps });
+  });
+  at(t + 30 * 60_000);
+  for (const s of setsForWorkout(id)) setCompleted(s.id, true);
+  at(t + 45 * 60_000);
+  return { id, summary: finishWorkout(id) };
+}
+
+beforeAll(() => {
+  jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] });
+  at(MONDAY - DAY);
+  ensureSeeded();
+  createProfile(
+    { displayName: 'Test', sexForStandards: 'male', birthYear: 1998, heightCm: 180, unitPref: 'kg', weeklyTargetDays: 3 },
+    75,
+  );
+});
+
+afterAll(() => jest.useRealTimers());
+
+describe('catalogue seed', () => {
+  it('seeds the curated catalogue', () => {
+    const all = listExercises();
+    expect(all.length).toBeGreaterThanOrEqual(80);
+    expect(getExercise('bench_press')).toMatchObject({ shortName: 'BP', benchmarkId: 'bench_press', category: 'free_weight' });
+  });
+
+  it('re-seeding is idempotent and keeps favourites', () => {
+    toggleFavourite('deadlift');
+    const before = listExercises().length;
+    seedExercises();
+    expect(listExercises().length).toBe(before);
+    expect(getExercise('deadlift')?.isFavourite).toBe(true);
+  });
+});
+
+describe('profile', () => {
+  it('stores onboarding answers', () => {
+    expect(getProfile()).toMatchObject({ displayName: 'Test', weeklyTargetDays: 3, sexForStandards: 'male' });
+  });
+});
+
+describe('workout flow', () => {
+  it('new exercises start with sensible defaults', () => {
+    at(MONDAY);
+    const id = startWorkout();
+    addExerciseToWorkout(id, getExercise('db_curl')!);
+    expect(setsForWorkout(id)).toEqual([expect.objectContaining({ weightKg: 10, reps: 8, completedAt: null })]);
+  });
+
+  it('finishing with nothing completed discards the workout', () => {
+    const active = getActiveWorkout()!;
+    expect(finishWorkout(active.id)).toBeNull();
+    expect(getActiveWorkout()).toBeNull();
+  });
+
+  it('first bench session: baseline, first-exercise XP and benchmark tiers', () => {
+    // 80 × 5 → e1RM 93.3 kg at 75 kg = 1.24× → beginner, novice, intermediate.
+    const { id, summary } = logLifts(MONDAY, 'bench_press', [
+      [80, 5],
+      [80, 5],
+      [80, 5],
+    ]);
+    expect(summary).not.toBeNull();
+    const reasons = Object.fromEntries(summary!.events.filter((e) => e.reason !== 'benchmark_tier').map((e) => [e.reason, e.amount]));
+    expect(reasons).toEqual({ workout_complete: 50, working_sets: 15, first_exercise: 20 });
+    expect(summary!.unlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
+    expect(summary!.prs).toEqual([]);
+
+    expect(totalXpFromDb()).toBe(summary!.xpGained);
+    expect(summary!.xpGained).toBe(50 + 15 + 20 + 250 + 750 + 2000);
+    expect(xpByWorkout([id]).get(id)).toBe(summary!.xpGained);
+    expect(listRecords()).toEqual([expect.objectContaining({ exerciseId: 'bench_press', metric: 'e1rm' })]);
+    expect(listBenchmarkUnlocks()).toHaveLength(3);
+    expect(summary!.rank.rankUp).toBe(true); // E → D at 2,000 XP
+  });
+
+  it('next session pre-fills from last time and a heavier set is a PR', () => {
+    at(MONDAY + DAY);
+    const id = startWorkout();
+    addExerciseToWorkout(id, getExercise('bench_press')!);
+    expect(setsForWorkout(id).map((s) => [s.weightKg, s.reps])).toEqual([
+      [80, 5],
+      [80, 5],
+      [80, 5],
+    ]);
+    const [first, second] = setsForWorkout(id);
+    updateSet(first.id, { weightKg: 82.5 });
+    setCompleted(first.id, true);
+    setCompleted(second.id, true);
+    at(MONDAY + DAY + 40 * 60_000);
+    const summary = finishWorkout(id)!;
+
+    expect(summary.prs).toEqual([expect.objectContaining({ exerciseName: 'Bench press' })]);
+    expect(summary.events.find((e) => e.reason === 'personal_record')).toMatchObject({ amount: 25, status: 'granted' });
+    // The unfinished third set was dropped; only 2 working sets → no completion bonus.
+    expect(setsForWorkout(id)).toHaveLength(2);
+    expect(summary.events.some((e) => e.reason === 'workout_complete')).toBe(false);
+  });
+
+  it('third training day hits the weekly goal', () => {
+    const { summary } = logLifts(MONDAY + 2 * DAY, 'back_squat', [
+      [60, 5],
+      [60, 5],
+      [60, 5],
+    ]);
+    // Tue had only 2 working sets (no completion), so Mon + Wed = 2 days: not yet.
+    expect(summary!.events.some((e) => e.reason === 'weekly_goal')).toBe(false);
+
+    const thu = logLifts(MONDAY + 3 * DAY, 'deadlift', [
+      [100, 5],
+      [100, 5],
+      [100, 5],
+    ]);
+    expect(thu.summary!.events.find((e) => e.reason === 'weekly_goal')).toMatchObject({ amount: 100, sourceId: '2026-10-05' });
+    expect(weeklyGoalWeeks()).toEqual(['2026-10-05']);
+  });
+
+  it('a big jump is pending, then confirmed by a repeat performance', () => {
+    // Squat best is 70 e1RM from Wednesday; 90 × 3 → 99 e1RM is +41% within 30 days.
+    const jump = logLifts(MONDAY + 4 * DAY, 'back_squat', [
+      [90, 3],
+      [90, 3],
+      [90, 3],
+    ]);
+    const pr = jump.summary!.events.find((e) => e.reason === 'personal_record');
+    expect(pr?.status).toBe('pending_review');
+    expect(listLedger().some((e) => e.status === 'pending_review')).toBe(true);
+
+    logLifts(MONDAY + 7 * DAY, 'back_squat', [
+      [90, 3],
+      [90, 3],
+      [90, 3],
+    ]);
+    const stillPending = listLedger().filter((e) => e.status === 'pending_review' && e.reason === 'personal_record');
+    expect(stillPending).toEqual([]);
+  });
+
+  it('history queries line up with the ledger', () => {
+    const days = xpByDay(new Date(MONDAY - DAY));
+    expect([...days.values()].reduce((a, b) => a + b, 0)).toBe(totalXpFromDb());
+    expect(recentExerciseIds()).toEqual(expect.arrayContaining(['bench_press', 'back_squat', 'deadlift']));
+    expect(exerciseHistory('bench_press').length).toBe(5);
+  });
+});

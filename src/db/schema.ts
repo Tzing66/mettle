@@ -33,6 +33,8 @@ export const bodyweightLogs = sqliteTable(
 export const exercises = sqliteTable('exercises', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
+  /** 2–3 letter code shown on the picker tile until custom icons exist. */
+  shortName: text('short_name').notNull().default(''),
   category: text('category').$type<ExerciseCategory>().notNull(),
   equipment: text('equipment'),
   primaryMuscles: text('primary_muscles', { mode: 'json' }).$type<string[]>().notNull().default(sql`'[]'`),

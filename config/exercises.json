@@ -1,0 +1,1143 @@
+{
+  "version": "exercises.v1",
+  "exercises": [
+    {
+      "id": "bench_press",
+      "name": "Bench press",
+      "short": "BP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "benchmarkId": "bench_press",
+      "source": "free-exercise-db:Barbell_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "id": "incline_bench_press",
+      "name": "Incline bench press",
+      "short": "IBP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Barbell_Incline_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "id": "close_grip_bench_press",
+      "name": "Close-grip bench press",
+      "short": "CGB",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "free-exercise-db:Close-Grip_Barbell_Bench_Press"
+    },
+    {
+      "id": "db_bench_press",
+      "name": "Dumbbell bench press",
+      "short": "DBP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Dumbbell_Bench_Press"
+    },
+    {
+      "id": "incline_db_press",
+      "name": "Incline dumbbell press",
+      "short": "IDP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Incline_Dumbbell_Press"
+    },
+    {
+      "id": "db_fly",
+      "name": "Dumbbell fly",
+      "short": "DF",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Dumbbell_Flyes"
+    },
+    {
+      "id": "back_squat",
+      "name": "Back squat",
+      "short": "SQ",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "benchmarkId": "back_squat",
+      "source": "free-exercise-db:Barbell_Full_Squat"
+    },
+    {
+      "id": "front_squat",
+      "name": "Front squat",
+      "short": "FS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Front_Barbell_Squat"
+    },
+    {
+      "id": "goblet_squat",
+      "name": "Goblet squat",
+      "short": "GS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "kettlebells",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Goblet_Squat"
+    },
+    {
+      "id": "deadlift",
+      "name": "Deadlift",
+      "short": "DL",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "lower back"
+      ],
+      "benchmarkId": "deadlift",
+      "source": "free-exercise-db:Barbell_Deadlift"
+    },
+    {
+      "id": "romanian_deadlift",
+      "name": "Romanian deadlift",
+      "short": "RDL",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Romanian_Deadlift"
+    },
+    {
+      "id": "sumo_deadlift",
+      "name": "Sumo deadlift",
+      "short": "SDL",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Sumo_Deadlift"
+    },
+    {
+      "id": "trap_bar_deadlift",
+      "name": "Trap bar deadlift",
+      "short": "TBD",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "other",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Trap_Bar_Deadlift"
+    },
+    {
+      "id": "hip_thrust",
+      "name": "Hip thrust",
+      "short": "HT",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "source": "free-exercise-db:Barbell_Hip_Thrust"
+    },
+    {
+      "id": "glute_bridge",
+      "name": "Barbell glute bridge",
+      "short": "GB",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "source": "free-exercise-db:Barbell_Glute_Bridge"
+    },
+    {
+      "id": "good_morning",
+      "name": "Good morning",
+      "short": "GM",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Good_Morning"
+    },
+    {
+      "id": "overhead_press",
+      "name": "Overhead press",
+      "short": "OHP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Standing_Military_Press"
+    },
+    {
+      "id": "db_shoulder_press",
+      "name": "Dumbbell shoulder press",
+      "short": "DSP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Dumbbell_Shoulder_Press"
+    },
+    {
+      "id": "arnold_press",
+      "name": "Arnold press",
+      "short": "AP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Arnold_Dumbbell_Press"
+    },
+    {
+      "id": "lateral_raise",
+      "name": "Lateral raise",
+      "short": "LR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Side_Lateral_Raise"
+    },
+    {
+      "id": "rear_delt_fly",
+      "name": "Rear delt fly",
+      "short": "RDF",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Reverse_Flyes"
+    },
+    {
+      "id": "upright_row",
+      "name": "Upright row",
+      "short": "UR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Upright_Barbell_Row"
+    },
+    {
+      "id": "barbell_row",
+      "name": "Barbell row",
+      "short": "BR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "free-exercise-db:Bent_Over_Barbell_Row"
+    },
+    {
+      "id": "db_row",
+      "name": "Dumbbell row",
+      "short": "DR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "free-exercise-db:One-Arm_Dumbbell_Row"
+    },
+    {
+      "id": "t_bar_row",
+      "name": "T-bar row",
+      "short": "TBR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "free-exercise-db:T-Bar_Row_with_Handle"
+    },
+    {
+      "id": "barbell_shrug",
+      "name": "Barbell shrug",
+      "short": "SH",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "traps"
+      ],
+      "source": "free-exercise-db:Barbell_Shrug"
+    },
+    {
+      "id": "db_shrug",
+      "name": "Dumbbell shrug",
+      "short": "DSH",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "traps"
+      ],
+      "source": "free-exercise-db:Dumbbell_Shrug"
+    },
+    {
+      "id": "barbell_curl",
+      "name": "Barbell curl",
+      "short": "BC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "free-exercise-db:Barbell_Curl"
+    },
+    {
+      "id": "db_curl",
+      "name": "Dumbbell curl",
+      "short": "DC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "free-exercise-db:Dumbbell_Bicep_Curl"
+    },
+    {
+      "id": "hammer_curl",
+      "name": "Hammer curl",
+      "short": "HC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "free-exercise-db:Hammer_Curls"
+    },
+    {
+      "id": "preacher_curl",
+      "name": "Preacher curl",
+      "short": "PC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "free-exercise-db:Preacher_Curl"
+    },
+    {
+      "id": "skullcrusher",
+      "name": "Skullcrusher",
+      "short": "SC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "e-z curl bar",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "free-exercise-db:EZ-Bar_Skullcrusher"
+    },
+    {
+      "id": "db_triceps_extension",
+      "name": "Overhead triceps extension",
+      "short": "OTE",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "free-exercise-db:Standing_Dumbbell_Triceps_Extension"
+    },
+    {
+      "id": "triceps_kickback",
+      "name": "Triceps kickback",
+      "short": "TK",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "free-exercise-db:Tricep_Dumbbell_Kickback"
+    },
+    {
+      "id": "db_lunge",
+      "name": "Dumbbell lunge",
+      "short": "LU",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Dumbbell_Lunges"
+    },
+    {
+      "id": "barbell_lunge",
+      "name": "Barbell lunge",
+      "short": "BL",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Barbell_Lunge"
+    },
+    {
+      "id": "split_squat",
+      "name": "Split squat",
+      "short": "SS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Split_Squat_with_Dumbbells"
+    },
+    {
+      "id": "step_up",
+      "name": "Step-up",
+      "short": "SU",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Dumbbell_Step_Ups"
+    },
+    {
+      "id": "kettlebell_swing",
+      "name": "Kettlebell swing",
+      "short": "KS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "kettlebells",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:One-Arm_Kettlebell_Swings"
+    },
+    {
+      "id": "farmers_walk",
+      "name": "Farmer's walk",
+      "short": "FW",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "other",
+      "primaryMuscles": [
+        "forearms"
+      ],
+      "source": "free-exercise-db:Farmers_Walk"
+    },
+    {
+      "id": "power_clean",
+      "name": "Power clean",
+      "short": "PCL",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Power_Clean"
+    },
+    {
+      "id": "leg_press",
+      "name": "Leg press",
+      "short": "LP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Leg_Press"
+    },
+    {
+      "id": "hack_squat",
+      "name": "Hack squat",
+      "short": "HS",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Hack_Squat"
+    },
+    {
+      "id": "smith_squat",
+      "name": "Smith machine squat",
+      "short": "SMS",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Smith_Machine_Squat"
+    },
+    {
+      "id": "leg_extension",
+      "name": "Leg extension",
+      "short": "LE",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Leg_Extensions"
+    },
+    {
+      "id": "lying_leg_curl",
+      "name": "Lying leg curl",
+      "short": "LLC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Lying_Leg_Curls"
+    },
+    {
+      "id": "seated_leg_curl",
+      "name": "Seated leg curl",
+      "short": "SLC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Seated_Leg_Curl"
+    },
+    {
+      "id": "standing_calf_raise",
+      "name": "Standing calf raise",
+      "short": "CR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "free-exercise-db:Standing_Calf_Raises"
+    },
+    {
+      "id": "seated_calf_raise",
+      "name": "Seated calf raise",
+      "short": "SCR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "free-exercise-db:Seated_Calf_Raise"
+    },
+    {
+      "id": "hip_abduction",
+      "name": "Hip abduction",
+      "short": "HAB",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "abductors"
+      ],
+      "source": "free-exercise-db:Thigh_Abductor"
+    },
+    {
+      "id": "hip_adduction",
+      "name": "Hip adduction",
+      "short": "HAD",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "adductors"
+      ],
+      "source": "free-exercise-db:Thigh_Adductor"
+    },
+    {
+      "id": "lat_pulldown",
+      "name": "Lat pulldown",
+      "short": "LPD",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "free-exercise-db:Wide-Grip_Lat_Pulldown"
+    },
+    {
+      "id": "close_grip_pulldown",
+      "name": "Close-grip pulldown",
+      "short": "CPD",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "free-exercise-db:Close-Grip_Front_Lat_Pulldown"
+    },
+    {
+      "id": "straight_arm_pulldown",
+      "name": "Straight-arm pulldown",
+      "short": "SAP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "free-exercise-db:Straight-Arm_Pulldown"
+    },
+    {
+      "id": "seated_cable_row",
+      "name": "Seated cable row",
+      "short": "CRW",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "free-exercise-db:Seated_Cable_Rows"
+    },
+    {
+      "id": "face_pull",
+      "name": "Face pull",
+      "short": "FP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Face_Pull"
+    },
+    {
+      "id": "machine_chest_press",
+      "name": "Machine chest press",
+      "short": "MCP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Leverage_Chest_Press"
+    },
+    {
+      "id": "pec_deck",
+      "name": "Pec deck",
+      "short": "PD",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Butterfly"
+    },
+    {
+      "id": "cable_crossover",
+      "name": "Cable crossover",
+      "short": "CC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "free-exercise-db:Cable_Crossover"
+    },
+    {
+      "id": "machine_shoulder_press",
+      "name": "Machine shoulder press",
+      "short": "MSP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Machine_Shoulder_Military_Press"
+    },
+    {
+      "id": "cable_lateral_raise",
+      "name": "Cable lateral raise",
+      "short": "CLR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "free-exercise-db:Cable_Seated_Lateral_Raise"
+    },
+    {
+      "id": "triceps_pushdown",
+      "name": "Triceps pushdown",
+      "short": "TP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "free-exercise-db:Triceps_Pushdown"
+    },
+    {
+      "id": "rope_hammer_curl",
+      "name": "Rope hammer curl",
+      "short": "RHC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "free-exercise-db:Cable_Hammer_Curls_-_Rope_Attachment"
+    },
+    {
+      "id": "cable_crunch",
+      "name": "Cable crunch",
+      "short": "CCR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Cable_Crunch"
+    },
+    {
+      "id": "pallof_press",
+      "name": "Pallof press",
+      "short": "PP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Pallof_Press"
+    },
+    {
+      "id": "push_up",
+      "name": "Push-up",
+      "short": "PU",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "benchmarkId": "push_ups",
+      "source": "free-exercise-db:Pushups"
+    },
+    {
+      "id": "pull_up",
+      "name": "Pull-up",
+      "short": "PL",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "free-exercise-db:Pullups"
+    },
+    {
+      "id": "chin_up",
+      "name": "Chin-up",
+      "short": "CU",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "free-exercise-db:Chin-Up"
+    },
+    {
+      "id": "dip",
+      "name": "Dip",
+      "short": "DP",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "free-exercise-db:Dips_-_Triceps_Version"
+    },
+    {
+      "id": "inverted_row",
+      "name": "Inverted row",
+      "short": "IR",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": null,
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "free-exercise-db:Inverted_Row"
+    },
+    {
+      "id": "bodyweight_squat",
+      "name": "Air squat",
+      "short": "AS",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Bodyweight_Squat"
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "short": "PK",
+      "category": "bodyweight",
+      "trackingType": "time",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Plank"
+    },
+    {
+      "id": "side_plank",
+      "name": "Side plank",
+      "short": "SPK",
+      "category": "bodyweight",
+      "trackingType": "time",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Side_Bridge"
+    },
+    {
+      "id": "crunch",
+      "name": "Crunch",
+      "short": "CN",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Crunches"
+    },
+    {
+      "id": "sit_up",
+      "name": "Sit-up",
+      "short": "SIT",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Sit-Up"
+    },
+    {
+      "id": "hanging_leg_raise",
+      "name": "Hanging leg raise",
+      "short": "HLR",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Hanging_Leg_Raise"
+    },
+    {
+      "id": "russian_twist",
+      "name": "Russian twist",
+      "short": "RT",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Russian_Twist"
+    },
+    {
+      "id": "ab_wheel",
+      "name": "Ab wheel",
+      "short": "AW",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "other",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "free-exercise-db:Ab_Roller"
+    },
+    {
+      "id": "mountain_climber",
+      "name": "Mountain climber",
+      "short": "MC",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": null,
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "free-exercise-db:Mountain_Climbers"
+    },
+    {
+      "id": "back_extension",
+      "name": "Back extension",
+      "short": "BE",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "other",
+      "primaryMuscles": [
+        "lower back"
+      ],
+      "source": "free-exercise-db:Hyperextensions_Back_Extensions"
+    },
+    {
+      "id": "box_jump",
+      "name": "Box jump",
+      "short": "BJ",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "other",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "free-exercise-db:Box_Jump_Multiple_Response"
+    },
+    {
+      "id": "burpee",
+      "name": "Burpee",
+      "short": "BU",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps",
+        "chest",
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "outdoor_run",
+      "name": "Run",
+      "short": "RUN",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "none",
+      "primaryMuscles": [
+        "quadriceps",
+        "hamstrings",
+        "calves"
+      ],
+      "activity": "run",
+      "benchmarkId": "run_5k",
+      "source": "mettle"
+    },
+    {
+      "id": "treadmill_run",
+      "name": "Treadmill run",
+      "short": "TRM",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "run",
+      "benchmarkId": "run_5k",
+      "source": "free-exercise-db:Running_Treadmill"
+    },
+    {
+      "id": "walk",
+      "name": "Walk",
+      "short": "WLK",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "walk",
+      "source": "free-exercise-db:Walking_Treadmill"
+    },
+    {
+      "id": "hike",
+      "name": "Hike",
+      "short": "HK",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": null,
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "hike",
+      "source": "free-exercise-db:Trail_Running_Walking"
+    },
+    {
+      "id": "outdoor_cycle",
+      "name": "Ride",
+      "short": "RD",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "other",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "cycle",
+      "source": "free-exercise-db:Bicycling"
+    },
+    {
+      "id": "stationary_bike",
+      "name": "Stationary bike",
+      "short": "BK",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "cycle",
+      "source": "free-exercise-db:Bicycling_Stationary"
+    },
+    {
+      "id": "rowing_machine",
+      "name": "Rowing machine",
+      "short": "ROW",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "row",
+      "source": "free-exercise-db:Rowing_Stationary"
+    },
+    {
+      "id": "swim",
+      "name": "Swim",
+      "short": "SWM",
+      "category": "cardio",
+      "trackingType": "distance_time",
+      "equipment": "pool",
+      "primaryMuscles": [
+        "lats",
+        "shoulders"
+      ],
+      "activity": "swim",
+      "source": "mettle"
+    },
+    {
+      "id": "elliptical",
+      "name": "Elliptical",
+      "short": "EL",
+      "category": "cardio",
+      "trackingType": "time",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "elliptical",
+      "source": "free-exercise-db:Elliptical_Trainer"
+    },
+    {
+      "id": "stair_climber",
+      "name": "Stair climber",
+      "short": "STR",
+      "category": "cardio",
+      "trackingType": "time",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "stairs",
+      "source": "free-exercise-db:Stairmaster"
+    },
+    {
+      "id": "jump_rope",
+      "name": "Jump rope",
+      "short": "JR",
+      "category": "cardio",
+      "trackingType": "time",
+      "equipment": "other",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "activity": "jump_rope",
+      "source": "free-exercise-db:Rope_Jumping"
+    }
+  ]
+}
