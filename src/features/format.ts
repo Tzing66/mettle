@@ -1,16 +1,4 @@
-import { displayWeight, formatDuration, type RecordMetric, type TrackingType, type UnitPref, type XpReason } from '@/engine';
-
-export const REASON_LABELS: Record<XpReason, string> = {
-  workout_complete: 'Workout complete',
-  working_sets: 'Working sets',
-  cardio_minutes: 'Cardio minutes',
-  streak_bonus: 'Streak bonus',
-  weekly_goal: 'Weekly goal',
-  personal_record: 'Personal record',
-  first_exercise: 'New exercise',
-  first_activity: 'New activity',
-  benchmark_tier: 'Benchmark tier',
-};
+import { displayWeight, formatDuration, type RecordMetric, type TrackingType, type UnitPref } from '@/engine';
 
 export const TIER_LABELS: Record<string, string> = {
   beginner: 'Beginner',

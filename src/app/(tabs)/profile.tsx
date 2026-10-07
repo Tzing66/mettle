@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { addBodyweight, listBodyweight, updateProfile } from '@/db/repositories/profile';
 import { listBenchmarkUnlocks, listLedger, totalXpFromDb } from '@/db/repositories/xp';
 import { useDbQuery } from '@/db/useDbQuery';
-import { Button, Card, Chip, RankBadge, Screen, SegmentedTabs, Stepper, Text } from '@/design/components';
+import { Button, Card, RankBadge, Screen, SegmentedTabs, Stepper, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { radii, rankColors, space } from '@/design/tokens';
 import {
@@ -16,9 +16,10 @@ import {
   toStoredKg,
   type XpReason,
 } from '@/engine';
-import { formatDay, formatNumber, formatWeight, REASON_LABELS, TIER_LABELS } from '@/features/format';
+import { formatDay, formatNumber, formatWeight, TIER_LABELS } from '@/features/format';
 import { shareWorkoutExport } from '@/features/export/exportData';
 import { AccountCard } from '@/features/account/AccountCard';
+import { XpLedger } from '@/features/profile/XpLedger';
 import { useProfile } from '@/features/profile/useProfile';
 import { makeStyles, useTheme, useThemePreference } from '@/design/theme';
 
@@ -244,28 +245,7 @@ export default function Profile() {
         <Text variant="overline" color="inkMuted">
           XP ledger
         </Text>
-        <Card padded={false}>
-          {data.ledger.length === 0 ? (
-            <Text color="inkMuted" style={styles.ledgerEmpty}>
-              Nothing yet. Finish a workout to start earning.
-            </Text>
-          ) : (
-            data.ledger.slice(0, 40).map((e, i) => (
-              <View key={e.id} style={[styles.ledgerRow, i > 0 && styles.divider]}>
-                <View style={styles.flex}>
-                  <Text variant="label">{REASON_LABELS[e.reason]}</Text>
-                  <Text variant="caption" color="inkMuted">
-                    {formatDay(e.createdAt)}
-                  </Text>
-                </View>
-                {e.status === 'pending_review' ? <Chip label="Pending" tone="xp" textColor="xpInk" /> : null}
-                <Text variant="label" tabular>
-                  +{formatNumber(e.amount)}
-                </Text>
-              </View>
-            ))
-          )}
-        </Card>
+        <XpLedger />
       </View>
 
       <Card style={styles.card}>
