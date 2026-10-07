@@ -2,17 +2,18 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { haptics } from '../haptics';
-import { colors, hitSize, radii, shadows, space, type ColorToken } from '../tokens';
+import { colors, hitSize, radii, space, type ColorToken } from '../tokens';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
 
-type Variant = 'primary' | 'secondary' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'accent' | 'ghost';
 type Size = 'md' | 'lg';
 
 const variantStyles: Record<Variant, { bg: ColorToken | null; fg: ColorToken; border: boolean }> = {
   primary: { bg: 'primary', fg: 'onPrimary', border: false },
   secondary: { bg: 'surface', fg: 'ink', border: true },
-  ghost: { bg: null, fg: 'primaryInk', border: false },
+  accent: { bg: 'accent', fg: 'ink', border: false },
+  ghost: { bg: null, fg: 'accentInk', border: false },
 };
 
 export interface ButtonProps {
@@ -20,16 +21,15 @@ export interface ButtonProps {
   onPress?: () => void;
   variant?: Variant;
   size?: Size;
-  /** Override the background with any colour token (e.g. 'mint' for a success action). */
-  tone?: ColorToken;
   icon?: ReactNode;
   disabled?: boolean;
+  /** Skip the default tick when the caller fires its own haptic. */
+  silent?: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
-export function Button({ label, onPress, variant = 'primary', size = 'md', tone, icon, disabled, style }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', size = 'md', icon, disabled, silent, style }: ButtonProps) {
   const v = variantStyles[variant];
-  const bg = tone ?? v.bg;
 
   return (
     <PressableScale
@@ -37,15 +37,14 @@ export function Button({ label, onPress, variant = 'primary', size = 'md', tone,
       accessibilityLabel={label}
       disabled={disabled}
       onPress={() => {
-        haptics.tick();
+        if (!silent) haptics.tick();
         onPress?.();
       }}
       style={[
         styles.base,
         size === 'lg' && styles.lg,
-        bg && { backgroundColor: colors[bg] },
+        v.bg && { backgroundColor: colors[v.bg] },
         v.border && styles.border,
-        variant === 'primary' && shadows.card,
         style,
       ]}>
       {icon ? <View style={styles.icon}>{icon}</View> : null}
@@ -60,17 +59,17 @@ const styles = StyleSheet.create({
   base: {
     minHeight: hitSize,
     paddingHorizontal: space.xl,
-    borderRadius: radii.pill,
+    borderRadius: radii.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   lg: {
-    minHeight: 64,
-    paddingHorizontal: space.xxl,
+    minHeight: 58,
+    borderRadius: radii.lg,
   },
   border: {
-    borderWidth: 1.5,
+    borderWidth: StyleSheet.hairlineWidth * 2,
     borderColor: colors.line,
   },
   icon: {

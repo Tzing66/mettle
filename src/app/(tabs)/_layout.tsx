@@ -11,12 +11,13 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: colors.bg },
-        tabBarActiveTintColor: colors.primaryInk,
+        tabBarActiveTintColor: colors.ink,
         tabBarInactiveTintColor: colors.inkMuted,
-        tabBarLabelStyle: { fontFamily: fonts.bold, fontSize: 12 },
+        tabBarLabelStyle: { fontFamily: fonts.semibold, fontSize: 11 },
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.line,
+          elevation: 0,
         },
       }}>
       <Tabs.Screen name="index" options={{ title: 'Home', tabBarIcon: ({ color }) => <HomeIcon color={color} /> }} />

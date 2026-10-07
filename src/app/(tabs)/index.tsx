@@ -47,7 +47,7 @@ export default function HomeScreen() {
           <Stepper value={reps} onChange={setReps} step={1} min={1} decimals={0} unit="reps" accessibilityLabel="Reps" />
         </View>
         <View>
-          <Button label="Complete set ✓" tone="mint" onPress={completeSet} />
+          <Button label="Complete set ✓" variant="accent" onPress={completeSet} />
           {floats.map((id) => (
             <XPFloat key={id} amount={5} onDone={() => setFloats((f) => f.filter((x) => x !== id))} />
           ))}

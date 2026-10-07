@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
-    "@expo-google-fonts/nunito": "^0.4.2",
+    "@expo-google-fonts/inter": "^0.4.2",
     "@expo/ui": "~57.0.22",
     "drizzle-orm": "^0.45.3",
     "expo": "~57.0.27",

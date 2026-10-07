@@ -89,7 +89,7 @@ function StepButton({ label, onPress, disabled }: { label: string; onPress: () =
       disabled={disabled}
       scaleTo={0.9}
       style={styles.stepButton}>
-      <Text variant="title" color="primaryInk">
+      <Text variant="title" color="ink">
         {label}
       </Text>
     </PressableScale>
@@ -111,14 +111,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     minWidth: 72,
     borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
+    borderBottomColor: colors.accent,
     paddingVertical: 0,
   },
   stepButton: {
     width: hitSize,
     height: hitSize,
-    borderRadius: radii.pill,
-    backgroundColor: colors.track,
+    borderRadius: radii.sm,
+    backgroundColor: colors.sunken,
     alignItems: 'center',
     justifyContent: 'center',
   },

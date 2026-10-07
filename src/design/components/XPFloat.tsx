@@ -33,7 +33,7 @@ export function XPFloat({ amount, onDone, tone = 'xp' }: XPFloatProps) {
   // Runs once on mount; the ref means a new onDone from a re-render can't restart the animation.
   useEffect(() => {
     const finish = () => onDoneRef.current?.();
-    scale.set(withSequence(withSpring(1.1, motion.spring.bouncy), withSpring(1, motion.spring.gentle)));
+    scale.set(withSequence(withSpring(1.06, motion.spring.pop), withSpring(1, motion.spring.snappy)));
     progress.set(
       withTiming(1, { duration: motion.duration.float, easing: Easing.out(Easing.cubic) }, (finished) => {
         if (finished) scheduleOnRN(finish);
@@ -48,7 +48,9 @@ export function XPFloat({ amount, onDone, tone = 'xp' }: XPFloatProps) {
 
   return (
     <Animated.View pointerEvents="none" style={[styles.pill, { backgroundColor: colors[tone] }, animated]}>
-      <Text variant="label">+{amount} XP</Text>
+      <Text variant="label" color={tone === 'pr' ? 'prInk' : 'xpInk'} tabular>
+        +{amount} XP
+      </Text>
     </Animated.View>
   );
 }

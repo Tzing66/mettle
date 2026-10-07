@@ -13,12 +13,12 @@ export interface ProgressBarProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export function ProgressBar({ progress, fill = colors.primary, height = 12, style }: ProgressBarProps) {
+export function ProgressBar({ progress, fill = colors.accent, height = 8, style }: ProgressBarProps) {
   const clamped = Math.min(1, Math.max(0, progress));
   const width = useSharedValue(clamped);
 
   useEffect(() => {
-    width.set(withSpring(clamped, motion.spring.gentle));
+    width.set(withSpring(clamped, motion.spring.snappy));
   }, [clamped, width]);
 
   const animated = useAnimatedStyle(() => ({ width: `${width.get() * 100}%` }));
@@ -36,7 +36,7 @@ export function ProgressBar({ progress, fill = colors.primary, height = 12, styl
 const styles = StyleSheet.create({
   track: {
     width: '100%',
-    backgroundColor: colors.track,
+    backgroundColor: colors.sunken,
     overflow: 'hidden',
     borderRadius: radii.pill,
   },

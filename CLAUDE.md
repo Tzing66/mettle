@@ -6,7 +6,7 @@ Gamified workout tracker: consistency earns steady XP, real progress earns big X
 `plan.md` is the product spec and roadmap. Read the relevant section before building a feature, and tick off roadmap items when they're done.
 
 ## Stack
-Expo SDK 57 (React Native 0.86, TypeScript, React Compiler on) · expo-router (routes in `src/app/`) · Reanimated 4 · expo-haptics · expo-sqlite + drizzle-orm 0.45 · zustand · Jest (jest-expo) · StyleSheet + design tokens (no NativeWind). Runs in Expo Go on iOS and Android.
+Expo SDK 57 (React Native 0.86, TypeScript, React Compiler on) · expo-router (routes in `src/app/`) · Reanimated 4 · expo-haptics · expo-sqlite + drizzle-orm 0.45 · zustand · Jest (jest-expo) · StyleSheet + design tokens (no NativeWind), Inter font, "Sage & stone" palette. Runs in Expo Go on iOS and Android.
 
 ## Layout
 ```

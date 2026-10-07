@@ -1,4 +1,4 @@
-// Mettle's own tab icons: rounded strokes to match Nunito.
+// Mettle's own tab icons: thin rounded strokes.
 import type { ColorValue } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
@@ -7,7 +7,7 @@ interface IconProps {
   size?: number;
 }
 
-const stroke = { strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' } as const;
+const stroke = { strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' } as const;
 
 export function HomeIcon({ color, size = 26 }: IconProps) {
   return (
