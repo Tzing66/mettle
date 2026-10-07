@@ -8,7 +8,7 @@ import { create } from 'zustand';
 import { getSession, useSession } from '@/features/account/auth';
 import { cloudConfigured, supabase } from '@/features/account/supabase';
 
-import { getSyncState, resetLocalForAccount, syncAccount } from './sync';
+import { getSyncState, queueProfileRefresh, resetLocalForAccount, syncAccount } from './sync';
 
 type Status = 'idle' | 'syncing' | 'error' | 'mismatch';
 
@@ -95,6 +95,7 @@ export function SyncController() {
 
   useEffect(() => {
     useSyncStore.setState({ lastSyncedAt: getSyncState().lastSyncedAt ?? null });
+    queueProfileRefresh(); // once per app launch: keeps the server's time zone current
   }, []);
 
   useEffect(() => {

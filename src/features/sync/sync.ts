@@ -51,6 +51,17 @@ function setState(patch: Partial<typeof syncState.$inferInsert>) {
     .run();
 }
 
+/**
+ * Queues the profile for upload even if unchanged — it carries the phone's UTC
+ * offset, which the server needs to count days in local time (time zones and
+ * DST change without the profile changing).
+ */
+export function queueProfileRefresh() {
+  if (getSyncState().userId && db.select().from(profile).get()) {
+    db.insert(syncOutbox).values({ tableName: 'profiles', rowId: PROFILE_ID }).run();
+  }
+}
+
 export function pendingChangeCount(): number {
   return db.select({ n: sql<number>`count(distinct ${syncOutbox.tableName} || ':' || ${syncOutbox.rowId})` }).from(syncOutbox).get()?.n ?? 0;
 }
