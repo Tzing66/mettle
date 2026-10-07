@@ -1,4 +1,4 @@
-import { rankChange, rankFor, totalXp } from '../ranks';
+import { levelSteps, rankChange, rankFor, totalXp } from '../ranks';
 
 describe('rank thresholds (§6.1)', () => {
   it.each([
@@ -63,5 +63,35 @@ describe('totalXp (ledger)', () => {
 
   it('excludes pending XP for leaderboards', () => {
     expect(totalXp(events, { includePending: false })).toBe(100);
+  });
+});
+
+describe('levelSteps (level-up animation)', () => {
+  it('a single step when staying in the level', () => {
+    expect(levelSteps(rankChange(100, 300))).toEqual([{ levelXp: 300, from: 0.25, to: 0.75 }]);
+  });
+
+  it('one level up: fill the old level, then the new one from zero', () => {
+    const steps = levelSteps(rankChange(300, 500)); // E1 → E2 (400 XP levels)
+    expect(steps.map((s) => [rankFor(s.levelXp).label, s.from, s.to])).toEqual([
+      ['E1', 0.75, 1],
+      ['E2', 0, 0.25],
+    ]);
+  });
+
+  it('passes through full levels in between', () => {
+    const steps = levelSteps(rankChange(100, 1300)); // E1 → E4
+    expect(steps.map((s) => rankFor(s.levelXp).label)).toEqual(['E1', 'E2', 'E3', 'E4']);
+  });
+
+  it('caps very large jumps', () => {
+    const steps = levelSteps(rankChange(0, 30000), 4); // E1 → B
+    expect(steps).toHaveLength(4);
+    expect(rankFor(steps[3].levelXp).label).toBe(rankFor(30000).label);
+  });
+
+  it('crosses rank boundaries (E5 → D1)', () => {
+    const steps = levelSteps(rankChange(1900, 2100));
+    expect(steps.map((s) => rankFor(s.levelXp).label)).toEqual(['E5', 'D1']);
   });
 });

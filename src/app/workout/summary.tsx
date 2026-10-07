@@ -1,17 +1,17 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button, Card, Chip, ProgressBar, RankBadge, Text } from '@/design/components';
-import { haptics } from '@/design/haptics';
+import { Button, Card, Text } from '@/design/components';
 import { FlameIcon, TrophyIcon } from '@/design/icons/Icons';
-import { colors, radii, rankColors, space } from '@/design/tokens';
+import { colors, radii, space } from '@/design/tokens';
 import { kgToLb, type XpEventDraft, type XpReason } from '@/engine';
 import { formatDurationMs, formatMetric, formatNumber, TIER_LABELS } from '@/features/format';
 import { useProfile } from '@/features/profile/useProfile';
 import { CountUp } from '@/features/workout/CountUp';
+import { LevelProgress } from '@/features/workout/LevelProgress';
 import { RankUpMoment } from '@/features/workout/RankUpMoment';
 import { useWorkoutUi } from '@/features/workout/store';
 
@@ -39,15 +39,6 @@ export default function Summary() {
     ? LINES.map((l) => ({ ...l, amount: sum(summary.events.filter((e) => l.reasons.includes(e.reason))) })).filter((l) => l.amount > 0)
     : [];
   const totalDelay = lines.length * STEP_MS;
-
-  useEffect(() => {
-    if (!summary) return;
-    const t = setTimeout(() => {
-      if (summary.rank.rankUp) setShowRankUp(true);
-      else if (summary.rank.levelUp) haptics.success();
-    }, totalDelay + 500);
-    return () => clearTimeout(t);
-  }, [summary, totalDelay]);
 
   if (!summary) {
     return (
@@ -94,19 +85,8 @@ export default function Summary() {
         </Card>
 
         <Animated.View entering={FadeInDown.delay(200 + totalDelay).duration(300)}>
-          <Card style={styles.level}>
-            <RankBadge rank={rank.after.rank} size={52} />
-            <View style={styles.levelText}>
-              <View style={styles.levelRow}>
-                <Text variant="heading">Level {rank.after.label}</Text>
-                {rank.levelUp ? <Chip label="Level up" tone="accentSoft" textColor="accentInk" /> : null}
-              </View>
-              <LevelBar from={rank.before.rank === rank.after.rank ? rank.before.levelProgress : 0} to={rank.after.levelProgress} color={rankColors[rank.after.rank]} delay={300 + totalDelay} />
-              <Text variant="caption" color="inkMuted" tabular>
-                {formatNumber(rank.after.nextLevelXp - rank.after.totalXp)} XP to next level
-              </Text>
-            </View>
-          </Card>
+          {/* Rank-ups get the full-screen moment once the level animation has played. */}
+          <LevelProgress change={rank} delay={300 + totalDelay} onDone={() => rank.rankUp && setShowRankUp(true)} />
         </Animated.View>
 
         {summary.prs.length > 0 && (
@@ -169,16 +149,6 @@ export default function Summary() {
   );
 }
 
-/** Starts at the pre-workout position and springs to the new one after the tally. */
-function LevelBar({ from, to, color, delay }: { from: number; to: number; color: string; delay: number }) {
-  const [p, setP] = useState(from);
-  useEffect(() => {
-    const t = setTimeout(() => setP(to), delay);
-    return () => clearTimeout(t);
-  }, [to, delay]);
-  return <ProgressBar progress={p} fill={color} />;
-}
-
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <View style={styles.stat}>
@@ -203,9 +173,6 @@ const styles = StyleSheet.create({
   stat: { alignItems: 'center', gap: space.xxs },
   tally: { gap: space.md },
   line: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  level: { flexDirection: 'row', alignItems: 'center', gap: space.lg },
-  levelText: { flex: 1, gap: space.sm },
-  levelRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   section: { gap: space.sm },
   prCard: { flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.md },
   prIcon: {

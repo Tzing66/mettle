@@ -77,3 +77,29 @@ export function totalXp(
     0,
   );
 }
+
+export interface LevelStep {
+  /** A total XP inside the level this step animates (for its label and colour). */
+  levelXp: number;
+  /** Bar position (0–1) at the start and end of this step. */
+  from: number;
+  to: number;
+}
+
+/**
+ * The bar animation for a level change: fill the old level, pass through any
+ * full levels in between (at most `maxSteps` steps in total), then fill the
+ * new level to where the user landed.
+ */
+export function levelSteps(change: Pick<RankChange, 'before' | 'after'>, maxSteps = 4, config: RanksConfig = ranksConfig): LevelStep[] {
+  const { before, after } = change;
+  if (before.label === after.label) return [{ levelXp: after.totalXp, from: before.levelProgress, to: after.levelProgress }];
+  const steps: LevelStep[] = [{ levelXp: before.totalXp, from: before.levelProgress, to: 1 }];
+  let xp = before.nextLevelXp;
+  while (xp < after.levelStartXp && steps.length < maxSteps - 1) {
+    steps.push({ levelXp: xp, from: 0, to: 1 });
+    xp = rankFor(xp, config).nextLevelXp;
+  }
+  steps.push({ levelXp: after.totalXp, from: 0, to: after.levelProgress });
+  return steps;
+}
