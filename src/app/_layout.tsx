@@ -14,7 +14,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useDatabaseMigrations } from '@/db/client';
 import { ensureSeeded } from '@/db/seed';
-import { Text } from '@/design/components';
+import { KeyboardDoneBar, Text } from '@/design/components';
 import { colors, space } from '@/design/tokens';
 
 SplashScreen.preventAutoHideAsync();
@@ -51,6 +51,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style="dark" />
+      <KeyboardDoneBar />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="onboarding" options={{ gestureEnabled: false, animation: 'fade' }} />

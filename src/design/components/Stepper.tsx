@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, TextInput, View } from 'react-native';
 
 import { haptics } from '../haptics';
 import { colors, hitSize, radii, space, type } from '../tokens';
+import { KEYBOARD_DONE_ID } from './KeyboardDoneBar';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
 
@@ -53,6 +54,7 @@ export function Stepper({ value, onChange, step, min = 0, max = 9999, unit, deci
             onBlur={commit}
             onSubmitEditing={commit}
             keyboardType="decimal-pad"
+            inputAccessoryViewID={Platform.OS === 'ios' ? KEYBOARD_DONE_ID : undefined}
             selectTextOnFocus
             style={[type.number, styles.input]}
           />

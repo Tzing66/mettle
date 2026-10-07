@@ -17,6 +17,8 @@ export const profile = sqliteTable('profile', {
   heightCm: real('height_cm'),
   unitPref: text('unit_pref').$type<'kg' | 'lb'>().notNull().default('kg'),
   weeklyTargetDays: integer('weekly_target_days').notNull().default(3),
+  /** Rest timer after a working set; 0 turns it off. */
+  restSeconds: integer('rest_seconds').notNull().default(90),
   createdAt: createdAt(),
 });
 

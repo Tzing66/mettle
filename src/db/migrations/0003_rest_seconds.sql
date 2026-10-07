@@ -1,0 +1,1 @@
+ALTER TABLE `profile` ADD `rest_seconds` integer DEFAULT 90 NOT NULL;

@@ -72,7 +72,8 @@ export default function ActiveWorkout() {
     const ex = byId.get(s.exerciseId);
     if (ex && isPrSet(s, ex)) haptics.pr();
     else haptics.setComplete();
-    if (ex?.category !== 'cardio' && !s.isWarmup) startRest();
+    const restS = profile?.restSeconds ?? 90;
+    if (ex?.category !== 'cardio' && !s.isWarmup && restS > 0) startRest(restS);
   };
 
   const start = () => {

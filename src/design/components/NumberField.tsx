@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { Platform, StyleSheet, TextInput } from 'react-native';
 
 import { colors, radii, space, type } from '../tokens';
+import { KEYBOARD_DONE_ID } from './KeyboardDoneBar';
 
 export interface NumberFieldProps {
   value: number | null;
@@ -40,6 +41,7 @@ export function NumberField({ value, onCommit, decimals = 1, width = 64, accessi
       editable={editable}
       keyboardType={decimals > 0 ? 'decimal-pad' : 'number-pad'}
       returnKeyType="done"
+      inputAccessoryViewID={Platform.OS === 'ios' ? KEYBOARD_DONE_ID : undefined}
       selectTextOnFocus
       accessibilityLabel={accessibilityLabel}
       placeholder="0"

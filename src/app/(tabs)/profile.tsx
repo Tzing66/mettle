@@ -20,6 +20,14 @@ import { formatDay, formatNumber, formatWeight, REASON_LABELS, TIER_LABELS } fro
 import { shareWorkoutExport } from '@/features/export/exportData';
 import { useProfile } from '@/features/profile/useProfile';
 
+const REST_OPTIONS = [
+  { key: '0', label: 'Off' },
+  { key: '60', label: '1 min' },
+  { key: '90', label: '90 s' },
+  { key: '120', label: '2 min' },
+  { key: '180', label: '3 min' },
+];
+
 const GROUPS: { label: string; reasons: XpReason[] }[] = [
   { label: 'Showing up', reasons: ['workout_complete', 'working_sets', 'cardio_minutes', 'streak_bonus', 'weekly_goal'] },
   { label: 'Records & firsts', reasons: ['personal_record', 'first_exercise', 'first_activity'] },
@@ -173,6 +181,13 @@ export default function Profile() {
             options={['3', '4', '5', '6'].map((d) => ({ key: d, label: d }))}
             value={String(profile.weeklyTargetDays)}
             onChange={(v) => updateProfile({ weeklyTargetDays: Number(v) })}
+          />
+        </Setting>
+        <Setting label="Rest timer">
+          <SegmentedTabs
+            options={REST_OPTIONS}
+            value={String(profile.restSeconds)}
+            onChange={(v) => updateProfile({ restSeconds: Number(v) })}
           />
         </Setting>
         <Setting label="Standards">
