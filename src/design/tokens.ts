@@ -43,6 +43,8 @@ export const colors = {
   info: palette.mist,
 
   overlay: 'rgba(22, 24, 29, 0.4)',
+  /** Track behind progress on an ink background. */
+  onPrimaryTrack: 'rgba(255, 255, 255, 0.15)',
 } as const;
 
 export type ColorToken = keyof typeof colors;
@@ -65,6 +67,9 @@ export const rankInk: Record<RankLetter, string> = {
   A: '#9A4A2E',
   S: '#6E5413',
 };
+
+/** History heatmap, from no activity to a big day. */
+export const heatScale = ['#EEEEEA', '#D5E6DB', '#B3D2BF', '#8FB8A0', '#2F6B4F'] as const;
 
 export const categoryColors: Record<ExerciseCategory, { tint: string; ink: string }> = {
   free_weight: { tint: '#E3EEE7', ink: '#2F6B4F' },
