@@ -1,18 +1,21 @@
 import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { Button, Card, PressableScale, ProgressBar, RankBadge, Ring, Screen, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronRightIcon, FlameIcon, PlusIcon } from '@/design/icons/Icons';
-import { colors, rankColors, rankInk, space } from '@/design/tokens';
+import { rankColors, rankInk, space } from '@/design/tokens';
 import { formatDay, formatDurationMs, formatNumber } from '@/features/format';
 import { useHomeStats } from '@/features/home/useHomeStats';
 import { useProfile } from '@/features/profile/useProfile';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const enter = (i: number) => FadeInDown.delay(i * 60).duration(320);
 
 export default function Home() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const profile = useProfile();
   const stats = useHomeStats();
   const { rank } = stats;
@@ -127,7 +130,7 @@ export default function Home() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   greeting: { gap: space.xxs, paddingTop: space.sm },
   flex: { flex: 1, gap: space.xxs },
   rankCard: { gap: space.md },
@@ -140,4 +143,4 @@ const styles = StyleSheet.create({
   section: { gap: space.sm },
   last: { gap: space.xs },
   lastTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-});
+}));

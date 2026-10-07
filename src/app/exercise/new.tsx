@@ -7,8 +7,9 @@ import { createCustomExercise } from '@/db/repositories/exercises';
 import { addExerciseToWorkout, getActiveWorkout } from '@/db/repositories/workouts';
 import { Button, OptionRow, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { colors, radii, space, type } from '@/design/tokens';
+import { radii, space, type } from '@/design/tokens';
 import type { ExerciseCategory, TrackingType } from '@/engine';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const CATEGORIES: { key: ExerciseCategory; label: string }[] = [
   { key: 'free_weight', label: 'Free weight' },
@@ -32,6 +33,8 @@ const TRACKING: Record<ExerciseCategory, { key: TrackingType; label: string; des
 };
 
 export default function NewExercise() {
+  const styles = useStyles();
+  const { colors, scheme } = useTheme();
   const params = useLocalSearchParams<{ name?: string }>();
   const [name, setName] = useState(params.name ?? '');
   const [category, setCategory] = useState<ExerciseCategory>('free_weight');
@@ -65,6 +68,7 @@ export default function NewExercise() {
               Name
             </Text>
             <TextInput
+              keyboardAppearance={scheme}
               value={name}
               onChangeText={setName}
               placeholder="e.g. Belt squat"
@@ -102,7 +106,7 @@ export default function NewExercise() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
   header: {
@@ -124,4 +128,4 @@ const styles = StyleSheet.create({
     padding: space.md,
   },
   footer: { padding: space.lg },
-});
+}));

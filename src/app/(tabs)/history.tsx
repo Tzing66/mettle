@@ -8,9 +8,10 @@ import { xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { useDbQuery } from '@/db/useDbQuery';
 import { Card, ExerciseGlyph, PressableScale, Screen, Text } from '@/design/components';
 import { ChevronRightIcon } from '@/design/icons/Icons';
-import { categoryColors, colors, heatScale, radii, space } from '@/design/tokens';
+import { radii, space } from '@/design/tokens';
 import { dayKey, weekStart } from '@/engine';
 import { formatDay, formatDurationMs, formatNumber } from '@/features/format';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const WEEKS = 16;
 
@@ -52,6 +53,8 @@ function readHistory() {
 }
 
 export default function History() {
+  const styles = useStyles();
+  const { colors, categoryColors } = useTheme();
   const data = useDbQuery(readHistory, ['workouts', 'workout_sets', 'xp_events']);
 
   return (
@@ -130,6 +133,8 @@ export default function History() {
 
 /** Grid of weeks (columns, Mon–Sun), shaded by XP earned that day. */
 function Heatmap({ start, today, xpByDay }: { start: number; today: string; xpByDay: Map<string, number> }) {
+  const styles = useStyles();
+  const { heatScale } = useTheme();
   const shade = (xp: number) => heatScale[xp <= 0 ? 0 : xp < 60 ? 1 : xp < 120 ? 2 : xp < 400 ? 3 : 4];
   const base = new Date(start);
 
@@ -157,7 +162,7 @@ function Heatmap({ start, today, xpByDay }: { start: number; today: string; xpBy
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   cardTitle: { marginBottom: space.md },
   section: { gap: space.sm },
   flex: { flex: 1, gap: space.xxs },
@@ -170,4 +175,4 @@ const styles = StyleSheet.create({
   code: { width: 36, height: 36, borderRadius: radii.sm, alignItems: 'center', justifyContent: 'center' },
   workout: { gap: space.xs },
   workoutTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-});
+}));

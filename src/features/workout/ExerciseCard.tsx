@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import Animated, { FadeInDown, FadeOut, LinearTransition } from 'react-native-reanimated';
 
 import type { ExerciseRow } from '@/db/repositories/exercises';
@@ -6,11 +6,12 @@ import type { SetRow as SetRowData } from '@/db/repositories/workouts';
 import { Card, Chip, ExerciseGlyph, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { DotsIcon, TimerIcon } from '@/design/icons/Icons';
-import { categoryColors, colors, motion, radii, space } from '@/design/tokens';
+import { motion, radii, space } from '@/design/tokens';
 import type { UnitPref } from '@/engine';
 
 import { formatSet } from '../format';
 import { SetRow, setColumns, type NumericField } from './SetRow';
+import { makeStyles, useTheme } from '@/design/theme';
 
 export interface ExerciseCardProps {
   exercise: ExerciseRow;
@@ -31,6 +32,8 @@ export interface ExerciseCardProps {
 }
 
 export function ExerciseCard(props: ExerciseCardProps) {
+  const styles = useStyles();
+  const { colors, categoryColors } = useTheme();
   const { exercise, sets, lastTime, unit, planning } = props;
   const tone = categoryColors[exercise.category];
   const cols = setColumns(exercise.trackingType, exercise.category, exercise.activity, unit);
@@ -125,6 +128,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
 
 /** − 3 sets + */
 function SetCounter({ count, onChange }: { count: number; onChange: (n: number) => void }) {
+  const styles = useStyles();
   const change = (n: number) => {
     if (n < 1) return;
     haptics.tick();
@@ -152,7 +156,7 @@ function numberWorkingSets(sets: SetRowData[]): Map<string, number> {
   return out;
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   card: { padding: space.md, gap: space.sm },
   header: { flexDirection: 'row', alignItems: 'center', gap: space.md },
   code: { width: 40, height: 40, borderRadius: radii.sm, alignItems: 'center', justifyContent: 'center' },
@@ -174,4 +178,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   counterLabel: { minWidth: 56, textAlign: 'center' },
-});
+}));

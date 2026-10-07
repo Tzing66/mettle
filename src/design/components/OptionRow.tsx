@@ -1,10 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { haptics } from '../haptics';
 import { CheckIcon } from '../icons/Icons';
-import { colors, radii, space } from '../tokens';
+import { radii, space } from '../tokens';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
+import { makeStyles, useTheme } from '../theme';
 
 export interface OptionRowProps {
   label: string;
@@ -15,6 +16,8 @@ export interface OptionRowProps {
 
 /** Full-width selectable row (radio style). */
 export function OptionRow({ label, description, selected, onPress }: OptionRowProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   return (
     <PressableScale
       accessibilityRole="radio"
@@ -39,7 +42,7 @@ export function OptionRow({ label, description, selected, onPress }: OptionRowPr
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -70,4 +73,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.ink,
     borderColor: colors.ink,
   },
-});
+}));

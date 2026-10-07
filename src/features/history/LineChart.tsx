@@ -4,7 +4,8 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
 
 import { Text } from '@/design/components';
-import { colors, space } from '@/design/tokens';
+import { space } from '@/design/tokens';
+import { useTheme } from '@/design/theme';
 
 export interface LineChartProps {
   values: number[];
@@ -16,6 +17,7 @@ export interface LineChartProps {
 
 /** Minimal line chart: area-less line, end dot, best/latest labels. */
 export function LineChart({ values, height = 160, format, invert }: LineChartProps) {
+  const { colors } = useTheme();
   const [width, setWidth] = useState(0);
   const pad = 8;
 

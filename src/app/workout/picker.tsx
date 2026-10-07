@@ -10,8 +10,9 @@ import { useDbQuery } from '@/db/useDbQuery';
 import { Button, ExerciseTile, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { CheckIcon, PlusIcon, SearchIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space, type } from '@/design/tokens';
+import { motion, radii, space, type } from '@/design/tokens';
 import type { ExerciseCategory } from '@/engine';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const TABS: { key: ExerciseCategory; label: string }[] = [
   { key: 'free_weight', label: 'Free weights' },
@@ -22,6 +23,8 @@ const TABS: { key: ExerciseCategory; label: string }[] = [
 const COLUMNS = 3;
 
 export default function Picker() {
+  const styles = useStyles();
+  const { colors, scheme } = useTheme();
   const { width } = useWindowDimensions();
   const [tab, setTab] = useState<ExerciseCategory>('free_weight');
   const [query, setQuery] = useState('');
@@ -90,6 +93,7 @@ export default function Picker() {
       <View style={styles.search}>
         <SearchIcon color={colors.inkMuted} size={18} />
         <TextInput
+          keyboardAppearance={scheme}
           value={query}
           onChangeText={setQuery}
           placeholder="Search exercises or muscles"
@@ -132,7 +136,7 @@ export default function Picker() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   header: {
     flexDirection: 'row',
@@ -182,4 +186,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}));

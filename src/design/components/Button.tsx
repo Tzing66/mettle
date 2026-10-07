@@ -2,9 +2,10 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { haptics } from '../haptics';
-import { colors, hitSize, radii, space, type ColorToken } from '../tokens';
+import { hitSize, radii, space, type ColorToken } from '../tokens';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
+import { makeStyles, useTheme } from '../theme';
 
 type Variant = 'primary' | 'secondary' | 'accent' | 'ghost';
 type Size = 'md' | 'lg';
@@ -12,7 +13,7 @@ type Size = 'md' | 'lg';
 const variantStyles: Record<Variant, { bg: ColorToken | null; fg: ColorToken; border: boolean }> = {
   primary: { bg: 'primary', fg: 'onPrimary', border: false },
   secondary: { bg: 'surface', fg: 'ink', border: true },
-  accent: { bg: 'accent', fg: 'ink', border: false },
+  accent: { bg: 'accent', fg: 'onAccent', border: false },
   ghost: { bg: null, fg: 'accentInk', border: false },
 };
 
@@ -29,6 +30,8 @@ export interface ButtonProps {
 }
 
 export function Button({ label, onPress, variant = 'primary', size = 'md', icon, disabled, silent, style }: ButtonProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const v = variantStyles[variant];
 
   return (
@@ -55,7 +58,7 @@ export function Button({ label, onPress, variant = 'primary', size = 'md', icon,
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   base: {
     minHeight: hitSize,
     paddingHorizontal: space.xl,
@@ -75,4 +78,4 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: space.sm,
   },
-});
+}));

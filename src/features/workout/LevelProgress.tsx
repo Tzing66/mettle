@@ -20,12 +20,14 @@ import { scheduleOnRN } from 'react-native-worklets';
 
 import { Card, Chip, RankBadge, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { colors, motion, radii, rankColors, space } from '@/design/tokens';
+import { motion, radii, rankColors, space } from '@/design/tokens';
 import { levelSteps, rankFor, type RankChange } from '@/engine';
 import { formatNumber } from '@/features/format';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const FILL_MS = 650;
 export function LevelProgress({ change, delay, onDone }: { change: RankChange; delay: number; onDone?: () => void }) {
+  const styles = useStyles();
   const [steps] = useState(() => levelSteps(change));
   const [step, setStep] = useState(0);
   const [celebrations, setCelebrations] = useState(0);
@@ -109,6 +111,8 @@ const SPARKS = 12;
 
 /** Small radial burst of dots behind the badge. Remount (via key) to replay. */
 function SparkleBurst({ active, color }: { active: boolean; color: string }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   if (!active) return null;
   return (
     <View pointerEvents="none" style={styles.burst}>
@@ -120,6 +124,7 @@ function SparkleBurst({ active, color }: { active: boolean; color: string }) {
 }
 
 function Spark({ angle, color, distance }: { angle: number; color: string; distance: number }) {
+  const styles = useStyles();
   const t = useSharedValue(0);
   useEffect(() => {
     t.set(withTiming(1, { duration: 650, easing: Easing.out(Easing.cubic) }));
@@ -135,7 +140,7 @@ function Spark({ angle, color, distance }: { angle: number; color: string; dista
   return <Animated.View entering={FadeIn.duration(60)} style={[styles.spark, { backgroundColor: color }, style]} />;
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   card: { gap: space.md },
   row: { flexDirection: 'row', alignItems: 'center', gap: space.lg },
   text: { flex: 1, gap: space.sm },
@@ -145,4 +150,4 @@ const styles = StyleSheet.create({
   message: { gap: space.xxs, paddingTop: space.xs, borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: colors.line },
   burst: { position: 'absolute', left: 26, top: 26, width: 0, height: 0 },
   spark: { position: 'absolute', width: 7, height: 7, marginLeft: -3.5, marginTop: -3.5, borderRadius: radii.pill },
-});
+}));

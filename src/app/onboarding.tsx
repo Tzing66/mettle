@@ -8,8 +8,9 @@ import { createProfile } from '@/db/repositories/profile';
 import { Button, OptionRow, PressableScale, ProgressBar, Stepper, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space, type } from '@/design/tokens';
+import { motion, radii, space, type } from '@/design/tokens';
 import { displayWeight, toStoredKg, type UnitPref } from '@/engine';
+import { makeStyles, useTheme } from '@/design/theme';
 
 type Sex = 'male' | 'female';
 
@@ -17,6 +18,8 @@ const STEPS = ['name', 'units', 'body', 'birth', 'standards', 'goal'] as const;
 const THIS_YEAR = new Date().getFullYear();
 
 export default function Onboarding() {
+  const styles = useStyles();
+  const { colors, scheme } = useTheme();
   const [step, setStep] = useState(0);
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<UnitPref>('kg');
@@ -71,6 +74,7 @@ export default function Onboarding() {
           {key === 'name' && (
             <Step title="What should we call you?">
               <TextInput
+                keyboardAppearance={scheme}
                 value={name}
                 onChangeText={setName}
                 placeholder="Your name"
@@ -158,6 +162,7 @@ export default function Onboarding() {
 }
 
 function Step({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
+  const styles = useStyles();
   return (
     <View style={styles.step}>
       <View style={styles.titles}>
@@ -170,6 +175,7 @@ function Step({ title, subtitle, children }: { title: string; subtitle?: string;
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  const styles = useStyles();
   return (
     <View style={styles.field}>
       <Text variant="label">{label}</Text>
@@ -178,7 +184,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
   header: {
@@ -232,4 +238,4 @@ const styles = StyleSheet.create({
   daySelected: { backgroundColor: colors.ink, borderColor: colors.ink },
   disclaimer: { marginTop: space.lg },
   footer: { padding: space.lg },
-});
+}));

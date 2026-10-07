@@ -6,21 +6,38 @@ import {
   Inter_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/inter';
-import { Stack } from 'expo-router';
+import { DarkTheme, DefaultTheme, ThemeProvider as NavigationThemeProvider, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useDatabaseMigrations } from '@/db/client';
 import { ensureSeeded } from '@/db/seed';
 import { KeyboardDoneBar, Text } from '@/design/components';
-import { colors, space } from '@/design/tokens';
+import { space } from '@/design/tokens';
 import { SyncController } from '@/features/sync/useSync';
+import { makeStyles, ThemeProvider, useTheme } from '@/design/theme';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  );
+}
+
+function App() {
+  const styles = useStyles();
+  const { colors, scheme } = useTheme();
+  const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+  // Navigation chrome (modal backdrops, card backgrounds) follows our palette.
+  const navigationTheme = {
+    ...base,
+    colors: { ...base.colors, background: colors.bg, card: colors.surface, text: colors.ink, border: colors.line, primary: colors.accentInk },
+  };
   const [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -50,8 +67,8 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <StatusBar style="dark" />
+    <NavigationThemeProvider value={navigationTheme}>
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <KeyboardDoneBar />
       <SyncController />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
@@ -67,11 +84,11 @@ export default function RootLayout() {
         <Stack.Screen name="group/add" options={{ presentation: 'modal' }} />
         <Stack.Screen name="group/[id]" />
       </Stack>
-    </>
+    </NavigationThemeProvider>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   error: {
     flex: 1,
     justifyContent: 'center',
@@ -79,4 +96,4 @@ const styles = StyleSheet.create({
     gap: space.sm,
     backgroundColor: colors.bg,
   },
-});
+}));

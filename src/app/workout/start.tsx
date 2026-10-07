@@ -11,8 +11,9 @@ import { useDbQuery } from '@/db/useDbQuery';
 import { PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronRightIcon, ListIcon, PlayIcon, RepeatIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space } from '@/design/tokens';
+import { motion, radii, space } from '@/design/tokens';
 import { formatDay } from '@/features/format';
+import { makeStyles, useTheme } from '@/design/theme';
 
 function readLast() {
   const last = listFinishedWorkouts(1)[0];
@@ -23,6 +24,8 @@ function readLast() {
 }
 
 export default function StartSheet() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const last = useDbQuery(readLast, ['workouts']);
 
@@ -73,6 +76,8 @@ export default function StartSheet() {
 }
 
 function Option({ title, body, tone, glyph, onPress }: { title: string; body: string; tone: string; glyph: ReactNode; onPress: () => void }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   return (
     <PressableScale accessibilityRole="button" accessibilityLabel={title} onPress={onPress} style={styles.option}>
       <View style={[styles.glyph, { backgroundColor: tone }]}>
@@ -89,7 +94,7 @@ function Option({ title, body, tone, glyph, onPress }: { title: string; body: st
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   root: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { backgroundColor: colors.overlay },
   sheet: {
@@ -119,4 +124,4 @@ const styles = StyleSheet.create({
   },
   glyph: { width: 48, height: 48, borderRadius: radii.sm, alignItems: 'center', justifyContent: 'center' },
   optionText: { flex: 1, gap: space.xxs },
-});
+}));

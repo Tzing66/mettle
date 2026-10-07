@@ -6,7 +6,7 @@ import { listBenchmarkUnlocks, listLedger, totalXpFromDb } from '@/db/repositori
 import { useDbQuery } from '@/db/useDbQuery';
 import { Button, Card, Chip, RankBadge, Screen, SegmentedTabs, Stepper, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { colors, radii, rankColors, space } from '@/design/tokens';
+import { radii, rankColors, space } from '@/design/tokens';
 import {
   benchmarksConfig,
   bodyweightNeedsConfirmation,
@@ -20,6 +20,7 @@ import { formatDay, formatNumber, formatWeight, REASON_LABELS, TIER_LABELS } fro
 import { shareWorkoutExport } from '@/features/export/exportData';
 import { AccountCard } from '@/features/account/AccountCard';
 import { useProfile } from '@/features/profile/useProfile';
+import { makeStyles, useTheme, useThemePreference } from '@/design/theme';
 
 const REST_OPTIONS = [
   { key: '0', label: 'Off' },
@@ -48,6 +49,10 @@ function readProfileData() {
 }
 
 export default function Profile() {
+  const themePreference = useThemePreference((p) => p.preference);
+  const setThemePreference = useThemePreference((p) => p.setPreference);
+  const styles = useStyles();
+  const { colors } = useTheme();
   const profile = useProfile();
   const data = useDbQuery(readProfileData, ['bodyweight_logs', 'xp_events', 'benchmark_unlocks']);
   const latest = data.logs[data.logs.length - 1];
@@ -169,6 +174,17 @@ export default function Profile() {
         <Text variant="overline" color="inkMuted">
           Settings
         </Text>
+        <Setting label="Appearance">
+          <SegmentedTabs
+            options={[
+              { key: 'system', label: 'System' },
+              { key: 'light', label: 'Light' },
+              { key: 'dark', label: 'Dark' },
+            ]}
+            value={themePreference}
+            onChange={setThemePreference}
+          />
+        </Setting>
         <Setting label="Units">
           <SegmentedTabs
             options={[
@@ -268,6 +284,7 @@ export default function Profile() {
 }
 
 function Setting({ label, children }: { label: string; children: React.ReactNode }) {
+  const styles = useStyles();
   return (
     <View style={styles.setting}>
       <Text variant="label">{label}</Text>
@@ -276,7 +293,7 @@ function Setting({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   header: { flexDirection: 'row', alignItems: 'center', gap: space.lg, paddingTop: space.sm },
   flex: { flex: 1, gap: space.xxs },
   card: { gap: space.md },
@@ -294,4 +311,4 @@ const styles = StyleSheet.create({
   ledgerRow: { flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.md },
   ledgerEmpty: { padding: space.lg },
   divider: { borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: colors.line },
-});
+}));

@@ -5,12 +5,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { colors, radii, space, type } from '@/design/tokens';
+import { radii, space, type } from '@/design/tokens';
 import { createGroup, joinGroup } from '@/features/social/api';
+import { makeStyles, useTheme } from '@/design/theme';
 
 type Mode = 'join' | 'create';
 
 export default function AddGroup() {
+  const styles = useStyles();
+  const { colors, scheme } = useTheme();
   const [mode, setMode] = useState<Mode>('join');
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
@@ -53,6 +56,7 @@ export default function AddGroup() {
             <View style={styles.field}>
               <Text color="inkMuted">Ask a friend for their group’s 6-character code.</Text>
               <TextInput
+                keyboardAppearance={scheme}
                 key="code"
                 value={cleanCode}
                 onChangeText={setCode}
@@ -69,6 +73,7 @@ export default function AddGroup() {
             <View style={styles.field}>
               <Text color="inkMuted">You’ll get a code to share. Members see each other’s name and XP only.</Text>
               <TextInput
+                keyboardAppearance={scheme}
                 key="name"
                 value={name}
                 onChangeText={setName}
@@ -95,7 +100,7 @@ export default function AddGroup() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: space.lg, paddingTop: space.md },
@@ -112,4 +117,4 @@ const styles = StyleSheet.create({
   },
   code: { ...type.number, letterSpacing: 8, textAlign: 'center' },
   footer: { padding: space.lg },
-});
+}));

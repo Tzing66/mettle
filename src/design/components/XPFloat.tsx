@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { StyleSheet } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -10,8 +9,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { colors, motion, radii, space } from '../tokens';
+import { motion, radii, space } from '../tokens';
 import { Text } from './Text';
+import { makeStyles, useTheme } from '../theme';
 
 export interface XPFloatProps {
   amount: number;
@@ -22,6 +22,8 @@ export interface XPFloatProps {
 
 /** "+5 XP" that pops, rises and fades. Absolutely positioned and touch-transparent. */
 export function XPFloat({ amount, onDone, tone = 'xp' }: XPFloatProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const progress = useSharedValue(0);
   const scale = useSharedValue(0.6);
   const onDoneRef = useRef(onDone);
@@ -55,7 +57,7 @@ export function XPFloat({ amount, onDone, tone = 'xp' }: XPFloatProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   pill: {
     position: 'absolute',
     alignSelf: 'center',
@@ -63,4 +65,4 @@ const styles = StyleSheet.create({
     paddingVertical: space.xs,
     borderRadius: radii.pill,
   },
-});
+}));

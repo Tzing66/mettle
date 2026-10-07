@@ -26,7 +26,7 @@ import { useDbQuery } from '@/db/useDbQuery';
 import { Button, Chip, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon, PlusIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space } from '@/design/tokens';
+import { motion, radii, space } from '@/design/tokens';
 import { cardioXp, formatDuration, setBeatsRecords, xpRules } from '@/engine';
 import { useProfile } from '@/features/profile/useProfile';
 import { ExerciseCard } from '@/features/workout/ExerciseCard';
@@ -34,8 +34,11 @@ import { finishWorkout } from '@/features/workout/finishWorkout';
 import { RestTimerBar } from '@/features/workout/RestTimerBar';
 import { requestSync } from '@/features/sync/useSync';
 import { useWorkoutUi } from '@/features/workout/store';
+import { makeStyles, useTheme } from '@/design/theme';
 
 export default function ActiveWorkout() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const profile = useProfile();
   const workout = useDbQuery(getActiveWorkout, ['workouts']);
   const sets = useDbQuery(() => (workout ? setsForWorkout(workout.id) : []), ['workout_sets'], [workout?.id]);
@@ -250,7 +253,7 @@ function Elapsed({ since }: { since: number }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   header: {
     flexDirection: 'row',
@@ -291,4 +294,4 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth * 2,
     borderTopColor: colors.line,
   },
-});
+}));

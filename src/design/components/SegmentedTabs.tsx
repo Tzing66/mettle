@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View, type LayoutChangeEvent } from 'react-native';
+import { Pressable, View, type LayoutChangeEvent } from 'react-native';
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 import { haptics } from '../haptics';
-import { colors, fonts, motion, radii, space } from '../tokens';
+import { fonts, motion, radii, space } from '../tokens';
 import { Text } from './Text';
+import { makeStyles } from '../theme';
 
 export interface SegmentedTabsProps<K extends string> {
   options: { key: K; label: string }[];
@@ -14,6 +15,7 @@ export interface SegmentedTabsProps<K extends string> {
 
 /** Pill segmented control with a sliding indicator. */
 export function SegmentedTabs<K extends string>({ options, value, onChange }: SegmentedTabsProps<K>) {
+  const styles = useStyles();
   const [width, setWidth] = useState(0);
   const index = Math.max(0, options.findIndex((o) => o.key === value));
   const segment = width / options.length;
@@ -47,7 +49,7 @@ export function SegmentedTabs<K extends string>({ options, value, onChange }: Se
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   track: {
     flexDirection: 'row',
     backgroundColor: colors.sunken,
@@ -70,4 +72,4 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.semibold,
   },
-});
+}));

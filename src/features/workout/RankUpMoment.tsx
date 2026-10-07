@@ -15,12 +15,15 @@ import Animated, {
 
 import { Button, RankBadge, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { colors, motion, rankColors, space } from '@/design/tokens';
+import { motion, rankColors, space } from '@/design/tokens';
 import type { RankLetter } from '@/engine';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const PIECES = 28;
 
 export function RankUpMoment({ rank, onDone }: { rank: RankLetter; onDone: () => void }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { width, height } = useWindowDimensions();
 
   useEffect(() => {
@@ -58,6 +61,7 @@ export function RankUpMoment({ rank, onDone }: { rank: RankLetter; onDone: () =>
 }
 
 function Confetti({ index, width, height, color }: { index: number; width: number; height: number; color: string }) {
+  const styles = useStyles();
   // Deterministic pseudo-random spread per piece.
   const r = (n: number) => {
     const x = Math.sin(index * 9301 + n * 49297) * 233280;
@@ -85,7 +89,7 @@ function Confetti({ index, width, height, color }: { index: number; width: numbe
   return <Animated.View pointerEvents="none" style={[styles.piece, { width: w, height: w * 1.6, backgroundColor: color }, style]} />;
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   backdrop: {
     backgroundColor: colors.bg,
     zIndex: 10,
@@ -100,4 +104,4 @@ const styles = StyleSheet.create({
   copy: { gap: space.sm },
   footer: { padding: space.lg, paddingBottom: space.xxxl },
   piece: { position: 'absolute', top: 0, left: 0, borderRadius: 2 },
-});
+}));

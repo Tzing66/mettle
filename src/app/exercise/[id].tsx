@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getExercise, toExerciseInfo } from '@/db/repositories/exercises';
@@ -7,11 +7,12 @@ import { exerciseHistory, listRecords, toSetInput, type SetRow } from '@/db/repo
 import { useDbQuery } from '@/db/useDbQuery';
 import { Card, ExerciseGlyph, PressableScale, Text } from '@/design/components';
 import { ChevronLeftIcon } from '@/design/icons/Icons';
-import { categoryColors, colors, radii, space } from '@/design/tokens';
+import { radii, space } from '@/design/tokens';
 import { setMetrics, type RecordMetric } from '@/engine';
 import { formatDay, formatMetric, formatSet } from '@/features/format';
 import { LineChart } from '@/features/history/LineChart';
 import { useProfile } from '@/features/profile/useProfile';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const PRIMARY: Record<string, RecordMetric> = {
   weight_reps: 'e1rm',
@@ -21,6 +22,8 @@ const PRIMARY: Record<string, RecordMetric> = {
 };
 
 export default function ExerciseDetail() {
+  const styles = useStyles();
+  const { colors, categoryColors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const profile = useProfile();
   const unit = profile?.unitPref ?? 'kg';
@@ -122,7 +125,7 @@ export default function ExerciseDetail() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   header: { paddingHorizontal: space.lg, paddingTop: space.xs },
   content: { padding: space.lg, gap: space.lg, paddingBottom: space.xxxl },
@@ -135,4 +138,4 @@ const styles = StyleSheet.create({
   recordRow: { flexDirection: 'row', justifyContent: 'space-between' },
   section: { gap: space.sm },
   session: { gap: space.xs, padding: space.md },
-});
+}));

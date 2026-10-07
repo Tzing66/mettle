@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
-import { colors, fonts, radii, space, type ColorToken } from '../tokens';
+import { fonts, radii, space, type ColorToken } from '../tokens';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
+import { makeStyles, useTheme } from '../theme';
 
 export interface ChipProps {
   label: string;
@@ -15,6 +16,8 @@ export interface ChipProps {
 
 /** Small rounded label. Pressable when onPress is set. */
 export function Chip({ label, tone = 'sunken', textColor = 'ink', icon, onPress }: ChipProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const content = (
     <>
       {icon}
@@ -33,7 +36,7 @@ export function Chip({ label, tone = 'sunken', textColor = 'ink', icon, onPress 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -46,4 +49,4 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: fonts.semibold,
   },
-});
+}));

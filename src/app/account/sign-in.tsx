@@ -7,12 +7,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, KEYBOARD_DONE_ID, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { CheckIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space, type } from '@/design/tokens';
+import { motion, radii, space, type } from '@/design/tokens';
 import { authRedirectUri, sendEmailCode, signInWithGoogle, verifyEmailCode } from '@/features/account/auth';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const BENEFITS = ['Back up every workout', 'Keep your rank across phones', 'Friends and weekly leaderboards'];
 
 export default function SignIn() {
+  const styles = useStyles();
+  const { colors, scheme } = useTheme();
   const [busy, setBusy] = useState<'google' | 'send' | 'verify' | null>(null);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -91,6 +94,7 @@ export default function SignIn() {
           </View>
 
           <TextInput
+            keyboardAppearance={scheme}
             value={email}
             onChangeText={(v) => {
               setEmail(v);
@@ -111,6 +115,7 @@ export default function SignIn() {
                 We emailed a 6-digit code to {email.trim()}.
               </Text>
               <TextInput
+                keyboardAppearance={scheme}
                 value={code}
                 onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
                 placeholder="123456"
@@ -143,7 +148,7 @@ export default function SignIn() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
   header: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: space.sm, paddingTop: space.sm },
@@ -173,4 +178,4 @@ const styles = StyleSheet.create({
   },
   codeBlock: { gap: space.sm },
   code: { ...type.number, letterSpacing: 6, textAlign: 'center' },
-});
+}));

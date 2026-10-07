@@ -1,13 +1,14 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import type { ExerciseCategory } from '@/engine/types';
 
 import { haptics } from '../haptics';
 import { StarIcon } from '../icons/Icons';
-import { categoryColors, colors, radii, space } from '../tokens';
+import { radii, space } from '../tokens';
 import { ExerciseGlyph } from './ExerciseGlyph';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
+import { makeStyles, useTheme } from '../theme';
 
 export interface ExerciseTileProps {
   name: string;
@@ -22,6 +23,8 @@ export interface ExerciseTileProps {
 
 /** Picker tile: tinted block with the movement glyph, name underneath. Long-press to favourite. */
 export function ExerciseTile({ name, short, icon, category, favourite, onPress, onLongPress, width }: ExerciseTileProps) {
+  const styles = useStyles();
+  const { categoryColors } = useTheme();
   const tone = categoryColors[category];
   return (
     <PressableScale
@@ -50,7 +53,7 @@ export function ExerciseTile({ name, short, icon, category, favourite, onPress, 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   tile: {
     gap: space.xs,
   },
@@ -69,4 +72,4 @@ const styles = StyleSheet.create({
     color: colors.ink,
     minHeight: 32,
   },
-});
+}));

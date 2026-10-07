@@ -1,18 +1,21 @@
 import { router } from 'expo-router';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, Card, PressableScale, Text } from '@/design/components';
 import { ChevronRightIcon, PlusIcon } from '@/design/icons/Icons';
 import { FriendsIcon } from '@/design/icons/TabIcons';
-import { colors, radii, space } from '@/design/tokens';
+import { radii, space } from '@/design/tokens';
 import { useSession } from '@/features/account/auth';
 import { cloudConfigured } from '@/features/account/supabase';
 import { listMyGroups } from '@/features/social/api';
 import { useRemote } from '@/features/social/useRemote';
+import { makeStyles, useTheme } from '@/design/theme';
 
 export default function Friends() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { session, ready } = useSession();
   const signedIn = !!session;
   const groups = useRemote(listMyGroups, signedIn);
@@ -88,7 +91,7 @@ export default function Friends() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   content: { padding: space.lg, gap: space.md, paddingBottom: space.xxxl },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: space.sm, marginBottom: space.xs },
@@ -112,4 +115,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flex: { flex: 1, gap: space.xxs },
-});
+}));

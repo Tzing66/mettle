@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import { colors, motion, radii } from '../tokens';
+import { motion, radii } from '../tokens';
+import { makeStyles, useTheme } from '../theme';
 
 export interface ProgressBarProps {
   /** 0–1 */
@@ -13,9 +14,12 @@ export interface ProgressBarProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export function ProgressBar({ progress, fill = colors.accent, height = 8, style }: ProgressBarProps) {
+export function ProgressBar({ progress, fill: fillProp, height = 8, style }: ProgressBarProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const clamped = Math.min(1, Math.max(0, progress));
   const width = useSharedValue(clamped);
+  const fill = fillProp ?? colors.accent;
 
   useEffect(() => {
     width.set(withSpring(clamped, motion.spring.snappy));
@@ -33,7 +37,7 @@ export function ProgressBar({ progress, fill = colors.accent, height = 8, style 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   track: {
     width: '100%',
     backgroundColor: colors.sunken,
@@ -43,4 +47,4 @@ const styles = StyleSheet.create({
   fill: {
     height: '100%',
   },
-});
+}));

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Keyboard, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Keyboard, Pressable, View } from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -16,8 +16,9 @@ import type { SetRow as SetRowData } from '@/db/repositories/workouts';
 import { Chip, NumberField, PressableScale, Text, XPFloat } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { CheckIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space } from '@/design/tokens';
+import { motion, radii, space } from '@/design/tokens';
 import { displayWeight, toStoredKg, type ExerciseCategory, type TrackingType, type UnitPref } from '@/engine';
+import { makeStyles, useTheme } from '@/design/theme';
 
 export type NumericField = 'weightKg' | 'reps' | 'durationS' | 'distanceM';
 
@@ -56,6 +57,8 @@ export function setColumns(tracking: TrackingType, category: ExerciseCategory, a
 }
 
 export function SetRow(props: SetRowProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { set, number, tracking, category, activity, unit, planning, isPr, xpOnComplete } = props;
   const done = set.completedAt !== null;
   const [floats, setFloats] = useState<number[]>([]);
@@ -167,7 +170,7 @@ export function SetRow(props: SetRowProps) {
             onPress={toggleComplete}
             scaleTo={1}>
             <Animated.View style={[styles.check, checkStyle]}>
-              <CheckIcon color={done ? colors.ink : colors.inkFaint} size={18} />
+              <CheckIcon color={done ? colors.onAccent : colors.inkFaint} size={18} />
             </Animated.View>
           </PressableScale>
           {floats.map((id) => (
@@ -179,7 +182,7 @@ export function SetRow(props: SetRowProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -207,4 +210,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}));

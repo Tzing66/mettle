@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 
 import { PressableScale, ProgressBar, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { TimerIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, shadows, space } from '@/design/tokens';
+import { motion, radii, shadows, space } from '@/design/tokens';
 import { formatDuration } from '@/engine';
 
 import { useWorkoutUi } from './store';
+import { makeStyles, useTheme } from '@/design/theme';
 
 /** Floating rest countdown. Never blocks the list underneath. */
 export function RestTimerBar() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const rest = useWorkoutUi((s) => s.rest);
   const extend = useWorkoutUi((s) => s.extendRest);
   const stop = useWorkoutUi((s) => s.stopRest);
@@ -56,7 +59,7 @@ export function RestTimerBar() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -78,4 +81,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.sm,
     paddingVertical: space.xs,
   },
-});
+}));

@@ -7,13 +7,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Card, Chip, PressableScale, RankBadge, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon } from '@/design/icons/Icons';
-import { colors, motion, radii, space } from '@/design/tokens';
+import { motion, radii, space } from '@/design/tokens';
 import { formatNumber } from '@/features/format';
 import { getGroup, groupLeaderboard, leaveGroup } from '@/features/social/api';
 import { rankLeaderboard, type Period } from '@/features/social/leaderboard';
 import { useRemote } from '@/features/social/useRemote';
+import { makeStyles, useTheme } from '@/design/theme';
 
 export default function GroupScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [period, setPeriod] = useState<Period>('week');
   const group = useRemote(() => getGroup(id));
@@ -129,7 +132,7 @@ export default function GroupScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   header: { flexDirection: 'row', alignItems: 'center', gap: space.sm, paddingHorizontal: space.lg, paddingVertical: space.sm },
   back: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radii.sm },
@@ -142,4 +145,4 @@ const styles = StyleSheet.create({
   invite: { gap: space.md },
   codeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   code: { letterSpacing: 6 },
-});
+}));

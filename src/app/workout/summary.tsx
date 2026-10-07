@@ -1,12 +1,12 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, Card, Text } from '@/design/components';
 import { FlameIcon, TrophyIcon } from '@/design/icons/Icons';
-import { colors, radii, space } from '@/design/tokens';
+import { radii, space } from '@/design/tokens';
 import { kgToLb, type XpEventDraft, type XpReason } from '@/engine';
 import { formatDurationMs, formatMetric, formatNumber, TIER_LABELS } from '@/features/format';
 import { useProfile } from '@/features/profile/useProfile';
@@ -14,6 +14,7 @@ import { CountUp } from '@/features/workout/CountUp';
 import { LevelProgress } from '@/features/workout/LevelProgress';
 import { RankUpMoment } from '@/features/workout/RankUpMoment';
 import { useWorkoutUi } from '@/features/workout/store';
+import { makeStyles, useTheme } from '@/design/theme';
 
 const STEP_MS = 220;
 
@@ -30,6 +31,8 @@ const LINES: { label: string; reasons: XpReason[] }[] = [
 ];
 
 export default function Summary() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const summary = useWorkoutUi((s) => s.lastSummary);
   const profile = useProfile();
   const unit = profile?.unitPref ?? 'kg';
@@ -150,6 +153,7 @@ export default function Summary() {
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
+  const styles = useStyles();
   return (
     <View style={styles.stat}>
       <Text variant="heading" tabular>
@@ -164,7 +168,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 const sum = (events: XpEventDraft[]) => events.reduce((s, e) => s + e.amount, 0);
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   content: { padding: space.lg, gap: space.lg, paddingBottom: space.xxxl },
@@ -184,4 +188,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flex: { flex: 1, gap: space.xxs },
-});
+}));

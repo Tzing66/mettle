@@ -3,7 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
-import { colors, motion } from '../tokens';
+import { motion } from '../tokens';
+import { makeStyles, useTheme } from '../theme';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -17,7 +18,10 @@ export interface RingProps {
 }
 
 /** Circular progress (weekly goal). Content is centred inside. */
-export function Ring({ progress, size = 72, stroke = 7, color = colors.accent, children }: RingProps) {
+export function Ring({ progress, size = 72, stroke = 7, color: colorProp, children }: RingProps) {
+  const styles = useStyles();
+  const { colors } = useTheme();
+  const color = colorProp ?? colors.accent;
   const r = (size - stroke) / 2;
   const circumference = 2 * Math.PI * r;
   const p = useSharedValue(0);
@@ -50,9 +54,9 @@ export function Ring({ progress, size = 72, stroke = 7, color = colors.accent, c
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   center: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}));

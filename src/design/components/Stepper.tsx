@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, TextInput, View } from 'react-native';
 
 import { haptics } from '../haptics';
-import { colors, hitSize, radii, space, type } from '../tokens';
+import { hitSize, radii, space, type } from '../tokens';
 import { KEYBOARD_DONE_ID } from './KeyboardDoneBar';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
+import { makeStyles, useTheme } from '../theme';
 
 export interface StepperProps {
   value: number;
@@ -21,6 +22,8 @@ export interface StepperProps {
 
 /** − value + control. Tap the number to type a value directly. */
 export function Stepper({ value, onChange, step, min = 0, max = 9999, unit, decimals = 1, accessibilityLabel }: StepperProps) {
+  const { scheme } = useTheme();
+  const styles = useStyles();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
 
@@ -48,6 +51,7 @@ export function Stepper({ value, onChange, step, min = 0, max = 9999, unit, deci
       <View style={styles.valueBox}>
         {editing ? (
           <TextInput
+            keyboardAppearance={scheme}
             autoFocus
             value={draft}
             onChangeText={setDraft}
@@ -83,6 +87,7 @@ export function Stepper({ value, onChange, step, min = 0, max = 9999, unit, deci
 }
 
 function StepButton({ label, onPress, disabled }: { label: string; onPress: () => void; disabled: boolean }) {
+  const styles = useStyles();
   return (
     <PressableScale
       accessibilityRole="button"
@@ -98,7 +103,7 @@ function StepButton({ label, onPress, disabled }: { label: string; onPress: () =
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -124,4 +129,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}));

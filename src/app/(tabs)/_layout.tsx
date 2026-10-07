@@ -2,10 +2,12 @@ import { Redirect, Tabs } from 'expo-router';
 
 import { haptics } from '@/design/haptics';
 import { FriendsIcon, HistoryIcon, HomeIcon, ProfileIcon } from '@/design/icons/TabIcons';
-import { colors, fonts } from '@/design/tokens';
+import { fonts } from '@/design/tokens';
 import { useProfile } from '@/features/profile/useProfile';
+import { useTheme } from '@/design/theme';
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
   const profile = useProfile();
   if (!profile) return <Redirect href="/onboarding" />;
 

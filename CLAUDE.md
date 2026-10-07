@@ -33,7 +33,7 @@ Tests live next to code in `__tests__/` folders.
 - **Cloud security:** every table has RLS; anything that writes on behalf of others is a `security definer` function with explicit grants. Never ship the service key in the app. Schema changes go in `supabase/migrations/` and are applied with `npx supabase db push`.
 - **Units:** store kg / metres / seconds and epoch-ms timestamps. Convert only for display (`engine/units.ts`).
 - **Config, not code:** tunable numbers live in `config/*.json`. A behaviour change means a new version string, not an edit to the old one's meaning.
-- **Design tokens only:** no hex colours, font names or magic spacing in components or screens. Read them from `src/design/tokens.ts`.
+- **Design tokens only, theme-aware:** no hex colours, font names or magic spacing in components or screens. Colours come from the light/dark themes via hooks: `const useStyles = makeStyles((colors) => ({…}))` at module level, `const styles = useStyles(); const { colors } = useTheme();` inside components (`src/design/theme.tsx`). Never import colours directly; the React Compiler would cache stale ones. Contrast is enforced by `src/design/__tests__/contrast.test.ts`.
 - **Animations never block input:** short springs, `pointerEvents="none"` on overlays, haptics are fire-and-forget. Full-screen celebrations only for rank-ups.
 - **Reanimated + React Compiler:** use `sv.get()` / `sv.set()`, not `sv.value`. Use `scheduleOnRN` from `react-native-worklets` to call JS from worklets. Render must be pure: no `Date.now()` in render; compute it in the data read.
 - **Never commit secrets:** `.env.local`, Google `client_secret_*.json` and `plan.md` are gitignored.

@@ -1,15 +1,17 @@
 import { router } from 'expo-router';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 import { Button, Card, Text } from '@/design/components';
-import { colors, radii, space } from '@/design/tokens';
+import { radii, space } from '@/design/tokens';
 
 import { replaceLocalWithAccountData, syncNow, useSyncStore } from '@/features/sync/useSync';
 
 import { accountLabel, deleteAccount, signOut, useSession } from './auth';
 import { cloudConfigured } from './supabase';
+import { makeStyles, useTheme } from '@/design/theme';
 
 export function AccountCard() {
+  const styles = useStyles();
   const { session, ready } = useSession();
   const sync = useSyncStore();
   if (!cloudConfigured || !ready) return null;
@@ -92,6 +94,8 @@ export function AccountCard() {
 }
 
 function SyncStatus({ status, error, lastSyncedAt }: { status: string; error: string | null; lastSyncedAt: Date | null }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   if (status === 'mismatch') {
     return (
       <View style={styles.notice}>
@@ -141,7 +145,7 @@ function timeAgo(d: Date): string {
   return d.toLocaleDateString();
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   statusRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   dot: { width: 8, height: 8, borderRadius: radii.pill },
   notice: { gap: space.sm, padding: space.md, borderRadius: radii.md, backgroundColor: colors.sunken },
@@ -156,4 +160,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flex: { flex: 1, gap: space.xxs },
-});
+}));

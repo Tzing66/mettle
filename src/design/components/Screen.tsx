@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, space } from '../tokens';
+import { space } from '../tokens';
+import { makeStyles } from '../theme';
 
 export function Screen({ children, scroll = true }: { children: ReactNode; scroll?: boolean }) {
+  const styles = useStyles();
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
       {scroll ? (
@@ -18,7 +20,7 @@ export function Screen({ children, scroll = true }: { children: ReactNode; scrol
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   safe: {
     flex: 1,
     backgroundColor: colors.bg,
@@ -28,4 +30,4 @@ const styles = StyleSheet.create({
     gap: space.lg,
     paddingBottom: space.xxxl,
   },
-});
+}));
