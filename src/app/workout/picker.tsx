@@ -1,0 +1,175 @@
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
+import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { listExercises, recentExerciseIds, toggleFavourite, type ExerciseRow } from '@/db/repositories/exercises';
+import { addExerciseToWorkout, getActiveWorkout, setsForWorkout, startWorkout } from '@/db/repositories/workouts';
+import { useDbQuery } from '@/db/useDbQuery';
+import { Button, ExerciseTile, SegmentedTabs, Text } from '@/design/components';
+import { haptics } from '@/design/haptics';
+import { CheckIcon, SearchIcon } from '@/design/icons/Icons';
+import { colors, motion, radii, space, type } from '@/design/tokens';
+import type { ExerciseCategory } from '@/engine';
+
+const TABS: { key: ExerciseCategory; label: string }[] = [
+  { key: 'free_weight', label: 'Free weights' },
+  { key: 'machine', label: 'Machines' },
+  { key: 'bodyweight', label: 'Bodyweight' },
+  { key: 'cardio', label: 'Cardio' },
+];
+const COLUMNS = 3;
+
+export default function Picker() {
+  const { width } = useWindowDimensions();
+  const [tab, setTab] = useState<ExerciseCategory>('free_weight');
+  const [query, setQuery] = useState('');
+  const exercises = useDbQuery(listExercises, ['exercises']);
+  const recentIds = useDbQuery(() => recentExerciseIds(10), ['workout_sets']);
+  const inWorkout = useDbQuery(() => {
+    const w = getActiveWorkout();
+    return new Set(w ? setsForWorkout(w.id).map((s) => s.exerciseId) : []);
+  }, ['workout_sets', 'workouts']);
+
+  const tileWidth = (width - space.lg * 2 - space.md * (COLUMNS - 1)) / COLUMNS;
+  const byId = new Map(exercises.map((e) => [e.id, e]));
+  const q = query.trim().toLowerCase();
+  const searchResults = q
+    ? exercises.filter((e) => e.name.toLowerCase().includes(q) || e.primaryMuscles.some((m) => m.includes(q)))
+    : null;
+  const favourites = exercises.filter((e) => e.isFavourite);
+  const recent = recentIds.map((id) => byId.get(id)).filter((e): e is ExerciseRow => !!e);
+
+  const add = (exercise: ExerciseRow) => {
+    if (inWorkout.has(exercise.id)) return;
+    const workoutId = getActiveWorkout()?.id ?? startWorkout();
+    addExerciseToWorkout(workoutId, exercise);
+    haptics.setComplete();
+  };
+
+  const tile = (e: ExerciseRow, w = tileWidth) => (
+    <View key={e.id}>
+      <ExerciseTile
+        name={e.name}
+        short={e.shortName}
+        category={e.category}
+        favourite={e.isFavourite}
+        width={w}
+        onPress={() => add(e)}
+        onLongPress={() => toggleFavourite(e.id)}
+      />
+      {inWorkout.has(e.id) ? (
+        <Animated.View entering={ZoomIn.springify().damping(14).stiffness(320)} style={styles.added}>
+          <CheckIcon color={colors.onPrimary} size={14} />
+        </Animated.View>
+      ) : null}
+    </View>
+  );
+
+  const row = (title: string, items: ExerciseRow[]) =>
+    items.length ? (
+      <View style={styles.section}>
+        <Text variant="overline" color="inkMuted">
+          {title}
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hRow}>
+          {items.map((e) => tile(e, tileWidth * 0.82))}
+        </ScrollView>
+      </View>
+    ) : null;
+
+  return (
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+      <View style={styles.header}>
+        <Text variant="title">Add exercise</Text>
+        <Button label={inWorkout.size ? `Done · ${inWorkout.size}` : 'Done'} onPress={() => router.back()} />
+      </View>
+
+      <View style={styles.search}>
+        <SearchIcon color={colors.inkMuted} size={18} />
+        <TextInput
+          value={query}
+          onChangeText={setQuery}
+          placeholder="Search exercises or muscles"
+          placeholderTextColor={colors.inkFaint}
+          style={styles.searchInput}
+          autoCorrect={false}
+          clearButtonMode="while-editing"
+        />
+      </View>
+
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {searchResults ? (
+          <Animated.View entering={FadeIn.duration(motion.duration.fast)} style={styles.grid}>
+            {searchResults.length ? searchResults.map((e) => tile(e)) : <Text color="inkMuted">No matches for “{query}”.</Text>}
+          </Animated.View>
+        ) : (
+          <>
+            {row('Favourites', favourites)}
+            {row('Recent', recent)}
+            <SegmentedTabs options={TABS} value={tab} onChange={setTab} />
+            <Animated.View key={tab} entering={FadeIn.duration(motion.duration.base)} style={styles.grid}>
+              {exercises.filter((e) => e.category === tab).map((e) => tile(e))}
+            </Animated.View>
+            <Text variant="caption" color="inkFaint" align="center">
+              Long-press a tile to favourite it
+            </Text>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.bg },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+    paddingBottom: space.sm,
+  },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.sm,
+    marginHorizontal: space.lg,
+    paddingHorizontal: space.md,
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: StyleSheet.hairlineWidth * 2,
+    borderColor: colors.line,
+  },
+  searchInput: {
+    ...type.body,
+    flex: 1,
+    color: colors.ink,
+    paddingVertical: space.md,
+  },
+  content: {
+    padding: space.lg,
+    gap: space.lg,
+    paddingBottom: space.xxxl,
+  },
+  section: { gap: space.sm },
+  hRow: { gap: space.md },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.md,
+  },
+  added: {
+    position: 'absolute',
+    top: space.xs + 2,
+    left: space.xs + 2,
+    width: 22,
+    height: 22,
+    borderRadius: radii.pill,
+    backgroundColor: colors.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

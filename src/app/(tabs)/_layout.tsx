@@ -1,10 +1,14 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 
 import { haptics } from '@/design/haptics';
 import { HistoryIcon, HomeIcon, ProfileIcon } from '@/design/icons/TabIcons';
 import { colors, fonts } from '@/design/tokens';
+import { useProfile } from '@/features/profile/useProfile';
 
 export default function TabsLayout() {
+  const profile = useProfile();
+  if (!profile) return <Redirect href="/onboarding" />;
+
   return (
     <Tabs
       screenListeners={{ tabPress: () => haptics.tick() }}

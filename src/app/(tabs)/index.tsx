@@ -1,107 +1,144 @@
-// Phase 0 home: a live preview of the design system wired to the real rank engine.
-// Phase 1 replaces this with the real Home (rank card, weekly ring, Start Workout).
-
-import { useState } from 'react';
+import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { Button, Card, ProgressBar, RankBadge, Screen, Stepper, Text, XPFloat } from '@/design/components';
+import { startWorkout } from '@/db/repositories/workouts';
+import { Button, Card, PressableScale, ProgressBar, RankBadge, Ring, Screen, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { rankColors, space } from '@/design/tokens';
-import { ranksConfig, rankFor } from '@/engine';
+import { ChevronRightIcon, FlameIcon, PlusIcon } from '@/design/icons/Icons';
+import { colors, rankColors, rankInk, space } from '@/design/tokens';
+import { formatDay, formatDurationMs, formatNumber } from '@/features/format';
+import { useHomeStats } from '@/features/home/useHomeStats';
+import { useProfile } from '@/features/profile/useProfile';
 
-export default function HomeScreen() {
-  const [xp, setXp] = useState(1850);
-  const [weight, setWeight] = useState(60);
-  const [reps, setReps] = useState(8);
-  const [floats, setFloats] = useState<number[]>([]);
-  const rank = rankFor(xp);
+const enter = (i: number) => FadeInDown.delay(i * 60).duration(320);
 
-  const completeSet = () => {
-    haptics.setComplete();
-    setXp((v) => v + 5);
-    setFloats((f) => [...f, Date.now()]);
+export default function Home() {
+  const profile = useProfile();
+  const stats = useHomeStats();
+  const { rank } = stats;
+  const target = profile?.weeklyTargetDays ?? 3;
+
+  const start = () => {
+    haptics.success();
+    if (!stats.activeWorkout) startWorkout();
+    router.push('/workout/active');
   };
 
   return (
     <Screen>
-      <Text variant="title">Mettle</Text>
-      <Text color="inkMuted">Design preview: Phase 0</Text>
-
-      <Card style={styles.rankCard}>
-        <RankBadge rank={rank.rank} size={80} />
-        <View style={styles.rankText}>
-          <Text variant="heading">Level {rank.label}</Text>
-          <Text variant="caption" color="inkMuted" tabular>
-            {rank.totalXp.toLocaleString()} XP · {(rank.nextLevelXp - rank.totalXp).toLocaleString()} to next level
-          </Text>
-          <ProgressBar progress={rank.levelProgress} fill={rankColors[rank.rank]} style={styles.bar} />
-        </View>
-      </Card>
-
-      <Card>
-        <Text variant="label" color="inkMuted">
-          Bench press · Set 1
+      <Animated.View entering={enter(0)} style={styles.greeting}>
+        <Text variant="caption" color="inkMuted">
+          {new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
         </Text>
-        <View style={styles.steppers}>
-          <Stepper value={weight} onChange={setWeight} step={2.5} unit="kg" accessibilityLabel="Weight" />
-          <Stepper value={reps} onChange={setReps} step={1} min={1} decimals={0} unit="reps" accessibilityLabel="Reps" />
-        </View>
-        <View>
-          <Button label="Complete set ✓" variant="accent" onPress={completeSet} />
-          {floats.map((id) => (
-            <XPFloat key={id} amount={5} onDone={() => setFloats((f) => f.filter((x) => x !== id))} />
-          ))}
-        </View>
-      </Card>
+        <Text variant="title">Hi, {profile?.displayName ?? 'there'}</Text>
+      </Animated.View>
 
-      <Card>
-        <Text variant="label" color="inkMuted" style={styles.sectionLabel}>
-          Ranks
+      <Animated.View entering={enter(1)}>
+        <PressableScale onPress={() => router.push('/profile')} accessibilityLabel="Rank details">
+          <Card style={styles.rankCard}>
+            <View style={styles.rankTop}>
+              <RankBadge rank={rank.rank} size={64} />
+              <View style={styles.flex}>
+                <Text variant="overline" style={{ color: rankInk[rank.rank] }}>
+                  {rank.rank} rank
+                </Text>
+                <Text variant="title">Level {rank.label}</Text>
+              </View>
+              <ChevronRightIcon color={colors.inkFaint} size={20} />
+            </View>
+            <ProgressBar progress={rank.levelProgress} fill={rankColors[rank.rank]} />
+            <View style={styles.rankFooter}>
+              <Text variant="caption" color="inkMuted" tabular>
+                {formatNumber(rank.totalXp)} XP
+              </Text>
+              <Text variant="caption" color="inkMuted" tabular>
+                {formatNumber(rank.nextLevelXp - rank.totalXp)} to {rank.level < 5 || rank.rank === 'S' ? `${rank.rank}${rank.level + 1}` : `${rank.nextRank}1`}
+              </Text>
+            </View>
+          </Card>
+        </PressableScale>
+      </Animated.View>
+
+      <Animated.View entering={enter(2)} style={styles.row}>
+        <Card style={[styles.half, styles.goal]}>
+          <Ring progress={stats.daysThisWeek / target} size={56} stroke={6} color={stats.weekGoalHit ? colors.accent : colors.ink}>
+            <Text variant="label" tabular>
+              {stats.daysThisWeek}/{target}
+            </Text>
+          </Ring>
+          <View style={styles.flex}>
+            <Text variant="label">This week</Text>
+            <Text variant="caption" color="inkMuted">
+              {stats.weekGoalHit ? 'Goal hit' : `${Math.max(0, target - stats.daysThisWeek)} to go`}
+            </Text>
+          </View>
+        </Card>
+        <Card style={[styles.half, styles.goal]}>
+          <View style={styles.flame}>
+            <FlameIcon color={stats.streakWeeks > 0 ? colors.prInk : colors.inkFaint} size={26} />
+          </View>
+          <View style={styles.flex}>
+            <Text variant="label" tabular>
+              {stats.streakWeeks} week{stats.streakWeeks === 1 ? '' : 's'}
+            </Text>
+            <Text variant="caption" color="inkMuted">
+              Streak
+            </Text>
+          </View>
+        </Card>
+      </Animated.View>
+
+      <Animated.View entering={enter(3)}>
+        <Button
+          label={stats.activeWorkout ? 'Resume workout' : 'Start workout'}
+          size="lg"
+          icon={stats.activeWorkout ? undefined : <PlusIcon color={colors.onPrimary} size={20} />}
+          onPress={start}
+          silent
+        />
+      </Animated.View>
+
+      <Animated.View entering={enter(4)} style={styles.section}>
+        <Text variant="overline" color="inkMuted">
+          Last workout
         </Text>
-        <View style={styles.ranks}>
-          {ranksConfig.ranks.map((r) => (
-            <RankBadge key={r.rank} rank={r.rank} size={44} />
-          ))}
-        </View>
-        <View style={styles.jump}>
-          <Button label="+500 XP" variant="secondary" onPress={() => setXp((v) => v + 500)} />
-          <Button label="Jump to S" variant="ghost" onPress={() => setXp(100000)} />
-        </View>
-      </Card>
-
-      <Button label="Start Workout" size="lg" onPress={() => haptics.success()} />
+        {stats.lastWorkout ? (
+          <Card style={styles.last}>
+            <View style={styles.lastTop}>
+              <Text variant="heading">{formatDay(stats.lastWorkout.endedAt)}</Text>
+              <Text variant="label" color="xpInk" tabular>
+                +{formatNumber(stats.lastWorkout.xp)} XP
+              </Text>
+            </View>
+            <Text variant="caption" color="inkMuted">
+              {formatDurationMs(stats.lastWorkout.durationMs)} · {stats.lastWorkout.sets} sets
+            </Text>
+            <Text color="inkMuted" numberOfLines={2}>
+              {stats.lastWorkout.exercises.join(' · ')}
+            </Text>
+          </Card>
+        ) : (
+          <Card>
+            <Text color="inkMuted">Your first workout will show up here. Every set counts.</Text>
+          </Card>
+        )}
+      </Animated.View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  rankCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.lg,
-  },
-  rankText: {
-    flex: 1,
-    gap: space.xs,
-  },
-  bar: {
-    marginTop: space.sm,
-  },
-  steppers: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: space.lg,
-  },
-  sectionLabel: {
-    marginBottom: space.md,
-  },
-  ranks: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  jump: {
-    flexDirection: 'row',
-    gap: space.sm,
-    marginTop: space.lg,
-  },
+  greeting: { gap: space.xxs, paddingTop: space.sm },
+  flex: { flex: 1, gap: space.xxs },
+  rankCard: { gap: space.md },
+  rankTop: { flexDirection: 'row', alignItems: 'center', gap: space.lg },
+  rankFooter: { flexDirection: 'row', justifyContent: 'space-between' },
+  row: { flexDirection: 'row', gap: space.md },
+  half: { flex: 1 },
+  goal: { flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.md },
+  flame: { width: 56, height: 56, alignItems: 'center', justifyContent: 'center' },
+  section: { gap: space.sm },
+  last: { gap: space.xs },
+  lastTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
 });

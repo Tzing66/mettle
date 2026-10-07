@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useDatabaseMigrations } from '@/db/client';
+import { ensureSeeded } from '@/db/seed';
 import { Text } from '@/design/components';
 import { colors, space } from '@/design/tokens';
 
@@ -28,6 +29,9 @@ export default function RootLayout() {
   });
   const migrations = useDatabaseMigrations();
   const ready = (fontsLoaded || !!fontError) && (migrations.success || !!migrations.error);
+
+  // The catalogue upsert is synchronous and must finish before any screen reads exercises.
+  if (migrations.success) ensureSeeded();
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -49,6 +53,11 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="onboarding" options={{ gestureEnabled: false, animation: 'fade' }} />
+        <Stack.Screen name="workout/active" options={{ animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="workout/picker" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="workout/summary" options={{ gestureEnabled: false, animation: 'fade' }} />
+        <Stack.Screen name="exercise/[id]" />
       </Stack>
     </>
   );
