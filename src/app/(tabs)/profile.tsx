@@ -137,7 +137,7 @@ export default function Profile() {
           );
         })}
         <Text variant="caption" color="inkFaint">
-          Tiers are placeholders for now and will be replaced with researched standards.
+          Lifts and reps use Strength Level’s standards (Intermediate = stronger than half of lifters). Runs are age-graded with the WMA 2025 tables.
         </Text>
       </Card>
 

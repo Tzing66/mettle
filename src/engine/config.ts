@@ -1,6 +1,7 @@
 // Typed access to the versioned JSON config. Engine functions take config as an
 // argument (defaulting to these) so tests can pass tuned variants.
 
+import ageGradingJson from '@config/age-grading.road2025.json';
 import benchmarksJson from '@config/benchmarks.v1.json';
 import ranksJson from '@config/ranks.v1.json';
 import xpRulesJson from '@config/xp-rules.v1.json';
@@ -59,6 +60,11 @@ interface BenchmarkBase {
   name: string;
   /** Five ascending thresholds, one per tier. */
   thresholds: Record<Sex, number[]>;
+  /**
+   * Exercise benchmark groups that also feed this benchmark (e.g. every
+   * exercise tagged "run" counts toward both the 5k and the 10k).
+   */
+  matches?: string[];
 }
 
 export type BenchmarkDef =
@@ -67,7 +73,6 @@ export type BenchmarkDef =
   | (BenchmarkBase & {
       kind: 'run_age_graded';
       distanceM: number;
-      standardSeconds: Record<Sex, number>;
     });
 
 export interface BenchmarksConfig {
@@ -79,5 +84,13 @@ export interface BenchmarksConfig {
 export const xpRules = xpRulesJson as XpRules;
 export const ranksConfig = ranksJson as RanksConfig;
 export const benchmarksConfig = benchmarksJson as unknown as BenchmarksConfig;
+
+export interface AgeGradingConfig {
+  version: string;
+  /** sex → distance in metres → age in years → age standard in seconds. */
+  standards: Record<Sex, Record<string, Record<string, number>>>;
+}
+
+export const ageGrading = ageGradingJson as unknown as AgeGradingConfig;
 
 export const DAY_MS = 24 * 60 * 60 * 1000;

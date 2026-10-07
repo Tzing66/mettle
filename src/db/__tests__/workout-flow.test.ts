@@ -127,7 +127,7 @@ describe('workout flow', () => {
   });
 
   it('first bench session: baseline, first-exercise XP and benchmark tiers', () => {
-    // 80 × 5 → e1RM 93.3 kg at 75 kg = 1.24× → beginner, novice, intermediate.
+    // 80 × 5 → e1RM 93.3 kg at 75 kg = 1.24× → beginner, novice (intermediate is 1.25×).
     const { id, summary } = logLifts(MONDAY, 'bench_press', [
       [80, 5],
       [80, 5],
@@ -136,15 +136,15 @@ describe('workout flow', () => {
     expect(summary).not.toBeNull();
     const reasons = Object.fromEntries(summary!.events.filter((e) => e.reason !== 'benchmark_tier').map((e) => [e.reason, e.amount]));
     expect(reasons).toEqual({ workout_complete: 50, working_sets: 15, first_exercise: 20 });
-    expect(summary!.unlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
+    expect(summary!.unlocks.map((u) => u.tier)).toEqual(['beginner', 'novice']);
     expect(summary!.prs).toEqual([]);
 
     expect(totalXpFromDb()).toBe(summary!.xpGained);
-    expect(summary!.xpGained).toBe(50 + 15 + 20 + 250 + 750 + 2000);
+    expect(summary!.xpGained).toBe(50 + 15 + 20 + 250 + 750);
     expect(xpByWorkout([id]).get(id)).toBe(summary!.xpGained);
     expect(listRecords()).toEqual([expect.objectContaining({ exerciseId: 'bench_press', metric: 'e1rm' })]);
-    expect(listBenchmarkUnlocks()).toHaveLength(3);
-    expect(summary!.rank.rankUp).toBe(true); // E → D at 2,000 XP
+    expect(listBenchmarkUnlocks()).toHaveLength(2);
+    expect(summary!.rank.rankUp).toBe(false); // 1,085 XP: still E
   });
 
   it('next session pre-fills from last time and a heavier set is a PR', () => {

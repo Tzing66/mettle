@@ -206,6 +206,7 @@
       "primaryMuscles": [
         "shoulders"
       ],
+      "benchmarkId": "overhead_press",
       "source": "free-exercise-db:Standing_Military_Press"
     },
     {
@@ -807,6 +808,7 @@
       "primaryMuscles": [
         "lats"
       ],
+      "benchmarkId": "pull_ups",
       "source": "free-exercise-db:Pullups"
     },
     {
@@ -1004,7 +1006,7 @@
         "calves"
       ],
       "activity": "run",
-      "benchmarkId": "run_5k",
+      "benchmarkId": "run",
       "source": "mettle"
     },
     {
@@ -1018,7 +1020,7 @@
         "quadriceps"
       ],
       "activity": "run",
-      "benchmarkId": "run_5k",
+      "benchmarkId": "run",
       "source": "free-exercise-db:Running_Treadmill"
     },
     {

@@ -1,7 +1,16 @@
 // Benchmark normalization and tier detection. Only exercises mapped to a
-// benchmark (exercise.benchmarkId) can unlock tiers.
+// benchmark (exercise.benchmarkId, directly or via a benchmark's `matches`
+// group) can unlock tiers.
 
-import { benchmarksConfig, xpRules, type BenchmarkDef, type BenchmarksConfig, type XpRules } from './config';
+import {
+  ageGrading,
+  benchmarksConfig,
+  xpRules,
+  type AgeGradingConfig,
+  type BenchmarkDef,
+  type BenchmarksConfig,
+  type XpRules,
+} from './config';
 import { estimateOneRepMax } from './e1rm';
 import type { BenchmarkTier, BenchmarkUnlock, ExerciseInfo, PerformanceRef, SetInput, Sex } from './types';
 
@@ -22,6 +31,38 @@ export function findBenchmark(
   return config.benchmarks.find((b) => b.id === id);
 }
 
+/** Does this exercise feed this benchmark? */
+export function exerciseFeeds(benchmark: BenchmarkDef, exercise: ExerciseInfo | undefined): boolean {
+  const tag = exercise?.benchmarkId;
+  return !!tag && (tag === benchmark.id || (benchmark.matches?.includes(tag) ?? false));
+}
+
+/** Benchmarks fed by any of these exercises, in config order. */
+export function benchmarksFor(
+  exercises: (ExerciseInfo | undefined)[],
+  config: BenchmarksConfig = benchmarksConfig,
+): BenchmarkDef[] {
+  return config.benchmarks.filter((b) => exercises.some((e) => exerciseFeeds(b, e)));
+}
+
+/** WMA/USATF age standard (seconds) for a distance, or null if that distance isn't tabled. */
+export function ageStandardSeconds(
+  sex: Sex,
+  age: number,
+  distanceM: number,
+  tables: AgeGradingConfig = ageGrading,
+): number | null {
+  const byAge = tables.standards[sex]?.[String(distanceM)];
+  if (!byAge) return null;
+  const ages = Object.keys(byAge).map(Number);
+  const clamped = Math.min(Math.max(Math.round(age), Math.min(...ages)), Math.max(...ages));
+  return byAge[String(clamped)] ?? null;
+}
+
+export function ageAt(birthYear: number, at: number): number {
+  return new Date(at).getFullYear() - birthYear;
+}
+
 /**
  * Best normalized value a set of sets achieves for one benchmark, or null.
  * Lifts need a bodyweight; without one they can't be normalized.
@@ -30,7 +71,7 @@ export function benchmarkValue(
   benchmark: BenchmarkDef,
   sets: SetInput[],
   exercises: Record<string, ExerciseInfo>,
-  ctx: { sex: Sex; bodyweightKg: number | null },
+  ctx: { sex: Sex; bodyweightKg: number | null; birthYear: number },
   rules: XpRules = xpRules,
 ): BenchmarkResult | null {
   let best: BenchmarkResult | null = null;
@@ -40,7 +81,7 @@ export function benchmarkValue(
 
   for (const set of sets) {
     const exercise = exercises[set.exerciseId];
-    if (set.isWarmup || exercise?.benchmarkId !== benchmark.id) continue;
+    if (set.isWarmup || !exerciseFeeds(benchmark, exercise)) continue;
     const base = { benchmarkId: benchmark.id, setId: set.id, achievedAt: set.completedAt };
 
     switch (benchmark.kind) {
@@ -67,8 +108,9 @@ export function benchmarkValue(
         // Longer runs are scaled down to the benchmark distance at the same pace,
         // which under-rates the runner slightly: the conservative direction.
         const projected = set.durationS * (benchmark.distanceM / set.distanceM);
-        // PLACEHOLDER: open-class standard only, no WMA age factor yet.
-        const ageGrade = (benchmark.standardSeconds[ctx.sex] / projected) * 100;
+        const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, set.completedAt), benchmark.distanceM);
+        if (!standard) break;
+        const ageGrade = (standard / projected) * 100;
         const pace = set.durationS / (set.distanceM / 1000);
         consider({
           ...base,

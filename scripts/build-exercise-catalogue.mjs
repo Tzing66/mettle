@@ -34,7 +34,7 @@ const CATALOGUE = [
   ['hip_thrust', 'Barbell_Hip_Thrust', 'Hip thrust', 'HT', 'free_weight', W],
   ['glute_bridge', 'Barbell_Glute_Bridge', 'Barbell glute bridge', 'GB', 'free_weight', W],
   ['good_morning', 'Good_Morning', 'Good morning', 'GM', 'free_weight', W],
-  ['overhead_press', 'Standing_Military_Press', 'Overhead press', 'OHP', 'free_weight', W],
+  ['overhead_press', 'Standing_Military_Press', 'Overhead press', 'OHP', 'free_weight', W, { benchmarkId: 'overhead_press' }],
   ['db_shoulder_press', 'Dumbbell_Shoulder_Press', 'Dumbbell shoulder press', 'DSP', 'free_weight', W],
   ['arnold_press', 'Arnold_Dumbbell_Press', 'Arnold press', 'AP', 'free_weight', W],
   ['lateral_raise', 'Side_Lateral_Raise', 'Lateral raise', 'LR', 'free_weight', W],
@@ -88,7 +88,7 @@ const CATALOGUE = [
 
   // Bodyweight
   ['push_up', 'Pushups', 'Push-up', 'PU', 'bodyweight', R, { benchmarkId: 'push_ups' }],
-  ['pull_up', 'Pullups', 'Pull-up', 'PL', 'bodyweight', R],
+  ['pull_up', 'Pullups', 'Pull-up', 'PL', 'bodyweight', R, { benchmarkId: 'pull_ups' }],
   ['chin_up', 'Chin-Up', 'Chin-up', 'CU', 'bodyweight', R],
   ['dip', 'Dips_-_Triceps_Version', 'Dip', 'DP', 'bodyweight', R],
   ['inverted_row', 'Inverted_Row', 'Inverted row', 'IR', 'bodyweight', R],
@@ -106,8 +106,8 @@ const CATALOGUE = [
   ['burpee', null, 'Burpee', 'BU', 'bodyweight', R, { equipment: 'body only', primaryMuscles: ['quadriceps', 'chest', 'shoulders'] }],
 
   // Cardio
-  ['outdoor_run', null, 'Run', 'RUN', 'cardio', D, { activity: 'run', benchmarkId: 'run_5k', equipment: 'none', primaryMuscles: ['quadriceps', 'hamstrings', 'calves'] }],
-  ['treadmill_run', 'Running_Treadmill', 'Treadmill run', 'TRM', 'cardio', D, { activity: 'run', benchmarkId: 'run_5k' }],
+  ['outdoor_run', null, 'Run', 'RUN', 'cardio', D, { activity: 'run', benchmarkId: 'run', equipment: 'none', primaryMuscles: ['quadriceps', 'hamstrings', 'calves'] }],
+  ['treadmill_run', 'Running_Treadmill', 'Treadmill run', 'TRM', 'cardio', D, { activity: 'run', benchmarkId: 'run' }],
   ['walk', 'Walking_Treadmill', 'Walk', 'WLK', 'cardio', D, { activity: 'walk' }],
   ['hike', 'Trail_Running_Walking', 'Hike', 'HK', 'cardio', D, { activity: 'hike' }],
   ['outdoor_cycle', 'Bicycling', 'Ride', 'RD', 'cardio', D, { activity: 'cycle' }],

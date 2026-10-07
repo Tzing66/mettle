@@ -130,9 +130,9 @@ describe('progress XP (§6.3)', () => {
 
 describe('benchmark unlocks', () => {
   it('unlocks every newly reached tier once', () => {
-    // 80 kg × 1 at 80 kg bodyweight = 1.0× → beginner, novice, intermediate.
+    // 104 kg × 1 at 80 kg bodyweight = 1.3× → beginner, novice, intermediate.
     const ctx = context({ benchmarkUnlocks: [{ benchmarkId: 'bench_press', tier: 'beginner' }] });
-    const r = computeWorkoutXp(workout([lift('bench', 80, 1)]), ctx);
+    const r = computeWorkoutXp(workout([lift('bench', 104, 1)]), ctx);
     const tiers = r.events.filter((e) => e.reason === 'benchmark_tier');
     expect(tiers.map((e) => [e.sourceId, e.amount])).toEqual([
       ['bench_press:novice', 750],
@@ -141,7 +141,7 @@ describe('benchmark unlocks', () => {
     expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['novice', 'intermediate']);
   });
 
-  it('works for push-ups and the 5k', () => {
+  it('works for push-ups and the 5k (age-graded)', () => {
     const r = computeWorkoutXp(
       workout([set('push_up', { reps: 21 }), set('run', { distanceM: 5000, durationS: 1500 })]),
       context(),
@@ -149,7 +149,8 @@ describe('benchmark unlocks', () => {
     expect(r.benchmarkUnlocks.map((u) => `${u.benchmarkId}:${u.tier}`)).toEqual([
       'push_ups:beginner',
       'push_ups:novice',
-      'run_5k:beginner',
+      'run_5k:beginner', // 769 s standard / 1500 s = 51% age grade
+      'run_5k:novice',
     ]);
   });
 });

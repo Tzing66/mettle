@@ -9,7 +9,7 @@ import {
   type BenchmarksConfig,
   type XpRules,
 } from './config';
-import { benchmarkValue, findBenchmark, newTiers } from './benchmarks';
+import { benchmarksFor, benchmarkValue, findBenchmark, newTiers } from './benchmarks';
 import { exceedsEliteCeiling, isSuspiciousE1rmJump } from './plausibility';
 import { detectRecords, type RecordOutcome } from './records';
 import { streakMultiplier } from './streaks';
@@ -190,13 +190,16 @@ export function computeWorkoutXp(
 
   // --- Progress: benchmark tiers --------------------------------------------
   const benchmarkUnlocks: BenchmarkUnlock[] = [];
-  const touched = uniqueInOrder(
-    workout.sets.map((s) => exercises[s.exerciseId]?.benchmarkId).filter((id): id is string => !!id),
-  );
-  for (const benchmarkId of touched) {
-    const benchmark = findBenchmark(benchmarkId, benchmarks);
-    if (!benchmark) continue;
-    const result = benchmarkValue(benchmark, workout.sets, exercises, { sex: ctx.profile.sex, bodyweightKg: ctx.bodyweightKg }, rules);
+  const touched = benchmarksFor(uniqueInOrder(workout.sets.map((s) => s.exerciseId)).map((id) => exercises[id]), benchmarks);
+  for (const benchmark of touched) {
+    const benchmarkId = benchmark.id;
+    const result = benchmarkValue(
+      benchmark,
+      workout.sets,
+      exercises,
+      { sex: ctx.profile.sex, bodyweightKg: ctx.bodyweightKg, birthYear: ctx.profile.birthYear },
+      rules,
+    );
     if (!result) continue;
 
     const previousE1rm = ctx.records.find((r) => r.exerciseId === result.performance.exerciseId && r.metric === 'e1rm');

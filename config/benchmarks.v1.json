@@ -1,6 +1,10 @@
 {
-  "version": "benchmarks.v1-placeholder",
-  "_note": "PLACEHOLDER tiers for v0 testing only (plan.md §7.3). Must be replaced with researched values before real users.",
+  "version": "benchmarks.v1",
+  "_sources": {
+    "lifts": "Strength Level bodyweight-ratio standards (strengthlevel.com/strength-standards), accessed 2026-10-07. Tiers are percentile-defined: Beginner > 5% of lifters, Novice > 20%, Intermediate > 50%, Advanced > 80%, Elite > 95%. Based on ~10.9M qualifying community lifts. Cross-checked against Trainnode's coach reference ratios (Intermediate within 0.25x).",
+    "reps": "Strength Level whole-community rep standards for push-ups and pull-ups, accessed 2026-10-07. '<1' is stored as 1 (the first rep).",
+    "running": "Age grade = WMA/USATF 2025 road age standard for the runner's age and sex / their time (config/age-grading.road2025.json, CC0). Tiers 40/50/60/70/80% place Intermediate at WAVA 'local class' (60%), Advanced at 'regional class' (70%), Elite at 'national class' (80%)."
+  },
   "tiers": ["beginner", "novice", "intermediate", "advanced", "elite"],
   "benchmarks": [
     {
@@ -8,8 +12,8 @@
       "name": "Bench press",
       "kind": "bodyweight_multiple",
       "thresholds": {
-        "male": [0.5, 0.75, 1.0, 1.5, 2.0],
-        "female": [0.25, 0.5, 0.75, 1.0, 1.5]
+        "male": [0.5, 1.0, 1.25, 1.5, 2.0],
+        "female": [0.3, 0.5, 0.75, 1.1, 1.45]
       }
     },
     {
@@ -17,8 +21,8 @@
       "name": "Back squat",
       "kind": "bodyweight_multiple",
       "thresholds": {
-        "male": [0.75, 1.25, 1.5, 2.25, 2.75],
-        "female": [0.5, 0.75, 1.25, 1.5, 2.0]
+        "male": [0.75, 1.25, 1.75, 2.25, 2.75],
+        "female": [0.5, 0.75, 1.25, 1.75, 2.25]
       }
     },
     {
@@ -26,8 +30,26 @@
       "name": "Deadlift",
       "kind": "bodyweight_multiple",
       "thresholds": {
-        "male": [1.0, 1.5, 2.0, 2.5, 3.0],
-        "female": [0.5, 1.0, 1.25, 1.75, 2.25]
+        "male": [1.0, 1.5, 2.0, 2.5, 3.25],
+        "female": [0.75, 1.0, 1.5, 2.0, 2.5]
+      }
+    },
+    {
+      "id": "overhead_press",
+      "name": "Overhead press",
+      "kind": "bodyweight_multiple",
+      "thresholds": {
+        "male": [0.35, 0.55, 0.8, 1.05, 1.35],
+        "female": [0.2, 0.35, 0.5, 0.7, 0.95]
+      }
+    },
+    {
+      "id": "pull_ups",
+      "name": "Pull-ups",
+      "kind": "max_reps",
+      "thresholds": {
+        "male": [1, 7, 13, 21, 30],
+        "female": [1, 1, 6, 12, 19]
       }
     },
     {
@@ -35,8 +57,8 @@
       "name": "Push-ups",
       "kind": "max_reps",
       "thresholds": {
-        "male": [10, 20, 35, 50, 70],
-        "female": [3, 10, 20, 35, 50]
+        "male": [5, 19, 39, 62, 87],
+        "female": [1, 7, 18, 31, 47]
       }
     },
     {
@@ -44,10 +66,21 @@
       "name": "5k run",
       "kind": "run_age_graded",
       "distanceM": 5000,
-      "standardSeconds": { "male": 755, "female": 840 },
+      "matches": ["run"],
       "thresholds": {
-        "male": [45, 55, 65, 75, 85],
-        "female": [45, 55, 65, 75, 85]
+        "male": [40, 50, 60, 70, 80],
+        "female": [40, 50, 60, 70, 80]
+      }
+    },
+    {
+      "id": "run_10k",
+      "name": "10k run",
+      "kind": "run_age_graded",
+      "distanceM": 10000,
+      "matches": ["run"],
+      "thresholds": {
+        "male": [40, 50, 60, 70, 80],
+        "female": [40, 50, 60, 70, 80]
       }
     }
   ]

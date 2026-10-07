@@ -13,7 +13,7 @@ export const exercises: Record<string, ExerciseInfo> = {
   leg_press: { id: 'leg_press', category: 'machine', trackingType: 'weight_reps' },
   push_up: { id: 'push_up', category: 'bodyweight', trackingType: 'reps', benchmarkId: 'push_ups' },
   plank: { id: 'plank', category: 'bodyweight', trackingType: 'time' },
-  run: { id: 'run', category: 'cardio', trackingType: 'distance_time', activity: 'run', benchmarkId: 'run_5k' },
+  run: { id: 'run', category: 'cardio', trackingType: 'distance_time', activity: 'run', benchmarkId: 'run' },
   bike: { id: 'bike', category: 'cardio', trackingType: 'distance_time', activity: 'cycle' },
 };
 
