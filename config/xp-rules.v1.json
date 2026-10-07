@@ -1,0 +1,46 @@
+{
+  "version": "xp-rules.v1",
+  "consistency": {
+    "workoutComplete": 50,
+    "workoutMinWorkingSets": 3,
+    "workoutMinCardioMinutes": 15,
+    "perWorkingSet": 5,
+    "maxSetXpPerWorkout": 40,
+    "cardioBands": [
+      { "upToMinutes": 30, "xpPerMinute": 2 },
+      { "upToMinutes": 60, "xpPerMinute": 1 }
+    ],
+    "weeklyGoal": 100,
+    "streakBonusPerWeek": 0.05,
+    "streakBonusMax": 0.25,
+    "dailyCap": 150
+  },
+  "progress": {
+    "personalRecord": 25,
+    "maxPrsPerDay": 3,
+    "firstExercise": 20,
+    "firstActivity": 100,
+    "benchmarkTier": {
+      "beginner": 250,
+      "novice": 750,
+      "intermediate": 2000,
+      "advanced": 5000,
+      "elite": 12000
+    }
+  },
+  "e1rm": {
+    "formula": "epley",
+    "maxReps": 10
+  },
+  "records": {
+    "minPaceDistanceM": 1000
+  },
+  "plausibility": {
+    "e1rmJumpPct": 0.15,
+    "e1rmJumpWindowDays": 30,
+    "eliteMultiplier": 1.2,
+    "bodyweightChangePct": 0.05,
+    "bodyweightChangeWindowDays": 7,
+    "rollingBodyweightDays": 14
+  }
+}

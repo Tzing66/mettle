@@ -1,0 +1,54 @@
+{
+  "version": "benchmarks.v1-placeholder",
+  "_note": "PLACEHOLDER tiers for v0 testing only (plan.md §7.3). Must be replaced with researched values before real users.",
+  "tiers": ["beginner", "novice", "intermediate", "advanced", "elite"],
+  "benchmarks": [
+    {
+      "id": "bench_press",
+      "name": "Bench press",
+      "kind": "bodyweight_multiple",
+      "thresholds": {
+        "male": [0.5, 0.75, 1.0, 1.5, 2.0],
+        "female": [0.25, 0.5, 0.75, 1.0, 1.5]
+      }
+    },
+    {
+      "id": "back_squat",
+      "name": "Back squat",
+      "kind": "bodyweight_multiple",
+      "thresholds": {
+        "male": [0.75, 1.25, 1.5, 2.25, 2.75],
+        "female": [0.5, 0.75, 1.25, 1.5, 2.0]
+      }
+    },
+    {
+      "id": "deadlift",
+      "name": "Deadlift",
+      "kind": "bodyweight_multiple",
+      "thresholds": {
+        "male": [1.0, 1.5, 2.0, 2.5, 3.0],
+        "female": [0.5, 1.0, 1.25, 1.75, 2.25]
+      }
+    },
+    {
+      "id": "push_ups",
+      "name": "Push-ups",
+      "kind": "max_reps",
+      "thresholds": {
+        "male": [10, 20, 35, 50, 70],
+        "female": [3, 10, 20, 35, 50]
+      }
+    },
+    {
+      "id": "run_5k",
+      "name": "5k run",
+      "kind": "run_age_graded",
+      "distanceM": 5000,
+      "standardSeconds": { "male": 755, "female": 840 },
+      "thresholds": {
+        "male": [45, 55, 65, 75, 85],
+        "female": [45, 55, 65, 75, 85]
+      }
+    }
+  ]
+}

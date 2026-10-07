@@ -8,8 +8,14 @@
       ],
       "@/assets/*": [
         "./assets/*"
+      ],
+      "@config/*": [
+        "./config/*"
       ]
-    }
+    },
+    "types": [
+      "jest"
+    ]
   },
   "include": [
     "**/*.ts",

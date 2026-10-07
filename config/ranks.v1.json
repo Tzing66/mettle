@@ -1,0 +1,13 @@
+{
+  "version": "ranks.v1",
+  "levelsPerRank": 5,
+  "ranks": [
+    { "rank": "E", "minXp": 0 },
+    { "rank": "D", "minXp": 2000 },
+    { "rank": "C", "minXp": 8000 },
+    { "rank": "B", "minXp": 20000 },
+    { "rank": "A", "minXp": 45000 },
+    { "rank": "S", "minXp": 100000 }
+  ],
+  "sLevelSpanXp": 25000
+}
