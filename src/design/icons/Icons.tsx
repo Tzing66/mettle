@@ -75,3 +75,19 @@ export const DotsIcon = ({ color, size }: IconProps) => (
     <Circle cx={18} cy={12} r={1.5} fill={color as string} />
   </Icon>
 );
+export const ListIcon = ({ color, size, strokeWidth }: IconProps) => (
+  <Icon size={size}>
+    <Path d="M9 6h11M9 12h11M9 18h11" {...s(color, strokeWidth)} />
+    <Circle cx={4.5} cy={6} r={1.2} fill={color as string} />
+    <Circle cx={4.5} cy={12} r={1.2} fill={color as string} />
+    <Circle cx={4.5} cy={18} r={1.2} fill={color as string} />
+  </Icon>
+);
+export const PlayIcon = ({ color, size, strokeWidth }: IconProps) => (
+  <Icon size={size}><Path d="M8 5.5v13l10-6.5z" {...s(color, strokeWidth)} /></Icon>
+);
+export const RepeatIcon = ({ color, size, strokeWidth }: IconProps) => (
+  <Icon size={size}>
+    <Path d="M4 11V9a3 3 0 0 1 3-3h12m-3-3 3 3-3 3M20 13v2a3 3 0 0 1-3 3H5m3 3-3-3 3-3" {...s(color, strokeWidth)} />
+  </Icon>
+);

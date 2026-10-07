@@ -52,6 +52,9 @@ export const workouts = sqliteTable(
   'workouts',
   {
     id: text('id').primaryKey(),
+    /** 'planning': exercises being set up, timer not running. 'active': in progress or finished (see endedAt). */
+    status: text('status').$type<'planning' | 'active'>().notNull().default('active'),
+    /** Creation time while planning; reset to the real start when the workout starts. */
     startedAt: integer('started_at', { mode: 'timestamp_ms' }).notNull(),
     endedAt: integer('ended_at', { mode: 'timestamp_ms' }),
     notes: text('notes'),

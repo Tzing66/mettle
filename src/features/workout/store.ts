@@ -16,10 +16,6 @@ interface WorkoutUiState {
   extendRest: (seconds: number) => void;
   stopRest: () => void;
 
-  /** Set row currently expanded for editing. */
-  expandedSetId: string | null;
-  setExpanded: (id: string | null) => void;
-
   lastSummary: WorkoutSummary | null;
   setLastSummary: (s: WorkoutSummary | null) => void;
 }
@@ -30,9 +26,6 @@ export const useWorkoutUi = create<WorkoutUiState>((set) => ({
   extendRest: (seconds) =>
     set((s) => (s.rest ? { rest: { endsAt: s.rest.endsAt + seconds * 1000, durationS: s.rest.durationS + seconds } } : s)),
   stopRest: () => set({ rest: null }),
-
-  expandedSetId: null,
-  setExpanded: (id) => set({ expandedSetId: id }),
 
   lastSummary: null,
   setLastSummary: (lastSummary) => set({ lastSummary }),

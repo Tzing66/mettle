@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, ne, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, gte, inArray, isNotNull, isNull, ne, sql } from 'drizzle-orm';
 
 import type { SetInput, WorkoutInput } from '@/engine/types';
 
@@ -18,9 +18,51 @@ export function getWorkout(id: string): WorkoutRow | null {
   return db.select().from(workouts).where(eq(workouts.id, id)).get() ?? null;
 }
 
+/** Starts a workout immediately: the timer runs from now ("add exercises as you go"). */
 export function startWorkout(): string {
   const id = newId();
-  db.insert(workouts).values({ id, startedAt: new Date() }).run();
+  db.insert(workouts).values({ id, status: 'active', startedAt: new Date() }).run();
+  return id;
+}
+
+/** Creates a workout in planning mode: set up exercises first, timer starts on beginWorkout. */
+export function planWorkout(): string {
+  const id = newId();
+  db.insert(workouts).values({ id, status: 'planning', startedAt: new Date() }).run();
+  return id;
+}
+
+/** Moves a planned workout to active and starts its clock now. */
+export function beginWorkout(id: string) {
+  db.update(workouts).set({ status: 'active', startedAt: new Date() }).where(eq(workouts.id, id)).run();
+}
+
+/** Plans a new workout with the same exercises and set targets as a finished one. */
+export function repeatWorkout(sourceId: string): string {
+  const source = db
+    .select()
+    .from(workoutSets)
+    .where(and(eq(workoutSets.workoutId, sourceId), isNotNull(workoutSets.completedAt)))
+    .orderBy(sql`rowid`)
+    .all();
+  const id = planWorkout();
+  db.transaction((tx) => {
+    for (const s of source) {
+      tx.insert(workoutSets)
+        .values({
+          id: newId(),
+          workoutId: id,
+          exerciseId: s.exerciseId,
+          setIndex: s.setIndex,
+          isWarmup: s.isWarmup,
+          weightKg: s.weightKg,
+          reps: s.reps,
+          durationS: s.durationS,
+          distanceM: s.distanceM,
+        })
+        .run();
+    }
+  });
   return id;
 }
 
@@ -91,12 +133,17 @@ export function defaultSetValues(exercise: ExerciseRow): SetValues {
   }
 }
 
+/** Sets a new exercise starts with when there's no history: 3 for strength, 1 for cardio and holds. */
+export function defaultSetCount(exercise: ExerciseRow): number {
+  return exercise.trackingType === 'weight_reps' || exercise.trackingType === 'reps' ? 3 : 1;
+}
+
 /** Adds an exercise pre-filled with last session's sets (or sensible defaults). */
 export function addExerciseToWorkout(workoutId: string, exercise: ExerciseRow) {
   const previous = lastSessionSets(exercise.id, workoutId);
   const values: SetValues[] = previous.length
     ? previous.map((s) => ({ isWarmup: s.isWarmup, weightKg: s.weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM }))
-    : [defaultSetValues(exercise)];
+    : Array.from({ length: defaultSetCount(exercise) }, () => defaultSetValues(exercise));
   db.transaction((tx) => {
     values.forEach((v, i) => {
       tx.insert(workoutSets).values({ id: newId(), workoutId, exerciseId: exercise.id, setIndex: i, ...v }).run();
@@ -131,6 +178,58 @@ export function addSet(workoutId: string, exerciseId: string): string {
 
 export function updateSet(id: string, patch: Partial<SetValues>) {
   db.update(workoutSets).set(patch).where(eq(workoutSets.id, id)).run();
+}
+
+type NumericField = 'weightKg' | 'reps' | 'durationS' | 'distanceM';
+
+/**
+ * Edits one set and carries the change down to later, unfinished sets of the
+ * same exercise that still had the old value. Change set 1 from 60 to 65 kg
+ * and sets 2–3 (also 60) follow; a set you'd already made different stays put.
+ */
+export function updateSetCascade(id: string, field: NumericField, value: number | null) {
+  const target = db.select().from(workoutSets).where(eq(workoutSets.id, id)).get();
+  if (!target) return;
+  const old = target[field];
+  db.transaction((tx) => {
+    tx.update(workoutSets).set({ [field]: value }).where(eq(workoutSets.id, id)).run();
+    const later = tx
+      .select()
+      .from(workoutSets)
+      .where(
+        and(
+          eq(workoutSets.workoutId, target.workoutId),
+          eq(workoutSets.exerciseId, target.exerciseId),
+          isNull(workoutSets.completedAt),
+          gt(workoutSets.setIndex, target.setIndex),
+        ),
+      )
+      .all();
+    for (const s of later) {
+      if (s[field] === old) tx.update(workoutSets).set({ [field]: value }).where(eq(workoutSets.id, s.id)).run();
+    }
+  });
+}
+
+/**
+ * Sets how many sets an exercise has. Adds copies of the last set, or removes
+ * unfinished sets from the end. Never removes completed sets or the last set.
+ */
+export function setSetCount(workoutId: string, exerciseId: string, count: number) {
+  const sets = db
+    .select()
+    .from(workoutSets)
+    .where(and(eq(workoutSets.workoutId, workoutId), eq(workoutSets.exerciseId, exerciseId)))
+    .orderBy(asc(workoutSets.setIndex))
+    .all();
+  const target = Math.max(1, count);
+  if (target > sets.length) {
+    for (let i = sets.length; i < target; i++) addSet(workoutId, exerciseId);
+    return;
+  }
+  const removable = sets.filter((s) => s.completedAt === null).reverse();
+  const toRemove = removable.slice(0, Math.min(sets.length - target, removable.length, sets.length - 1));
+  if (toRemove.length) db.delete(workoutSets).where(inArray(workoutSets.id, toRemove.map((s) => s.id))).run();
 }
 
 export function setCompleted(id: string, completed: boolean) {

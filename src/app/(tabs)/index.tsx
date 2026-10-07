@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { startWorkout } from '@/db/repositories/workouts';
 import { Button, Card, PressableScale, ProgressBar, RankBadge, Ring, Screen, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronRightIcon, FlameIcon, PlusIcon } from '@/design/icons/Icons';
@@ -19,10 +18,10 @@ export default function Home() {
   const { rank } = stats;
   const target = profile?.weeklyTargetDays ?? 3;
 
+  const active = stats.activeWorkout;
   const start = () => {
-    haptics.success();
-    if (!stats.activeWorkout) startWorkout();
-    router.push('/workout/active');
+    haptics.tick();
+    router.push(active ? '/workout/active' : '/workout/start');
   };
 
   return (
@@ -91,9 +90,9 @@ export default function Home() {
 
       <Animated.View entering={enter(3)}>
         <Button
-          label={stats.activeWorkout ? 'Resume workout' : 'Start workout'}
+          label={!active ? 'Start workout' : active.status === 'planning' ? 'Continue planning' : 'Resume workout'}
           size="lg"
-          icon={stats.activeWorkout ? undefined : <PlusIcon color={colors.onPrimary} size={20} />}
+          icon={active ? undefined : <PlusIcon color={colors.onPrimary} size={20} />}
           onPress={start}
           silent
         />

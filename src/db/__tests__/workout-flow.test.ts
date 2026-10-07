@@ -27,13 +27,19 @@ import { createProfile, getProfile } from '@/db/repositories/profile';
 import {
   addExerciseToWorkout,
   addSet,
+  beginWorkout,
+  discardWorkout,
   exerciseHistory,
   getActiveWorkout,
   listRecords,
+  planWorkout,
+  repeatWorkout,
   setCompleted,
+  setSetCount,
   setsForWorkout,
   startWorkout,
   updateSet,
+  updateSetCascade,
 } from '@/db/repositories/workouts';
 import { listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { ensureSeeded, seedExercises } from '@/db/seed';
@@ -102,13 +108,22 @@ describe('workout flow', () => {
     at(MONDAY);
     const id = startWorkout();
     addExerciseToWorkout(id, getExercise('db_curl')!);
-    expect(setsForWorkout(id)).toEqual([expect.objectContaining({ weightKg: 10, reps: 8, completedAt: null })]);
+    const sets = setsForWorkout(id);
+    expect(sets).toHaveLength(3);
+    expect(sets.every((x) => x.weightKg === 10 && x.reps === 8 && x.completedAt === null)).toBe(true);
   });
 
   it('finishing with nothing completed discards the workout', () => {
     const active = getActiveWorkout()!;
     expect(finishWorkout(active.id)).toBeNull();
     expect(getActiveWorkout()).toBeNull();
+  });
+
+  it('cardio starts with a single set', () => {
+    const id = startWorkout();
+    addExerciseToWorkout(id, getExercise('outdoor_run')!);
+    expect(setsForWorkout(id)).toHaveLength(1);
+    discardWorkout(id);
   });
 
   it('first bench session: baseline, first-exercise XP and benchmark tiers', () => {
@@ -198,5 +213,66 @@ describe('workout flow', () => {
     expect([...days.values()].reduce((a, b) => a + b, 0)).toBe(totalXpFromDb());
     expect(recentExerciseIds()).toEqual(expect.arrayContaining(['bench_press', 'back_squat', 'deadlift']));
     expect(exerciseHistory('bench_press').length).toBe(5);
+  });
+});
+
+describe('planning and fast set entry', () => {
+  it('a planned workout starts its clock only when begun', () => {
+    at(MONDAY + 10 * DAY);
+    const id = planWorkout();
+    expect(getActiveWorkout()).toMatchObject({ id, status: 'planning' });
+    addExerciseToWorkout(id, getExercise('overhead_press')!);
+    at(MONDAY + 10 * DAY + 15 * 60_000); // 15 minutes of setting up
+    beginWorkout(id);
+    expect(getActiveWorkout()).toMatchObject({ status: 'active' });
+    expect(getActiveWorkout()!.startedAt.getTime()).toBe(MONDAY + 10 * DAY + 15 * 60_000);
+  });
+
+  it('editing a set carries down to later sets that still matched', () => {
+    const id = getActiveWorkout()!.id;
+    const [a, b, c] = setsForWorkout(id);
+    updateSet(c.id, { reps: 6 }); // set 3 was customised
+    updateSetCascade(a.id, 'weightKg', 40);
+    updateSetCascade(a.id, 'reps', 10);
+    const after = setsForWorkout(id);
+    expect(after.map((x) => x.weightKg)).toEqual([40, 40, 40]);
+    expect(after.map((x) => x.reps)).toEqual([10, 10, 6]);
+    expect(b.id).toBe(after[1].id);
+  });
+
+  it('completed sets are never changed by a cascade', () => {
+    const id = getActiveWorkout()!.id;
+    const [a, b] = setsForWorkout(id);
+    setCompleted(b.id, true);
+    updateSetCascade(a.id, 'weightKg', 45);
+    expect(setsForWorkout(id).map((x) => x.weightKg)).toEqual([45, 40, 45]);
+  });
+
+  it('set count adds copies and trims unfinished sets from the end', () => {
+    const id = getActiveWorkout()!.id;
+    setSetCount(id, 'overhead_press', 5);
+    expect(setsForWorkout(id)).toHaveLength(5);
+    setSetCount(id, 'overhead_press', 1);
+    // Set 2 is completed, so it stays; set 1 is kept as the minimum.
+    const left = setsForWorkout(id);
+    expect(left.some((x) => x.completedAt)).toBe(true);
+    expect(left.length).toBeGreaterThanOrEqual(1);
+    expect(left.length).toBeLessThan(5);
+    finishWorkout(id);
+  });
+
+  it('repeat last workout plans the same exercises and sets', () => {
+    const last = logLifts(MONDAY + 12 * DAY, 'barbell_row', [
+      [50, 8],
+      [55, 8],
+      [55, 6],
+    ]);
+    const id = repeatWorkout(last.id);
+    expect(getActiveWorkout()).toMatchObject({ id, status: 'planning' });
+    expect(setsForWorkout(id).map((x) => [x.exerciseId, x.weightKg, x.reps, x.completedAt])).toEqual([
+      ['barbell_row', 50, 8, null],
+      ['barbell_row', 55, 8, null],
+      ['barbell_row', 55, 6, null],
+    ]);
   });
 });

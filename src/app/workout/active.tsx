@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listExercises, toExerciseInfo, type ExerciseRow } from '@/db/repositories/exercises';
 import {
-  addSet,
+  beginWorkout,
   deleteSet,
   discardWorkout,
   getActiveWorkout,
@@ -14,16 +15,18 @@ import {
   listRecords,
   removeExerciseFromWorkout,
   setCompleted,
+  setSetCount,
   setsForWorkout,
   toSetInput,
   updateSet,
+  updateSetCascade,
   type SetRow,
 } from '@/db/repositories/workouts';
 import { useDbQuery } from '@/db/useDbQuery';
-import { Button, PressableScale, Text } from '@/design/components';
+import { Button, Chip, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon, PlusIcon } from '@/design/icons/Icons';
-import { colors, radii, space } from '@/design/tokens';
+import { colors, motion, radii, space } from '@/design/tokens';
 import { cardioXp, formatDuration, setBeatsRecords, xpRules } from '@/engine';
 import { useProfile } from '@/features/profile/useProfile';
 import { ExerciseCard } from '@/features/workout/ExerciseCard';
@@ -37,14 +40,16 @@ export default function ActiveWorkout() {
   const sets = useDbQuery(() => (workout ? setsForWorkout(workout.id) : []), ['workout_sets'], [workout?.id]);
   const exercises = useDbQuery(listExercises, ['exercises']);
   const records = useDbQuery(listRecords, ['personal_records']);
-  const { expandedSetId, setExpanded, startRest, stopRest, setLastSummary } = useWorkoutUi();
+  const { startRest, stopRest, setLastSummary } = useWorkoutUi();
 
+  const planning = workout?.status === 'planning';
   const byId = new Map(exercises.map((e) => [e.id, e]));
   const groups = groupByExercise(sets);
   const unit = profile?.unitPref ?? 'kg';
   const engineRecords = records.map((r) => ({ ...r, achievedAt: r.achievedAt.getTime() }));
 
-  const isPrSet = (s: SetRow, ex: ExerciseRow) => setBeatsRecords(toSetInput(s), toExerciseInfo(ex), engineRecords).length > 0;
+  const isPrSet = (s: SetRow, ex: ExerciseRow) =>
+    !planning && setBeatsRecords(toSetInput(s), toExerciseInfo(ex), engineRecords).length > 0;
   const prSetIds = new Set(sets.filter((s) => byId.has(s.exerciseId) && isPrSet(s, byId.get(s.exerciseId)!)).map((s) => s.id));
 
   const completedWorking = sets.filter((s) => s.completedAt && !s.isWarmup && byId.get(s.exerciseId)?.category !== 'cardio').length;
@@ -68,16 +73,18 @@ export default function ActiveWorkout() {
     if (ex && isPrSet(s, ex)) haptics.pr();
     else haptics.setComplete();
     if (ex?.category !== 'cardio' && !s.isWarmup) startRest();
-    const group = groups.find((g) => g.exerciseId === s.exerciseId);
-    const next = group?.sets.find((x) => x.id !== s.id && x.completedAt === null);
-    setExpanded(next?.id ?? null);
+  };
+
+  const start = () => {
+    if (!workout) return;
+    haptics.success();
+    beginWorkout(workout.id);
   };
 
   const finish = () => {
     if (!workout) return;
     const run = () => {
       stopRest();
-      setExpanded(null);
       const summary = finishWorkout(workout.id);
       if (!summary) {
         router.replace('/');
@@ -105,7 +112,7 @@ export default function ActiveWorkout() {
 
   const discard = () => {
     if (!workout) return;
-    Alert.alert('Discard workout?', 'Nothing from this session will be saved.', [
+    Alert.alert(planning ? 'Discard this plan?' : 'Discard workout?', 'Nothing from this session will be saved.', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Discard',
@@ -137,6 +144,8 @@ export default function ActiveWorkout() {
     );
   }
 
+  const totalSets = sets.length;
+
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <View style={styles.header}>
@@ -144,28 +153,41 @@ export default function ActiveWorkout() {
           <ChevronLeftIcon color={colors.ink} />
         </PressableScale>
         <View style={styles.headerText}>
-          <Text variant="heading">Workout</Text>
-          <Elapsed since={workout.startedAt.getTime()} />
+          {planning ? (
+            <Animated.View entering={FadeIn}>
+              <Text variant="heading">Plan your workout</Text>
+              <Text variant="caption" color="inkMuted">
+                {groups.length} exercise{groups.length === 1 ? '' : 's'} · {totalSets} sets · timer starts when you do
+              </Text>
+            </Animated.View>
+          ) : (
+            <Animated.View entering={FadeIn}>
+              <Text variant="heading">Workout</Text>
+              <Elapsed since={workout.startedAt.getTime()} />
+            </Animated.View>
+          )}
         </View>
-        <Button label="Finish" onPress={finish} silent />
+        {planning ? <Chip label="Planning" tone="accentSoft" textColor="accentInk" /> : <Button label="Finish" onPress={finish} silent />}
       </View>
 
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         {groups.length === 0 ? (
-          <View style={styles.emptyWorkout}>
+          <Animated.View entering={FadeInDown.duration(motion.duration.slow)} style={styles.emptyWorkout}>
             <Text variant="title" align="center">
-              Let’s get moving
+              {planning ? 'What are you training?' : 'Let’s get moving'}
             </Text>
             <Text color="inkMuted" align="center">
-              Add your first exercise. Sets come pre-filled from last time.
+              {planning
+                ? 'Add your exercises and set targets. Sets come pre-filled from last time.'
+                : 'Add exercises as you go. Sets come pre-filled from last time.'}
             </Text>
-          </View>
+          </Animated.View>
         ) : null}
 
         {groups.map(({ exerciseId, sets: exSets }) => {
           const ex = byId.get(exerciseId);
           if (!ex) return null;
-          const hasDoneCardio = ex.category === 'cardio' && exSets.some((s) => s.completedAt);
+          const hasDoneCardio = !planning && ex.category === 'cardio' && exSets.some((s) => s.completedAt);
           const bonus = hasDoneCardio ? cardioXp(cardioMinutesDone, 5) : 0;
           return (
             <ExerciseCard
@@ -174,15 +196,15 @@ export default function ActiveWorkout() {
               sets={exSets}
               lastTime={lastSessionSets(exerciseId, workout.id)}
               unit={unit}
-              expandedSetId={expandedSetId}
+              planning={planning}
               prSetIds={prSetIds}
               xpForSet={xpForSet}
               bonusRoundXp={bonus > 0 ? bonus : null}
-              onExpand={setExpanded}
               onComplete={complete}
-              onChangeSet={(id, patch) => updateSet(id, patch)}
+              onField={(id, field, value) => updateSetCascade(id, field, value)}
+              onToggleWarmup={(s) => updateSet(s.id, { isWarmup: !s.isWarmup })}
               onDeleteSet={(id) => deleteSet(id)}
-              onAddSet={() => setExpanded(addSet(workout.id, exerciseId))}
+              onSetCount={(n) => setSetCount(workout.id, exerciseId, n)}
               onRemove={() => removeExerciseFromWorkout(workout.id, exerciseId)}
               onBonusRound={() => bonusRound(exerciseId)}
             />
@@ -196,12 +218,18 @@ export default function ActiveWorkout() {
           icon={<PlusIcon color={groups.length === 0 ? colors.onPrimary : colors.ink} size={20} />}
           onPress={() => router.push('/workout/picker')}
         />
-        <Button label="Discard workout" variant="ghost" onPress={discard} />
+        <Button label={planning ? 'Discard plan' : 'Discard workout'} variant="ghost" onPress={discard} />
       </ScrollView>
 
-      <View style={styles.restSlot} pointerEvents="box-none">
-        <RestTimerBar />
-      </View>
+      {planning ? (
+        <Animated.View entering={FadeInDown.duration(motion.duration.base)} style={styles.startBar}>
+          <Button label="Start workout" size="lg" onPress={start} disabled={groups.length === 0} silent />
+        </Animated.View>
+      ) : (
+        <View style={styles.restSlot} pointerEvents="box-none">
+          <RestTimerBar />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -214,7 +242,7 @@ function Elapsed({ since }: { since: number }) {
   }, []);
   return (
     <Text variant="caption" color="inkMuted" tabular>
-      {formatDuration((now - since) / 1000)}
+      {formatDuration(Math.max(0, (now - since) / 1000))}
     </Text>
   );
 }
@@ -239,7 +267,7 @@ const styles = StyleSheet.create({
   content: {
     padding: space.lg,
     gap: space.md,
-    paddingBottom: 120,
+    paddingBottom: 140,
   },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: space.lg },
   emptyWorkout: { paddingVertical: space.xxxl, gap: space.sm },
@@ -248,5 +276,16 @@ const styles = StyleSheet.create({
     left: space.lg,
     right: space.lg,
     bottom: space.xxl,
+  },
+  startBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: space.lg,
+    paddingBottom: space.xxl,
+    backgroundColor: colors.bg,
+    borderTopWidth: StyleSheet.hairlineWidth * 2,
+    borderTopColor: colors.line,
   },
 });

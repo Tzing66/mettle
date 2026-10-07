@@ -2,6 +2,7 @@ export * from './Button';
 export * from './Card';
 export * from './Chip';
 export * from './ExerciseTile';
+export * from './NumberField';
 export * from './OptionRow';
 export * from './PressableScale';
 export * from './ProgressBar';

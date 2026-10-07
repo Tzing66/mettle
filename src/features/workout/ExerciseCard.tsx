@@ -4,35 +4,37 @@ import Animated, { FadeInDown, FadeOut, LinearTransition } from 'react-native-re
 import type { ExerciseRow } from '@/db/repositories/exercises';
 import type { SetRow as SetRowData } from '@/db/repositories/workouts';
 import { Card, Chip, PressableScale, Text } from '@/design/components';
-import { DotsIcon, PlusIcon, TimerIcon } from '@/design/icons/Icons';
+import { haptics } from '@/design/haptics';
+import { DotsIcon, TimerIcon } from '@/design/icons/Icons';
 import { categoryColors, colors, motion, radii, space } from '@/design/tokens';
 import type { UnitPref } from '@/engine';
 
 import { formatSet } from '../format';
-import { SetRow, type SetRowProps } from './SetRow';
+import { SetRow, setColumns, type NumericField } from './SetRow';
 
 export interface ExerciseCardProps {
   exercise: ExerciseRow;
   sets: SetRowData[];
   lastTime: SetRowData[];
   unit: UnitPref;
-  expandedSetId: string | null;
+  planning: boolean;
   prSetIds: Set<string>;
   xpForSet: (set: SetRowData) => number | null;
   bonusRoundXp: number | null;
-  onExpand: (setId: string | null) => void;
   onComplete: (set: SetRowData) => void;
-  onChangeSet: (setId: string, patch: Parameters<SetRowProps['onChange']>[0]) => void;
+  onField: (setId: string, field: NumericField, value: number | null) => void;
+  onToggleWarmup: (set: SetRowData) => void;
   onDeleteSet: (setId: string) => void;
-  onAddSet: () => void;
+  onSetCount: (count: number) => void;
   onRemove: () => void;
   onBonusRound: () => void;
 }
 
 export function ExerciseCard(props: ExerciseCardProps) {
-  const { exercise, sets, lastTime, unit } = props;
+  const { exercise, sets, lastTime, unit, planning } = props;
   const tone = categoryColors[exercise.category];
-  let working = 0;
+  const cols = setColumns(exercise.trackingType, exercise.category, exercise.activity, unit);
+  const workingNumbers = numberWorkingSets(sets);
 
   return (
     <Animated.View entering={FadeInDown.duration(motion.duration.slow)} exiting={FadeOut.duration(motion.duration.fast)} layout={LinearTransition.duration(motion.duration.base)}>
@@ -66,40 +68,51 @@ export function ExerciseCard(props: ExerciseCardProps) {
           </PressableScale>
         </View>
 
+        <View style={styles.columns}>
+          <Text variant="overline" color="inkFaint" style={styles.colIndex}>
+            Set
+          </Text>
+          <View style={styles.colFields}>
+            {cols.map((c, i) => (
+              <Text
+                key={c.field}
+                variant="overline"
+                color="inkFaint"
+                align="center"
+                style={{ width: c.field === 'reps' ? 52 : 68, marginLeft: i > 0 && exercise.trackingType === 'weight_reps' ? space.lg : 0 }}>
+                {c.label}
+              </Text>
+            ))}
+          </View>
+          {planning ? null : <View style={styles.colCheck} />}
+        </View>
+
         <View style={styles.sets}>
-          {sets.map((s) => {
-            if (!s.isWarmup) working++;
-            return (
-              <SetRow
-                key={s.id}
-                set={s}
-                number={working}
-                tracking={exercise.trackingType}
-                category={exercise.category}
-                activity={exercise.activity}
-                unit={unit}
-                expanded={props.expandedSetId === s.id}
-                isPr={props.prSetIds.has(s.id)}
-                xpOnComplete={props.xpForSet(s)}
-                onToggleExpand={() => props.onExpand(props.expandedSetId === s.id ? null : s.id)}
-                onToggleComplete={() => props.onComplete(s)}
-                onChange={(patch) => props.onChangeSet(s.id, patch)}
-                onDelete={() => props.onDeleteSet(s.id)}
-              />
-            );
-          })}
+          {sets.map((s) => (
+            <SetRow
+              key={s.id}
+              set={s}
+              number={workingNumbers.get(s.id) ?? 0}
+              tracking={exercise.trackingType}
+              category={exercise.category}
+              activity={exercise.activity}
+              unit={unit}
+              planning={planning}
+              isPr={props.prSetIds.has(s.id)}
+              xpOnComplete={props.xpForSet(s)}
+              onToggleComplete={() => props.onComplete(s)}
+              onField={(field, value) => props.onField(s.id, field, value)}
+              onToggleWarmup={() => props.onToggleWarmup(s)}
+              onDelete={() => props.onDeleteSet(s.id)}
+            />
+          ))}
         </View>
 
         <View style={styles.footer}>
-          <PressableScale accessibilityRole="button" onPress={props.onAddSet} style={styles.addSet}>
-            <PlusIcon color={colors.accentInk} size={18} />
-            <Text variant="label" color="accentInk">
-              Add set
-            </Text>
-          </PressableScale>
+          <SetCounter count={sets.length} onChange={props.onSetCount} />
           {props.bonusRoundXp !== null ? (
             <Chip
-              label={`Bonus round +5 min · +${props.bonusRoundXp} XP`}
+              label={`+5 min · +${props.bonusRoundXp} XP`}
               tone="xp"
               textColor="xpInk"
               icon={<TimerIcon color={colors.xpInk} size={14} />}
@@ -112,45 +125,55 @@ export function ExerciseCard(props: ExerciseCardProps) {
   );
 }
 
+/** − 3 sets + */
+function SetCounter({ count, onChange }: { count: number; onChange: (n: number) => void }) {
+  const change = (n: number) => {
+    if (n < 1) return;
+    haptics.tick();
+    onChange(n);
+  };
+  return (
+    <View style={styles.counter}>
+      <PressableScale accessibilityLabel="Remove a set" onPress={() => change(count - 1)} disabled={count <= 1} style={styles.counterButton}>
+        <Text variant="heading">−</Text>
+      </PressableScale>
+      <Text variant="label" tabular style={styles.counterLabel}>
+        {count} {count === 1 ? 'set' : 'sets'}
+      </Text>
+      <PressableScale accessibilityLabel="Add a set" onPress={() => change(count + 1)} style={styles.counterButton}>
+        <Text variant="heading">+</Text>
+      </PressableScale>
+    </View>
+  );
+}
+
+function numberWorkingSets(sets: SetRowData[]): Map<string, number> {
+  const out = new Map<string, number>();
+  let n = 0;
+  for (const s of sets) if (!s.isWarmup) out.set(s.id, ++n);
+  return out;
+}
+
 const styles = StyleSheet.create({
-  card: {
-    padding: space.md,
-    gap: space.sm,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.md,
-  },
-  code: {
-    width: 40,
-    height: 40,
+  card: { padding: space.md, gap: space.sm },
+  header: { flexDirection: 'row', alignItems: 'center', gap: space.md },
+  code: { width: 40, height: 40, borderRadius: radii.sm, alignItems: 'center', justifyContent: 'center' },
+  titles: { flex: 1, gap: space.xxs },
+  menu: { padding: space.sm },
+  columns: { flexDirection: 'row', alignItems: 'center', gap: space.md, paddingHorizontal: space.xs, marginTop: space.xs },
+  colIndex: { width: 28, textAlign: 'center' },
+  colFields: { flex: 1, flexDirection: 'row', gap: space.sm },
+  colCheck: { width: 44 },
+  sets: { gap: space.xxs },
+  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: space.sm },
+  counter: { flexDirection: 'row', alignItems: 'center', gap: space.xs },
+  counterButton: {
+    width: 36,
+    height: 36,
     borderRadius: radii.sm,
+    backgroundColor: colors.sunken,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  titles: {
-    flex: 1,
-    gap: space.xxs,
-  },
-  menu: {
-    padding: space.sm,
-  },
-  sets: {
-    gap: space.xxs,
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    gap: space.sm,
-  },
-  addSet: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.xs,
-    paddingVertical: space.sm,
-    paddingHorizontal: space.xs,
-  },
+  counterLabel: { minWidth: 56, textAlign: 'center' },
 });
