@@ -6,7 +6,7 @@ import { listExercises } from '@/db/repositories/exercises';
 import { completedSetsForWorkouts, listFinishedWorkouts } from '@/db/repositories/workouts';
 import { xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { useDbQuery } from '@/db/useDbQuery';
-import { Card, PressableScale, Screen, Text } from '@/design/components';
+import { Card, ExerciseGlyph, PressableScale, Screen, Text } from '@/design/components';
 import { ChevronRightIcon } from '@/design/icons/Icons';
 import { categoryColors, colors, heatScale, radii, space } from '@/design/tokens';
 import { dayKey, weekStart } from '@/engine';
@@ -79,9 +79,7 @@ export default function History() {
                   onPress={() => router.push({ pathname: '/exercise/[id]', params: { id: exercise.id } })}
                   style={[styles.exerciseRow, i > 0 && styles.divider]}>
                   <View style={[styles.code, { backgroundColor: tone.tint }]}>
-                    <Text variant="caption" style={{ color: tone.ink }}>
-                      {exercise.shortName}
-                    </Text>
+                    <ExerciseGlyph icon={exercise.icon} short={exercise.shortName} color={tone.ink} size={28} />
                   </View>
                   <View style={styles.flex}>
                     <Text variant="label">{exercise.name}</Text>

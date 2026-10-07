@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getExercise, toExerciseInfo } from '@/db/repositories/exercises';
 import { exerciseHistory, listRecords, toSetInput, type SetRow } from '@/db/repositories/workouts';
 import { useDbQuery } from '@/db/useDbQuery';
-import { Card, PressableScale, Text } from '@/design/components';
+import { Card, ExerciseGlyph, PressableScale, Text } from '@/design/components';
 import { ChevronLeftIcon } from '@/design/icons/Icons';
 import { categoryColors, colors, radii, space } from '@/design/tokens';
 import { setMetrics, type RecordMetric } from '@/engine';
@@ -67,9 +67,7 @@ export default function ExerciseDetail() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.titleRow}>
           <View style={[styles.code, { backgroundColor: tone.tint }]}>
-            <Text variant="heading" style={{ color: tone.ink }}>
-              {exercise.shortName}
-            </Text>
+            <ExerciseGlyph icon={exercise.icon} short={exercise.shortName} color={tone.ink} size={40} />
           </View>
           <View style={styles.flex}>
             <Text variant="title">{exercise.name}</Text>

@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './Card';
 export * from './Chip';
+export * from './ExerciseGlyph';
 export * from './ExerciseTile';
 export * from './KeyboardDoneBar';
 export * from './NumberField';

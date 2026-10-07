@@ -7,6 +7,7 @@
       "short": "BP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "barbell",
       "primaryMuscles": [
         "chest"
@@ -20,6 +21,7 @@
       "short": "IBP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "barbell",
       "primaryMuscles": [
         "chest"
@@ -32,6 +34,7 @@
       "short": "CGB",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "barbell",
       "primaryMuscles": [
         "triceps"
@@ -44,6 +47,7 @@
       "short": "DBP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -56,6 +60,7 @@
       "short": "IDP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -68,6 +73,7 @@
       "short": "DF",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -80,6 +86,7 @@
       "short": "SQ",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -93,6 +100,7 @@
       "short": "FS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -105,6 +113,7 @@
       "short": "GS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "quadriceps"
@@ -117,6 +126,7 @@
       "short": "DL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "lower back"
@@ -130,6 +140,7 @@
       "short": "RDL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "hamstrings"
@@ -142,6 +153,7 @@
       "short": "SDL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "hamstrings"
@@ -154,6 +166,7 @@
       "short": "TBD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "other",
       "primaryMuscles": [
         "quadriceps"
@@ -166,6 +179,7 @@
       "short": "HT",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "glutes"
@@ -178,6 +192,7 @@
       "short": "GB",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "glutes"
@@ -190,6 +205,7 @@
       "short": "GM",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "hamstrings"
@@ -202,6 +218,7 @@
       "short": "OHP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "shoulders"
@@ -215,6 +232,7 @@
       "short": "DSP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "shoulders"
@@ -227,6 +245,7 @@
       "short": "AP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "shoulders"
@@ -239,6 +258,7 @@
       "short": "LR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "shoulders"
@@ -251,6 +271,7 @@
       "short": "RDF",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "shoulders"
@@ -263,6 +284,7 @@
       "short": "UR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "barbell",
       "primaryMuscles": [
         "shoulders"
@@ -275,6 +297,7 @@
       "short": "BR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "barbell",
       "primaryMuscles": [
         "middle back"
@@ -287,6 +310,7 @@
       "short": "DR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "middle back"
@@ -299,6 +323,7 @@
       "short": "TBR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "barbell",
       "primaryMuscles": [
         "middle back"
@@ -311,6 +336,7 @@
       "short": "SH",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "carry",
       "equipment": "barbell",
       "primaryMuscles": [
         "traps"
@@ -323,6 +349,7 @@
       "short": "DSH",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "carry",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "traps"
@@ -335,6 +362,7 @@
       "short": "BC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "barbell",
       "primaryMuscles": [
         "biceps"
@@ -347,6 +375,7 @@
       "short": "DC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "biceps"
@@ -359,6 +388,7 @@
       "short": "HC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "biceps"
@@ -371,6 +401,7 @@
       "short": "PC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "barbell",
       "primaryMuscles": [
         "biceps"
@@ -383,6 +414,7 @@
       "short": "SC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "e-z curl bar",
       "primaryMuscles": [
         "triceps"
@@ -395,6 +427,7 @@
       "short": "OTE",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "triceps"
@@ -407,6 +440,7 @@
       "short": "TK",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "triceps"
@@ -419,6 +453,7 @@
       "short": "LU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps"
@@ -431,6 +466,7 @@
       "short": "BL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -443,6 +479,7 @@
       "short": "SS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps"
@@ -455,6 +492,7 @@
       "short": "SU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps"
@@ -467,6 +505,7 @@
       "short": "KS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "hamstrings"
@@ -479,6 +518,7 @@
       "short": "FW",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "carry",
       "equipment": "other",
       "primaryMuscles": [
         "forearms"
@@ -491,6 +531,7 @@
       "short": "PCL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "hamstrings"
@@ -503,6 +544,7 @@
       "short": "LP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -515,6 +557,7 @@
       "short": "HS",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -527,6 +570,7 @@
       "short": "SMS",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -539,6 +583,7 @@
       "short": "LE",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -551,6 +596,7 @@
       "short": "LLC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "hamstrings"
@@ -563,6 +609,7 @@
       "short": "SLC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "hamstrings"
@@ -575,6 +622,7 @@
       "short": "CR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "calf",
       "equipment": "machine",
       "primaryMuscles": [
         "calves"
@@ -587,6 +635,7 @@
       "short": "SCR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "calf",
       "equipment": "machine",
       "primaryMuscles": [
         "calves"
@@ -599,6 +648,7 @@
       "short": "HAB",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "abductors"
@@ -611,6 +661,7 @@
       "short": "HAD",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "adductors"
@@ -623,6 +674,7 @@
       "short": "LPD",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "pullup",
       "equipment": "cable",
       "primaryMuscles": [
         "lats"
@@ -635,6 +687,7 @@
       "short": "CPD",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "pullup",
       "equipment": "cable",
       "primaryMuscles": [
         "lats"
@@ -647,6 +700,7 @@
       "short": "SAP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "pullup",
       "equipment": "cable",
       "primaryMuscles": [
         "lats"
@@ -659,6 +713,7 @@
       "short": "CRW",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "cable",
       "primaryMuscles": [
         "middle back"
@@ -671,6 +726,7 @@
       "short": "FP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "cable",
       "primaryMuscles": [
         "shoulders"
@@ -683,6 +739,7 @@
       "short": "MCP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "machine",
       "primaryMuscles": [
         "chest"
@@ -695,6 +752,7 @@
       "short": "PD",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "machine",
       "primaryMuscles": [
         "chest"
@@ -707,6 +765,7 @@
       "short": "CC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "cable",
       "primaryMuscles": [
         "chest"
@@ -719,6 +778,7 @@
       "short": "MSP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "machine",
       "primaryMuscles": [
         "shoulders"
@@ -731,6 +791,7 @@
       "short": "CLR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "cable",
       "primaryMuscles": [
         "shoulders"
@@ -743,6 +804,7 @@
       "short": "TP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "cable",
       "primaryMuscles": [
         "triceps"
@@ -755,6 +817,7 @@
       "short": "RHC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "cable",
       "primaryMuscles": [
         "biceps"
@@ -767,6 +830,7 @@
       "short": "CCR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "cable",
       "primaryMuscles": [
         "abdominals"
@@ -779,6 +843,7 @@
       "short": "PP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "cable",
       "primaryMuscles": [
         "abdominals"
@@ -791,6 +856,7 @@
       "short": "PU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "press",
       "equipment": "body only",
       "primaryMuscles": [
         "chest"
@@ -804,6 +870,7 @@
       "short": "PL",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "pullup",
       "equipment": "body only",
       "primaryMuscles": [
         "lats"
@@ -817,6 +884,7 @@
       "short": "CU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "pullup",
       "equipment": "body only",
       "primaryMuscles": [
         "lats"
@@ -829,6 +897,7 @@
       "short": "DP",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "extension",
       "equipment": "body only",
       "primaryMuscles": [
         "triceps"
@@ -841,6 +910,7 @@
       "short": "IR",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "row",
       "equipment": null,
       "primaryMuscles": [
         "middle back"
@@ -853,6 +923,7 @@
       "short": "AS",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "squat",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps"
@@ -865,6 +936,7 @@
       "short": "PK",
       "category": "bodyweight",
       "trackingType": "time",
+      "icon": "hold",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -877,6 +949,7 @@
       "short": "SPK",
       "category": "bodyweight",
       "trackingType": "time",
+      "icon": "hold",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -889,6 +962,7 @@
       "short": "CN",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -901,6 +975,7 @@
       "short": "SIT",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -913,6 +988,7 @@
       "short": "HLR",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -925,6 +1001,7 @@
       "short": "RT",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -937,6 +1014,7 @@
       "short": "AW",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "other",
       "primaryMuscles": [
         "abdominals"
@@ -949,6 +1027,7 @@
       "short": "MC",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": null,
       "primaryMuscles": [
         "quadriceps"
@@ -961,6 +1040,7 @@
       "short": "BE",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "hinge",
       "equipment": "other",
       "primaryMuscles": [
         "lower back"
@@ -973,6 +1053,7 @@
       "short": "BJ",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "other",
       "primaryMuscles": [
         "hamstrings"
@@ -985,6 +1066,7 @@
       "short": "BU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps",
@@ -999,6 +1081,7 @@
       "short": "RUN",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "run",
       "equipment": "none",
       "primaryMuscles": [
         "quadriceps",
@@ -1015,6 +1098,7 @@
       "short": "TRM",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "run",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1029,6 +1113,7 @@
       "short": "WLK",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "walk",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1042,6 +1127,7 @@
       "short": "HK",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "walk",
       "equipment": null,
       "primaryMuscles": [
         "quadriceps"
@@ -1055,6 +1141,7 @@
       "short": "RD",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "bike",
       "equipment": "other",
       "primaryMuscles": [
         "quadriceps"
@@ -1068,6 +1155,7 @@
       "short": "BK",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "bike",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1081,6 +1169,7 @@
       "short": "ROW",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "rower",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1094,6 +1183,7 @@
       "short": "SWM",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "swim",
       "equipment": "pool",
       "primaryMuscles": [
         "lats",
@@ -1108,6 +1198,7 @@
       "short": "EL",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "cardio",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1121,6 +1212,7 @@
       "short": "STR",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "cardio",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1134,6 +1226,7 @@
       "short": "JR",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "cardio",
       "equipment": "other",
       "primaryMuscles": [
         "quadriceps"
@@ -1147,6 +1240,7 @@
       "short": "WGB",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "barbell",
       "primaryMuscles": [
         "chest"
@@ -1159,6 +1253,7 @@
       "short": "DBE",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "barbell",
       "primaryMuscles": [
         "chest"
@@ -1171,6 +1266,7 @@
       "short": "FPL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "barbell",
       "primaryMuscles": [
         "triceps"
@@ -1183,6 +1279,7 @@
       "short": "DDP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -1195,6 +1292,7 @@
       "short": "NGD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -1207,6 +1305,7 @@
       "short": "IDF",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -1219,6 +1318,7 @@
       "short": "DPU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "chest"
@@ -1231,6 +1331,7 @@
       "short": "SDP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "shoulders"
@@ -1243,6 +1344,7 @@
       "short": "SBP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "shoulders"
@@ -1255,6 +1357,7 @@
       "short": "FR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "shoulders"
@@ -1267,6 +1370,7 @@
       "short": "DUR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "traps"
@@ -1279,6 +1383,7 @@
       "short": "LPA",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "shoulders",
@@ -1292,6 +1397,7 @@
       "short": "PPU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "shoulders",
@@ -1305,6 +1411,7 @@
       "short": "BS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1317,6 +1424,7 @@
       "short": "PS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps",
@@ -1330,6 +1438,7 @@
       "short": "DS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1342,6 +1451,7 @@
       "short": "SSU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1354,6 +1464,7 @@
       "short": "BSS",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps",
@@ -1367,6 +1478,7 @@
       "short": "WL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1379,6 +1491,7 @@
       "short": "RL",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1391,6 +1504,7 @@
       "short": "BSU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1403,6 +1517,7 @@
       "short": "SLD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "hamstrings"
@@ -1415,6 +1530,7 @@
       "short": "DRD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "hamstrings"
@@ -1427,6 +1543,7 @@
       "short": "SLR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "hamstrings"
@@ -1439,6 +1556,7 @@
       "short": "DD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "lower back"
@@ -1451,6 +1569,7 @@
       "short": "RP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "barbell",
       "primaryMuscles": [
         "lower back"
@@ -1463,6 +1582,7 @@
       "short": "DCR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "calf",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "calves"
@@ -1475,6 +1595,7 @@
       "short": "PR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "barbell",
       "primaryMuscles": [
         "middle back",
@@ -1488,6 +1609,7 @@
       "short": "UBR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "barbell",
       "primaryMuscles": [
         "middle back"
@@ -1500,6 +1622,7 @@
       "short": "CSD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "middle back"
@@ -1512,6 +1635,7 @@
       "short": "BOD",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "middle back"
@@ -1524,6 +1648,7 @@
       "short": "LRA",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "barbell",
       "primaryMuscles": [
         "middle back"
@@ -1536,6 +1661,7 @@
       "short": "EBC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "e-z curl bar",
       "primaryMuscles": [
         "biceps"
@@ -1548,6 +1674,7 @@
       "short": "IDC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "biceps"
@@ -1560,6 +1687,7 @@
       "short": "CCO",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "biceps"
@@ -1572,6 +1700,7 @@
       "short": "SCP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "e-z curl bar",
       "primaryMuscles": [
         "biceps"
@@ -1584,6 +1713,7 @@
       "short": "RC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "barbell",
       "primaryMuscles": [
         "biceps"
@@ -1596,6 +1726,7 @@
       "short": "ZC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "biceps"
@@ -1608,6 +1739,7 @@
       "short": "WC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "barbell",
       "primaryMuscles": [
         "forearms"
@@ -1620,6 +1752,7 @@
       "short": "JP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "barbell",
       "primaryMuscles": [
         "triceps"
@@ -1632,6 +1765,7 @@
       "short": "LDT",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "triceps"
@@ -1644,6 +1778,7 @@
       "short": "KP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "shoulders"
@@ -1656,6 +1791,7 @@
       "short": "KR",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "middle back"
@@ -1668,6 +1804,7 @@
       "short": "KC",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "hamstrings"
@@ -1680,6 +1817,7 @@
       "short": "KT",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "shoulders"
@@ -1692,6 +1830,7 @@
       "short": "TGU",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "shoulders"
@@ -1704,6 +1843,7 @@
       "short": "KW",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "kettlebells",
       "primaryMuscles": [
         "abdominals"
@@ -1716,6 +1856,7 @@
       "short": "HCA",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1728,6 +1869,7 @@
       "short": "CAP",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "shoulders"
@@ -1740,6 +1882,7 @@
       "short": "SN",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "barbell",
       "primaryMuscles": [
         "quadriceps"
@@ -1752,6 +1895,7 @@
       "short": "DSB",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "dumbbell",
       "primaryMuscles": [
         "abdominals"
@@ -1764,6 +1908,7 @@
       "short": "LRN",
       "category": "free_weight",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "barbell",
       "primaryMuscles": [
         "abdominals"
@@ -1776,6 +1921,7 @@
       "short": "SMB",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "machine",
       "primaryMuscles": [
         "chest"
@@ -1788,6 +1934,7 @@
       "short": "SMI",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "machine",
       "primaryMuscles": [
         "chest"
@@ -1800,6 +1947,7 @@
       "short": "SMM",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "overhead",
       "equipment": "machine",
       "primaryMuscles": [
         "shoulders"
@@ -1812,6 +1960,7 @@
       "short": "SMR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "machine",
       "primaryMuscles": [
         "hamstrings"
@@ -1824,6 +1973,7 @@
       "short": "SMT",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "lunge",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps"
@@ -1836,6 +1986,7 @@
       "short": "IMP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "machine",
       "primaryMuscles": [
         "chest"
@@ -1848,6 +1999,7 @@
       "short": "MR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "machine",
       "primaryMuscles": [
         "lats"
@@ -1860,6 +2012,7 @@
       "short": "MHR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "machine",
       "primaryMuscles": [
         "middle back"
@@ -1872,6 +2025,7 @@
       "short": "CST",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "machine",
       "primaryMuscles": [
         "middle back"
@@ -1884,6 +2038,7 @@
       "short": "RPD",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "machine",
       "primaryMuscles": [
         "shoulders"
@@ -1896,6 +2051,7 @@
       "short": "MBC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "machine",
       "primaryMuscles": [
         "biceps"
@@ -1908,6 +2064,7 @@
       "short": "MPC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "machine",
       "primaryMuscles": [
         "biceps"
@@ -1920,6 +2077,7 @@
       "short": "MTE",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "machine",
       "primaryMuscles": [
         "triceps"
@@ -1932,6 +2090,7 @@
       "short": "DM",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "machine",
       "primaryMuscles": [
         "triceps"
@@ -1944,6 +2103,7 @@
       "short": "ACM",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "machine",
       "primaryMuscles": [
         "abdominals"
@@ -1956,6 +2116,7 @@
       "short": "SLT",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "machine",
       "primaryMuscles": [
         "hamstrings"
@@ -1968,6 +2129,7 @@
       "short": "LPC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "calf",
       "equipment": "machine",
       "primaryMuscles": [
         "calves"
@@ -1980,6 +2142,7 @@
       "short": "GHR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "machine",
       "primaryMuscles": [
         "hamstrings"
@@ -1992,6 +2155,7 @@
       "short": "RH",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "machine",
       "primaryMuscles": [
         "hamstrings"
@@ -2004,6 +2168,7 @@
       "short": "CF",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "cable",
       "primaryMuscles": [
         "chest"
@@ -2016,6 +2181,7 @@
       "short": "ICF",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "cable",
       "primaryMuscles": [
         "chest"
@@ -2028,6 +2194,7 @@
       "short": "LTH",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "cable",
       "primaryMuscles": [
         "chest"
@@ -2040,6 +2207,7 @@
       "short": "CCP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "press",
       "equipment": "cable",
       "primaryMuscles": [
         "chest"
@@ -2052,6 +2220,7 @@
       "short": "CCA",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "cable",
       "primaryMuscles": [
         "biceps"
@@ -2064,6 +2233,7 @@
       "short": "OCC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "curl",
       "equipment": "cable",
       "primaryMuscles": [
         "biceps"
@@ -2076,6 +2246,7 @@
       "short": "OCT",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "cable",
       "primaryMuscles": [
         "triceps"
@@ -2088,6 +2259,7 @@
       "short": "RPO",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "cable",
       "primaryMuscles": [
         "triceps"
@@ -2100,6 +2272,7 @@
       "short": "RGP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "cable",
       "primaryMuscles": [
         "triceps"
@@ -2112,6 +2285,7 @@
       "short": "SAC",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "row",
       "equipment": "cable",
       "primaryMuscles": [
         "middle back"
@@ -2124,6 +2298,7 @@
       "short": "SAI",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "pullup",
       "equipment": "cable",
       "primaryMuscles": [
         "lats"
@@ -2136,6 +2311,7 @@
       "short": "UP",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "pullup",
       "equipment": "cable",
       "primaryMuscles": [
         "lats"
@@ -2148,6 +2324,7 @@
       "short": "CRD",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "fly",
       "equipment": "cable",
       "primaryMuscles": [
         "shoulders"
@@ -2160,6 +2337,7 @@
       "short": "CFR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "cable",
       "primaryMuscles": [
         "shoulders"
@@ -2172,6 +2350,7 @@
       "short": "CUR",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "cable",
       "primaryMuscles": [
         "traps"
@@ -2184,6 +2363,7 @@
       "short": "CS",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "carry",
       "equipment": "cable",
       "primaryMuscles": [
         "traps"
@@ -2196,6 +2376,7 @@
       "short": "CER",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "raise",
       "equipment": "cable",
       "primaryMuscles": [
         "shoulders"
@@ -2208,6 +2389,7 @@
       "short": "CGK",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "cable",
       "primaryMuscles": [
         "glutes"
@@ -2220,6 +2402,7 @@
       "short": "CPT",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "hinge",
       "equipment": "cable",
       "primaryMuscles": [
         "glutes"
@@ -2232,6 +2415,7 @@
       "short": "CW",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "core",
       "equipment": "cable",
       "primaryMuscles": [
         "abdominals"
@@ -2244,6 +2428,7 @@
       "short": "CHA",
       "category": "machine",
       "trackingType": "weight_reps",
+      "icon": "squat",
       "equipment": "cable",
       "primaryMuscles": [
         "quadriceps"
@@ -2256,6 +2441,7 @@
       "short": "WPU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "press",
       "equipment": "body only",
       "primaryMuscles": [
         "chest"
@@ -2268,6 +2454,7 @@
       "short": "DPI",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "press",
       "equipment": "body only",
       "primaryMuscles": [
         "triceps"
@@ -2280,6 +2467,7 @@
       "short": "DPE",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "press",
       "equipment": "body only",
       "primaryMuscles": [
         "chest"
@@ -2292,6 +2480,7 @@
       "short": "IPU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "press",
       "equipment": "body only",
       "primaryMuscles": [
         "chest"
@@ -2304,6 +2493,7 @@
       "short": "PPL",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "press",
       "equipment": "body only",
       "primaryMuscles": [
         "chest"
@@ -2316,6 +2506,7 @@
       "short": "BD",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "extension",
       "equipment": "body only",
       "primaryMuscles": [
         "triceps"
@@ -2328,6 +2519,7 @@
       "short": "RDI",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "extension",
       "equipment": "other",
       "primaryMuscles": [
         "triceps"
@@ -2340,6 +2532,7 @@
       "short": "BAP",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "pullup",
       "equipment": "other",
       "primaryMuscles": [
         "lats"
@@ -2352,6 +2545,7 @@
       "short": "WPE",
       "category": "bodyweight",
       "trackingType": "weight_reps",
+      "icon": "pullup",
       "equipment": "other",
       "primaryMuscles": [
         "lats"
@@ -2364,6 +2558,7 @@
       "short": "WD",
       "category": "bodyweight",
       "trackingType": "weight_reps",
+      "icon": "extension",
       "equipment": "other",
       "primaryMuscles": [
         "chest",
@@ -2377,6 +2572,7 @@
       "short": "MU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "pullup",
       "equipment": "other",
       "primaryMuscles": [
         "lats"
@@ -2389,6 +2585,7 @@
       "short": "RCO",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "pullup",
       "equipment": "other",
       "primaryMuscles": [
         "lats"
@@ -2401,6 +2598,7 @@
       "short": "HPU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "overhead",
       "equipment": "body only",
       "primaryMuscles": [
         "shoulders",
@@ -2414,6 +2612,7 @@
       "short": "PSI",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "lunge",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps",
@@ -2427,6 +2626,7 @@
       "short": "JS",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps"
@@ -2439,6 +2639,7 @@
       "short": "SJ",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps"
@@ -2451,6 +2652,7 @@
       "short": "BJR",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps"
@@ -2463,6 +2665,7 @@
       "short": "TJ",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "body only",
       "primaryMuscles": [
         "hamstrings"
@@ -2475,6 +2678,7 @@
       "short": "JJ",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "jump",
       "equipment": "body only",
       "primaryMuscles": [
         "calves",
@@ -2488,6 +2692,7 @@
       "short": "NC",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "hinge",
       "equipment": "body only",
       "primaryMuscles": [
         "hamstrings"
@@ -2500,6 +2705,7 @@
       "short": "SLG",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "hinge",
       "equipment": "body only",
       "primaryMuscles": [
         "glutes"
@@ -2512,6 +2718,7 @@
       "short": "GBL",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "hinge",
       "equipment": "body only",
       "primaryMuscles": [
         "glutes"
@@ -2524,6 +2731,7 @@
       "short": "RCE",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2536,6 +2744,7 @@
       "short": "BCI",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2548,6 +2757,7 @@
       "short": "LLR",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2560,6 +2770,7 @@
       "short": "FK",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "glutes"
@@ -2572,6 +2783,7 @@
       "short": "DB",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2584,6 +2796,7 @@
       "short": "VU",
       "category": "bodyweight",
       "trackingType": "reps",
+      "icon": "core",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2596,6 +2809,7 @@
       "short": "DH",
       "category": "bodyweight",
       "trackingType": "time",
+      "icon": "hold",
       "equipment": "body only",
       "primaryMuscles": [
         "forearms",
@@ -2609,6 +2823,7 @@
       "short": "LS",
       "category": "bodyweight",
       "trackingType": "time",
+      "icon": "hold",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2621,6 +2836,7 @@
       "short": "HH",
       "category": "bodyweight",
       "trackingType": "time",
+      "icon": "hold",
       "equipment": "body only",
       "primaryMuscles": [
         "abdominals"
@@ -2633,6 +2849,7 @@
       "short": "WS",
       "category": "bodyweight",
       "trackingType": "time",
+      "icon": "hold",
       "equipment": "body only",
       "primaryMuscles": [
         "quadriceps"
@@ -2645,6 +2862,7 @@
       "short": "AB",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "bike",
       "equipment": "machine",
       "primaryMuscles": [
         "quadriceps",
@@ -2659,6 +2877,7 @@
       "short": "SE",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "cardio",
       "equipment": "machine",
       "primaryMuscles": [
         "lats",
@@ -2673,6 +2892,7 @@
       "short": "SP",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "run",
       "equipment": "none",
       "primaryMuscles": [
         "quadriceps",
@@ -2687,6 +2907,7 @@
       "short": "BRA",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "cardio",
       "equipment": "other",
       "primaryMuscles": [
         "shoulders"
@@ -2699,6 +2920,7 @@
       "short": "SPL",
       "category": "cardio",
       "trackingType": "time",
+      "icon": "cardio",
       "equipment": "other",
       "primaryMuscles": [
         "quadriceps"
@@ -2711,6 +2933,7 @@
       "short": "IW",
       "category": "cardio",
       "trackingType": "distance_time",
+      "icon": "walk",
       "equipment": "machine",
       "primaryMuscles": [
         "calves",

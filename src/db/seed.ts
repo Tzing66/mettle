@@ -10,6 +10,7 @@ interface CatalogueEntry {
   id: string;
   name: string;
   short: string;
+  icon: string;
   category: ExerciseCategory;
   trackingType: TrackingType;
   equipment: string | null;
@@ -24,6 +25,7 @@ export function seedExercises() {
     id: e.id,
     name: e.name,
     shortName: e.short,
+    icon: e.icon,
     category: e.category,
     trackingType: e.trackingType,
     equipment: e.equipment,
@@ -42,6 +44,7 @@ export function seedExercises() {
           set: {
             name: sql`excluded.name`,
             shortName: sql`excluded.short_name`,
+            icon: sql`excluded.icon`,
             category: sql`excluded.category`,
             trackingType: sql`excluded.tracking_type`,
             equipment: sql`excluded.equipment`,

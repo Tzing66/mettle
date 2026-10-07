@@ -53,6 +53,7 @@ export default function Picker() {
       <ExerciseTile
         name={e.name}
         short={e.shortName}
+        icon={e.icon}
         category={e.category}
         favourite={e.isFavourite}
         width={w}

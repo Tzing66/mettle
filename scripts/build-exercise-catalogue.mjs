@@ -262,6 +262,41 @@ const CATALOGUE = [
   ['incline_walk', null, 'Incline walk', null, 'cardio', D, { activity: 'walk', equipment: 'machine', primaryMuscles: ['calves', 'glutes'] }],
 ];
 
+// Movement-pattern glyph per exercise (src/design/icons/glyphs.ts). First match wins.
+const ICON_RULES = [
+  ['carry', /farmer|carry|shrug/],
+  ['run', /\b(run|sprints?)\b/],
+  ['walk', /\b(walk|hike)\b/],
+  ['bike', /\b(bike|ride|cycl)/],
+  ['rower', /rowing machine/],
+  ['swim', /\bswim/],
+  ['cardio', /elliptical|stair|jump rope|ski erg|battle ropes|sled/],
+  ['jump', /box jump|jump|burpee|jack\b/],
+  ['hold', /plank|hollow|l-sit|wall sit|dead hang/],
+  ['calf', /calf/],
+  ['lunge', /lunge|split|step-up|pistol/],
+  ['core', /leg raise|crunch|sit-up|twist|ab wheel|v-up|dead bug|flutter|woodchop|pallof|side bend|windmill|landmine rotation|mountain climber/],
+  ['hinge', /deadlift|\brdl\b|good morning|swing|hip thrust|glute bridge|rack pull|pull-through|back extension|reverse hyper|glute-ham|nordic|glute kickback/],
+  ['fly', /\bfly\b|crossover|pec deck|pullover/],
+  ['pullup', /pull-up|chin-up|pulldown|muscle-up|rope climb/],
+  ['raise', /raise|rear delt|upright row|external rotation/],
+  ['row', /\brow\b|face pull/],
+  ['curl', /curl(?<!leg curl)/],
+  ['extension', /triceps|skullcrusher|pushdown|jm press|dip/],
+  ['overhead', /overhead press|shoulder press|military|arnold|push press|landmine press|kettlebell press|handstand|clean|snatch|thruster|get-up|seated barbell press|seated dumbbell press/],
+  ['press', /bench|chest press|push-up|floor press|dumbbell press|incline (machine )?press/],
+  ['squat', /squat|leg press|hack|leg extension|leg curl|abduction|adduction/],
+];
+const CATEGORY_ICON = { free_weight: 'press', machine: 'press', bodyweight: 'core', cardio: 'cardio' };
+
+function iconFor(name, category) {
+  const n = name.toLowerCase();
+  const hit = ICON_RULES.find(([, re]) => re.test(n));
+  if (!hit) unmatched.push(name);
+  return hit ? hit[0] : CATEGORY_ICON[category];
+}
+const unmatched = [];
+
 const res = await fetch(SOURCE);
 if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
 const dataset = new Map((await res.json()).map((e) => [e.id, e]));
@@ -294,6 +329,7 @@ const exercises = CATALOGUE.map(([id, datasetId, name, shortCode, category, trac
     short,
     category,
     trackingType,
+    icon: iconFor(name, category),
     equipment: extras.equipment ?? src?.equipment ?? null,
     primaryMuscles: extras.primaryMuscles ?? src?.primaryMuscles ?? [],
     ...(extras.activity ? { activity: extras.activity } : {}),
@@ -307,3 +343,4 @@ writeFileSync(
   JSON.stringify({ version: 'exercises.v2', exercises }, null, 2) + '\n',
 );
 console.log(`Wrote ${exercises.length} exercises`);
+if (unmatched.length) console.log('Icon fallback (category default):', unmatched.join(', '));

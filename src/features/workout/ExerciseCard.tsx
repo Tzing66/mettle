@@ -3,7 +3,7 @@ import Animated, { FadeInDown, FadeOut, LinearTransition } from 'react-native-re
 
 import type { ExerciseRow } from '@/db/repositories/exercises';
 import type { SetRow as SetRowData } from '@/db/repositories/workouts';
-import { Card, Chip, PressableScale, Text } from '@/design/components';
+import { Card, Chip, ExerciseGlyph, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { DotsIcon, TimerIcon } from '@/design/icons/Icons';
 import { categoryColors, colors, motion, radii, space } from '@/design/tokens';
@@ -41,9 +41,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
       <Card style={styles.card}>
         <View style={styles.header}>
           <View style={[styles.code, { backgroundColor: tone.tint }]}>
-            <Text variant="caption" style={{ color: tone.ink }}>
-              {exercise.shortName}
-            </Text>
+            <ExerciseGlyph icon={exercise.icon} short={exercise.shortName} color={tone.ink} size={30} />
           </View>
           <View style={styles.titles}>
             <Text variant="heading" numberOfLines={1}>
