@@ -5,7 +5,7 @@ import type { ExerciseRow } from '@/db/repositories/exercises';
 import type { SetRow as SetRowData } from '@/db/repositories/workouts';
 import { Card, Chip, ExerciseGlyph, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { DotsIcon, TimerIcon } from '@/design/icons/Icons';
+import { CheckIcon, DotsIcon, TimerIcon } from '@/design/icons/Icons';
 import { motion, radii, space } from '@/design/tokens';
 import type { UnitPref } from '@/engine';
 
@@ -29,6 +29,8 @@ export interface ExerciseCardProps {
   onSetCount: (count: number) => void;
   onRemove: () => void;
   onBonusRound: () => void;
+  /** Ticks every unfinished set of this exercise. */
+  onCompleteAll: () => void;
 }
 
 export function ExerciseCard(props: ExerciseCardProps) {
@@ -111,6 +113,15 @@ export function ExerciseCard(props: ExerciseCardProps) {
 
         <View style={styles.footer}>
           <SetCounter count={sets.length} onChange={props.onSetCount} />
+          {!planning && sets.some((s) => s.completedAt === null) ? (
+            <Chip
+              label="Complete all"
+              tone="accentSoft"
+              textColor="accentInk"
+              icon={<CheckIcon color={colors.accentInk} size={14} />}
+              onPress={props.onCompleteAll}
+            />
+          ) : null}
           {props.bonusRoundXp !== null ? (
             <Chip
               label={`+5 min · +${props.bonusRoundXp} XP`}

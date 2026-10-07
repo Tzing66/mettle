@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -78,6 +78,20 @@ export default function ActiveWorkout() {
     else haptics.setComplete();
     const restS = profile?.restSeconds ?? 90;
     if (ex?.category !== 'cardio' && !s.isWarmup && restS > 0) startRest(restS);
+  };
+
+  /** Ticks every unfinished set of one exercise: one haptic, one rest timer. */
+  const completeAll = (exerciseId: string) => {
+    Keyboard.dismiss();
+    const pending = sets.filter((s) => s.exerciseId === exerciseId && s.completedAt === null);
+    if (pending.length === 0) return;
+    for (const s of pending) setCompleted(s.id, true);
+    const ex = byId.get(exerciseId);
+    const anyPr = !!ex && pending.some((s) => isPrSet(s, ex));
+    if (anyPr) haptics.pr();
+    else haptics.success();
+    const restS = profile?.restSeconds ?? 90;
+    if (ex?.category !== 'cardio' && restS > 0) startRest(restS);
   };
 
   const start = () => {
@@ -213,6 +227,7 @@ export default function ActiveWorkout() {
               onSetCount={(n) => setSetCount(workout.id, exerciseId, n)}
               onRemove={() => removeExerciseFromWorkout(workout.id, exerciseId)}
               onBonusRound={() => bonusRound(exerciseId)}
+              onCompleteAll={() => completeAll(exerciseId)}
             />
           );
         })}
