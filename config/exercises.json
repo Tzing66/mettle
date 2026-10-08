@@ -2941,6 +2941,1352 @@
       ],
       "activity": "walk",
       "source": "mettle"
+    },
+    {
+      "id": "single_arm_db_press",
+      "name": "Single-arm dumbbell shoulder press",
+      "short": "SAD",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_db_bench_press",
+      "name": "Single-arm dumbbell bench press",
+      "short": "SAN",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_db_preacher_curl",
+      "name": "Single-arm dumbbell preacher curl",
+      "short": "SAG",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_overhead_db_extension",
+      "name": "Single-arm overhead dumbbell extension",
+      "short": "SAO",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_landmine_press",
+      "name": "Single-arm landmine press",
+      "short": "SAL",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "shoulders",
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_db_snatch",
+      "name": "Dumbbell snatch",
+      "short": "DSU",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders",
+        "hamstrings"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "meadows_row",
+      "name": "Meadows row",
+      "short": "MRE",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "middle back",
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "suitcase_carry",
+      "name": "Suitcase carry",
+      "short": "SCU",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "carry",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "forearms",
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_cable_curl",
+      "name": "Single-arm cable curl",
+      "short": "SAE",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_pushdown",
+      "name": "Single-arm cable pushdown",
+      "short": "SAA",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_rope_pushdown",
+      "name": "Single-arm rope pushdown",
+      "short": "SAR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_overhead_cable_extension",
+      "name": "Single-arm overhead cable triceps extension",
+      "short": "SAM",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cross_body_cable_extension",
+      "name": "Cross-body cable triceps extension",
+      "short": "CBC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_cable_fly",
+      "name": "Single-arm cable fly",
+      "short": "SAB",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "fly",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_cable_chest_press",
+      "name": "Single-arm cable chest press",
+      "short": "SAH",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_cable_lateral_raise",
+      "name": "Single-arm cable lateral raise",
+      "short": "SAT",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "raise",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_cable_rear_delt_fly",
+      "name": "Single-arm cable rear delt fly",
+      "short": "SAF",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "fly",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_machine_row",
+      "name": "Single-arm machine row",
+      "short": "SAW",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "middle back",
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_machine_chest_press",
+      "name": "Single-arm machine chest press",
+      "short": "SAS",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_arm_machine_shoulder_press",
+      "name": "Single-arm machine shoulder press",
+      "short": "SAU",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_leg_press",
+      "name": "Single-leg leg press",
+      "short": "SLL",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps",
+        "glutes"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_leg_extension",
+      "name": "Single-leg leg extension",
+      "short": "SLI",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_leg_lying_curl",
+      "name": "Single-leg lying leg curl",
+      "short": "SLN",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "single_leg_seated_calf_raise",
+      "name": "Single-leg seated calf raise",
+      "short": "SLS",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "calf",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "one_arm_push_up",
+      "name": "One-arm push-up",
+      "short": "OAP",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "press",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "chest",
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "one_arm_pull_up",
+      "name": "One-arm pull-up",
+      "short": "OAN",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "pullup",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lats",
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "belt_squat",
+      "name": "Belt squat",
+      "short": "BSE",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps",
+        "glutes"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "pendulum_squat",
+      "name": "Pendulum squat",
+      "short": "PSE",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "vertical_leg_press",
+      "name": "Vertical leg press",
+      "short": "VLP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "horizontal_leg_press",
+      "name": "Seated leg press",
+      "short": "SLP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "hip_thrust_machine",
+      "name": "Hip thrust machine",
+      "short": "HTM",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "hinge",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "glute_kickback_machine",
+      "name": "Glute kickback machine",
+      "short": "GKM",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "hinge",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_back_extension",
+      "name": "Back extension machine",
+      "short": "BEM",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "hinge",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "lower back"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_lateral_raise",
+      "name": "Machine lateral raise",
+      "short": "MLR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "raise",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_shrug",
+      "name": "Machine shrug",
+      "short": "MS",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "carry",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "traps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "smith_shrug",
+      "name": "Smith machine shrug",
+      "short": "SMH",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "carry",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "traps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "smith_calf_raise",
+      "name": "Smith machine calf raise",
+      "short": "SMC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "calf",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "smith_hip_thrust",
+      "name": "Smith machine hip thrust",
+      "short": "SMA",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "hinge",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "smith_row",
+      "name": "Smith machine row",
+      "short": "SMN",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_lat_pulldown",
+      "name": "Machine lat pulldown",
+      "short": "MLP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "pullup",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_pullover",
+      "name": "Pullover machine",
+      "short": "PM",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "fly",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "assisted_pull_up_machine",
+      "name": "Assisted pull-up machine",
+      "short": "APU",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "pullup",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "decline_machine_press",
+      "name": "Decline machine press",
+      "short": "DMP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_fly",
+      "name": "Machine chest fly",
+      "short": "MCF",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "fly",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_ab_twist",
+      "name": "Rotary torso machine",
+      "short": "RTM",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "core",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "machine_hack_calf_raise",
+      "name": "Hack squat calf raise",
+      "short": "HSC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "calf",
+      "equipment": "machine",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "bayesian_cable_curl",
+      "name": "Bayesian cable curl",
+      "short": "BCC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_hammer_curl",
+      "name": "Cable rope hammer curl (two-hand)",
+      "short": "CRH",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps",
+        "forearms"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "incline_cable_curl",
+      "name": "Incline cable curl",
+      "short": "ICC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "lying_cable_curl",
+      "name": "Lying cable curl",
+      "short": "LCC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_reverse_curl",
+      "name": "Cable reverse curl",
+      "short": "CRC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "forearms"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_preacher_curl",
+      "name": "Cable preacher curl",
+      "short": "CPC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "v_bar_pushdown",
+      "name": "V-bar pushdown",
+      "short": "VBP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_skullcrusher",
+      "name": "Cable skullcrusher",
+      "short": "CSA",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_triceps_kickback",
+      "name": "Cable triceps kickback",
+      "short": "CTK",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "rope_face_pull",
+      "name": "Rope face pull",
+      "short": "RFP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_y_raise",
+      "name": "Cable Y-raise",
+      "short": "CYR",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "raise",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "high_cable_fly",
+      "name": "High-to-low cable fly",
+      "short": "HTL",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "fly",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_pullover",
+      "name": "Cable rope pullover",
+      "short": "CRP",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "fly",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "v_bar_pulldown",
+      "name": "V-bar pulldown",
+      "short": "VBB",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "pullup",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "wide_grip_cable_row",
+      "name": "Wide-grip cable row",
+      "short": "WGC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "kneeling_cable_crunch",
+      "name": "Kneeling rope crunch",
+      "short": "KRC",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "core",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_leg_extension",
+      "name": "Cable leg extension",
+      "short": "CLE",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_abduction",
+      "name": "Cable hip abduction",
+      "short": "CHB",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "abductors"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cable_squat",
+      "name": "Cable squat",
+      "short": "CSB",
+      "category": "machine",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "cable",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "close_grip_db_press",
+      "name": "Close-grip dumbbell press",
+      "short": "CGD",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest",
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_floor_press",
+      "name": "Dumbbell floor press",
+      "short": "DFP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "paused_bench_press",
+      "name": "Paused bench press",
+      "short": "PBP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "press",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "incline_hammer_curl",
+      "name": "Incline hammer curl",
+      "short": "IHC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "seated_db_curl",
+      "name": "Seated dumbbell curl",
+      "short": "SDC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "cross_body_hammer_curl",
+      "name": "Cross-body hammer curl",
+      "short": "CBH",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "biceps",
+        "forearms"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_reverse_curl",
+      "name": "Dumbbell reverse curl",
+      "short": "DRC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "forearms"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_wrist_curl",
+      "name": "Dumbbell wrist curl",
+      "short": "DWC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "forearms"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "reverse_wrist_curl",
+      "name": "Reverse wrist curl",
+      "short": "RWC",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "curl",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "forearms"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "seated_db_triceps_extension",
+      "name": "Seated dumbbell triceps extension",
+      "short": "SDT",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "ez_bar_overhead_extension",
+      "name": "EZ-bar overhead triceps extension",
+      "short": "EBO",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "e-z curl bar",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "tate_press",
+      "name": "Tate press",
+      "short": "TPA",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "extension",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_front_squat",
+      "name": "Dumbbell front squat",
+      "short": "DFS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_deadlift",
+      "name": "Dumbbell deadlift",
+      "short": "DDU",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "hinge",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "hamstrings",
+        "lower back"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_hip_thrust",
+      "name": "Dumbbell hip thrust",
+      "short": "DHT",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "hinge",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_thruster",
+      "name": "Dumbbell thruster",
+      "short": "DT",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders",
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_push_press",
+      "name": "Dumbbell push press",
+      "short": "DPP",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "renegade_row",
+      "name": "Renegade row",
+      "short": "RR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "middle back",
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "db_lateral_raise_seated",
+      "name": "Seated lateral raise",
+      "short": "SLE",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "raise",
+      "equipment": "dumbbell",
+      "primaryMuscles": [
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "barbell_calf_raise",
+      "name": "Barbell calf raise",
+      "short": "BCR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "calf",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "zercher_squat",
+      "name": "Zercher squat",
+      "short": "ZS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "overhead_squat",
+      "name": "Overhead squat",
+      "short": "OS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps",
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "safety_bar_squat",
+      "name": "Safety bar squat",
+      "short": "SBS",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "squat",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "barbell_thruster",
+      "name": "Barbell thruster",
+      "short": "BT",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "shoulders",
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "clean_and_jerk",
+      "name": "Clean and jerk",
+      "short": "CAJ",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "overhead",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "quadriceps",
+        "shoulders"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "seal_row",
+      "name": "Seal row",
+      "short": "SR",
+      "category": "free_weight",
+      "trackingType": "weight_reps",
+      "icon": "row",
+      "equipment": "barbell",
+      "primaryMuscles": [
+        "middle back"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "neutral_grip_pull_up",
+      "name": "Neutral-grip pull-up",
+      "short": "NGP",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "pullup",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lats"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "hanging_knee_raise",
+      "name": "Hanging knee raise",
+      "short": "HKR",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "raise",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "toes_to_bar",
+      "name": "Toes-to-bar",
+      "short": "TTB",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "core",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "pike_push_up",
+      "name": "Pike push-up",
+      "short": "PPI",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "press",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "archer_push_up",
+      "name": "Archer push-up",
+      "short": "APR",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "press",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "chest"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "bodyweight_lunge",
+      "name": "Bodyweight lunge",
+      "short": "BLO",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "lunge",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "side_lunge",
+      "name": "Side lunge",
+      "short": "SL",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "lunge",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps",
+        "adductors"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "bodyweight_calf_raise",
+      "name": "Bodyweight calf raise",
+      "short": "BCO",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "calf",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "calves"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "decline_sit_up",
+      "name": "Decline sit-up",
+      "short": "DSE",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "core",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "abdominals"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "superman",
+      "name": "Superman",
+      "short": "SM",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "core",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "lower back"
+      ],
+      "source": "mettle"
+    },
+    {
+      "id": "sissy_squat",
+      "name": "Sissy squat",
+      "short": "SSI",
+      "category": "bodyweight",
+      "trackingType": "reps",
+      "icon": "squat",
+      "equipment": "body only",
+      "primaryMuscles": [
+        "quadriceps"
+      ],
+      "source": "mettle"
     }
   ]
 }

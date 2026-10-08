@@ -4,6 +4,8 @@
 import { eq, ne, sql } from 'drizzle-orm';
 
 import { xpRules } from '@/engine/config';
+import { placementTests } from '@/engine/placement';
+import { rollingBodyweight } from '@/engine/plausibility';
 import { replayHistory } from '@/engine/replay';
 
 import { db } from '../client';
@@ -41,7 +43,9 @@ export function rebuildDerivedData(): { events: number; xp: number } {
 
 /**
  * After an XP rules change, replays everyone's history under the new rules
- * once (the ledger records which rule version produced each event).
+ * once (the ledger records which rule version produced each event). Also
+ * replays when new placement standards cover a workout an unplaced user
+ * already logged.
  */
 export function rebuildIfRulesChanged(): boolean {
   const stale = db
@@ -49,9 +53,26 @@ export function rebuildIfRulesChanged(): boolean {
     .from(xpEvents)
     .where(ne(xpEvents.ruleVersion, xpRules.version))
     .get();
-  if (!stale?.n) return false;
+  if (!stale?.n && !placementNowPossible()) return false;
   rebuildDerivedData();
   return true;
+}
+
+/**
+ * Unplaced, but a finished workout now has a placement standard (standards
+ * were added after it was logged): replaying places the user from it.
+ */
+function placementNowPossible(): boolean {
+  if (isPlaced()) return false;
+  const profile = getProfile();
+  if (!profile) return false;
+  const exercises = exerciseInfoMap();
+  const logs = listBodyweight().map((l) => ({ weightKg: l.weightKg, loggedAt: l.loggedAt.getTime() }));
+  return finishedWorkoutInputs(new Date(0)).some(
+    (w) =>
+      placementTests([w], { exercises, sex: profile.sexForStandards, bodyweightKg: rollingBodyweight(logs, w.endedAt), birthYear: profile.birthYear })
+        .length > 0,
+  );
 }
 
 /** True once a placement award exists (the user has been placed). */

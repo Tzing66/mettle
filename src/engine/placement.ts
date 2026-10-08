@@ -16,7 +16,7 @@ import { epley } from './e1rm';
 import { rankFor } from './ranks';
 import type { ExerciseInfo, Sex, WorkoutInput, XpEventDraft } from './types';
 
-type StandardKind = BenchmarkDef['kind'];
+type StandardKind = BenchmarkDef['kind'] | 'max_duration';
 
 export interface PlacementStandard {
   id: string;
@@ -50,7 +50,7 @@ export function placementStandards(config: PlacementConfig = placementConfig, be
 
 export interface PlacementTest {
   standardId: string;
-  /** Normalised result (× bodyweight, reps, or age-grade %). */
+  /** Normalised result (× bodyweight, reps, seconds, or age-grade %). */
   value: number;
   /** 0–5: Beginner = 1 … Elite = 5, fractional in between. */
   score: number;
@@ -89,6 +89,8 @@ export function placementTests(
         value = epley(s.weightKg, s.reps) / ctx.bodyweightKg;
       } else if (std.kind === 'max_reps') {
         value = s.reps ?? 0;
+      } else if (std.kind === 'max_duration') {
+        value = s.durationS ?? 0;
       } else if (std.distanceM && s.distanceM && s.durationS && s.distanceM >= std.distanceM) {
         const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, s.completedAt), std.distanceM);
         if (standard) value = (standard / (s.durationS * (std.distanceM / s.distanceM))) * 100;

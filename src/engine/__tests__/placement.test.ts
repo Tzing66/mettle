@@ -1,3 +1,5 @@
+import catalogue from '@config/exercises.json';
+
 import { placementEvent, placementStandards, placementTarget, placementTests, standardScore, type PlacementTest } from '../placement';
 import { replayHistory } from '../replay';
 import type { ExerciseInfo, WorkoutInput } from '../types';
@@ -13,6 +15,8 @@ const exercises: Record<string, ExerciseInfo> = {
   leg_press: { id: 'leg_press', category: 'machine', trackingType: 'weight_reps' },
   barbell_row: { id: 'barbell_row', category: 'free_weight', trackingType: 'weight_reps' },
   lat_pulldown: { id: 'lat_pulldown', category: 'machine', trackingType: 'weight_reps' },
+  plank: { id: 'plank', category: 'bodyweight', trackingType: 'time' },
+  dead_bug: { id: 'dead_bug', category: 'bodyweight', trackingType: 'reps' },
   outdoor_run: { id: 'outdoor_run', category: 'cardio', trackingType: 'distance_time', activity: 'run', benchmarkId: 'run' },
 };
 const ctx74 = { exercises, sex: 'male' as const, bodyweightKg: 74, birthYear: 1998 };
@@ -68,7 +72,8 @@ describe('a real example: the owner’s lifts at 74 kg', () => {
   );
 
   it('scores every covered exercise, ignoring warm-ups', () => {
-    expect(tests.map((x) => [x.standardId, Math.round(x.score * 100) / 100])).toEqual([
+    const byId = (a: [string, number], b: [string, number]) => a[0].localeCompare(b[0]);
+    expect(tests.map((x): [string, number] => [x.standardId, Math.round(x.score * 100) / 100]).sort(byId)).toEqual(([
       ['bench_press', 1.62],
       ['back_squat', 1.77],
       ['push_ups', 2.3],
@@ -76,7 +81,7 @@ describe('a real example: the owner’s lifts at 74 kg', () => {
       ['leg_press', 1.74],
       ['barbell_row', 1.05],
       ['lat_pulldown', 2.03],
-    ]);
+    ] as [string, number][]).sort(byId));
   });
 
   it('places at D4', () => {
@@ -88,6 +93,24 @@ describe('placementTests', () => {
   it('works for an arms-only day and for a run', () => {
     expect(placementTests(once([lift('hammer_curl', 10, 10)]), ctx74).map((x) => x.standardId)).toEqual(['hammer_curl']);
     expect(placementTests(once([set('outdoor_run', { distanceM: 5000, durationS: 1538 })]), ctx74).map((x) => x.standardId)).toEqual(['run_5k']);
+  });
+
+  it('scores holds in seconds', () => {
+    // Male plank: Beginner 11 s, Novice 38 s, Intermediate 75 s.
+    const [plank] = placementTests(once([set('plank', { durationS: 75 })]), ctx74);
+    expect(plank).toMatchObject({ standardId: 'plank', score: 3 });
+  });
+
+  it('every standard never decreases and matches its exercises’ tracking type', () => {
+    const tracking = new Map(catalogue.exercises.map((e) => [e.id, e.trackingType]));
+    const expected = { bodyweight_multiple: 'weight_reps', max_reps: 'reps', max_duration: 'time', run_age_graded: 'distance_time' };
+    for (const std of placementStandards()) {
+      for (const sex of ['male', 'female'] as const) {
+        const t = std.thresholds[sex];
+        expect(t.every((v, i) => i === 0 || v >= t[i - 1])).toBe(true);
+      }
+      expect(std.exerciseIds.filter((id) => tracking.get(id) !== expected[std.kind])).toEqual([]);
+    }
   });
 
   it('skips implausible results and sets over 15 reps', () => {
@@ -118,7 +141,7 @@ describe('placement in history', () => {
 
   it('the first workout with a covered exercise places you, once; its benchmark tiers don’t pay twice', () => {
     const history = [
-      w('core', at(5), [set('plank', { durationS: 60, completedAt: at(5) })]), // no placement standard yet
+      w('core', at(5), [set('dead_bug', { reps: 20, completedAt: at(5) })]), // no placement standard
       w('heavy', at(3), [lift('bench_press', 104, 1, { completedAt: at(3) }), lift('back_squat', 140, 1, { completedAt: at(3) })]),
       w('later', at(1), [lift('bench_press', 125, 1, { completedAt: at(1) })]),
     ];

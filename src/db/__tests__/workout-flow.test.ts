@@ -9,6 +9,7 @@ jest.mock('expo-sharing', () => ({}));
 
 jest.mock('@/db/client', () => require('@/test/sqliteDb').createTestDbModule());
 
+import { eq } from 'drizzle-orm';
 import { createCustomExercise, getExercise, listExercises, recentExerciseIds, shortCodeFor, toggleFavourite } from '@/db/repositories/exercises';
 import { createProfile, getProfile } from '@/db/repositories/profile';
 import {
@@ -31,7 +32,9 @@ import {
 } from '@/db/repositories/workouts';
 import { eventsForWorkout, listBenchmarkUnlocks, listLedger, totalXpFromDb, weeklyGoalWeeks, xpByDay, xpByWorkout } from '@/db/repositories/xp';
 import { ensureSeeded, seedExercises } from '@/db/seed';
-import { rebuildDerivedData } from '@/db/repositories/derived';
+import { isPlaced, rebuildDerivedData, rebuildIfRulesChanged } from '@/db/repositories/derived';
+import { db } from '@/db/client';
+import { xpEvents } from '@/db/schema';
 import { buildWorkoutExport } from '@/features/export/exportData';
 import { finishWorkout } from '@/features/workout/finishWorkout';
 
@@ -331,6 +334,15 @@ describe('rebuilding derived data from history', () => {
     const result = rebuildDerivedData();
     expect(result.xp).toBe(live.total);
     expect(snapshot()).toEqual(live);
+  });
+
+  it('an unplaced user whose history is now covered by a standard gets placed on launch, once', () => {
+    // As on a phone that logged these workouts before the standards existed.
+    db.delete(xpEvents).where(eq(xpEvents.reason, 'placement')).run();
+    expect(isPlaced()).toBe(false);
+    expect(rebuildIfRulesChanged()).toBe(true);
+    expect(isPlaced()).toBe(true);
+    expect(rebuildIfRulesChanged()).toBe(false);
   });
 });
 

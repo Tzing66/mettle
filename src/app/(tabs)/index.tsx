@@ -98,8 +98,8 @@ export default function Home() {
               Your first workout places you
             </Text>
             <Text variant="caption" color="inkMuted">
-              Log a normal session with lifts like bench, squat, rows, pulldowns, curls, leg press, push-ups, or a 5 km run. Mettle compares
-              them with standards for your size, age and sex and starts you at the right rank, up to A1.
+              Just log a normal session. Most lifts, machines, cable moves, bodyweight exercises, planks and 5 km runs have standards. Mettle
+              compares your sets with them for your size, age and sex and starts you at the right rank, up to A1.
             </Text>
           </Card>
         </Animated.View>
