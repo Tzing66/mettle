@@ -17,6 +17,7 @@ import { ensureSeeded } from '@/db/seed';
 import { KeyboardDoneBar, Text } from '@/design/components';
 import { space } from '@/design/tokens';
 import { SyncController } from '@/features/sync/useSync';
+import { useLatestUpdate } from '@/features/updates/useLatestUpdate';
 import { makeStyles, ThemeProvider, useTheme } from '@/design/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -46,7 +47,8 @@ function App() {
     Inter_800ExtraBold,
   });
   const migrations = useDatabaseMigrations();
-  const ready = (fontsLoaded || !!fontError) && (migrations.success || !!migrations.error);
+  const updateChecked = useLatestUpdate();
+  const ready = updateChecked && (fontsLoaded || !!fontError) && (migrations.success || !!migrations.error);
 
   // The catalogue upsert is synchronous and must finish before any screen reads exercises.
   if (migrations.success) ensureSeeded();

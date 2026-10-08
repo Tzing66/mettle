@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
-import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
+import { FlatList, ScrollView, StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
+import Animated, { ZoomIn } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listExercises, recentExerciseIds, toggleFavourite, type ExerciseRow } from '@/db/repositories/exercises';
@@ -10,7 +10,7 @@ import { useDbQuery } from '@/db/useDbQuery';
 import { Button, ExerciseTile, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { CheckIcon, PlusIcon, SearchIcon } from '@/design/icons/Icons';
-import { motion, radii, space, type } from '@/design/tokens';
+import { radii, space, type } from '@/design/tokens';
 import type { ExerciseCategory } from '@/engine';
 import { makeStyles, useTheme } from '@/design/theme';
 
@@ -104,34 +104,49 @@ export default function Picker() {
         />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {searchResults ? (
-          <>
-            <Animated.View entering={FadeIn.duration(motion.duration.fast)} style={styles.grid}>
-              {searchResults.length ? searchResults.map((e) => tile(e)) : <Text color="inkMuted">No matches for “{query.trim()}”.</Text>}
-            </Animated.View>
-            <Button
-              label={`Create “${query.trim()}”`}
-              variant={searchResults.length ? 'ghost' : 'secondary'}
-              icon={<PlusIcon color={searchResults.length ? colors.accentInk : colors.ink} size={18} />}
-              onPress={() => router.push({ pathname: '/exercise/new', params: { name: query.trim() } })}
-            />
-          </>
-        ) : (
-          <>
-            {row('Favourites', favourites)}
-            {row('Recent', recent)}
-            <SegmentedTabs options={TABS} value={tab} onChange={setTab} />
-            <Animated.View key={tab} entering={FadeIn.duration(motion.duration.base)} style={styles.grid}>
-              {exercises.filter((e) => e.category === tab).map((e) => tile(e))}
-            </Animated.View>
-            <Text variant="caption" color="inkFaint" align="center">
-              Long-press a tile to favourite it
-            </Text>
-            <Button label="Can’t find it? Create your own" variant="ghost" onPress={() => router.push('/exercise/new')} />
-          </>
-        )}
-      </ScrollView>
+      {/* Virtualised grid: only tiles near the screen are drawn (each tile is an SVG figure). */}
+      <FlatList
+        data={searchResults ?? exercises.filter((e) => e.category === tab)}
+        keyExtractor={(e) => e.id}
+        renderItem={({ item }) => tile(item)}
+        numColumns={COLUMNS}
+        columnWrapperStyle={styles.gridRow}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        initialNumToRender={12}
+        maxToRenderPerBatch={12}
+        windowSize={5}
+        removeClippedSubviews
+        ListHeaderComponent={
+          searchResults ? null : (
+            <View style={styles.listHeader}>
+              {row('Favourites', favourites)}
+              {row('Recent', recent)}
+              <SegmentedTabs options={TABS} value={tab} onChange={setTab} />
+            </View>
+          )
+        }
+        ListEmptyComponent={searchResults ? <Text color="inkMuted">No matches for “{query.trim()}”.</Text> : null}
+        ListFooterComponent={
+          <View style={styles.listFooter}>
+            {searchResults ? (
+              <Button
+                label={`Create “${query.trim()}”`}
+                variant={searchResults.length ? 'ghost' : 'secondary'}
+                icon={<PlusIcon color={searchResults.length ? colors.accentInk : colors.ink} size={18} />}
+                onPress={() => router.push({ pathname: '/exercise/new', params: { name: query.trim() } })}
+              />
+            ) : (
+              <>
+                <Text variant="caption" color="inkFaint" align="center">
+                  Long-press a tile to favourite it
+                </Text>
+                <Button label="Can’t find it? Create your own" variant="ghost" onPress={() => router.push('/exercise/new')} />
+              </>
+            )}
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -170,11 +185,9 @@ const useStyles = makeStyles((colors) => ({
   },
   section: { gap: space.sm },
   hRow: { gap: space.md },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: space.md,
-  },
+  gridRow: { gap: space.md },
+  listHeader: { gap: space.lg, marginBottom: space.lg },
+  listFooter: { gap: space.md, marginTop: space.md },
   added: {
     position: 'absolute',
     top: space.xs + 2,

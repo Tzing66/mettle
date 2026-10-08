@@ -49,6 +49,14 @@ export default function ActiveWorkout() {
   const planning = workout?.status === 'planning';
   const byId = new Map(exercises.map((e) => [e.id, e]));
   const groups = groupByExercise(sets);
+  // "Last time" only depends on finished workouts, so read it once per exercise
+  // list change instead of querying on every set edit.
+  const exerciseKey = groups.map((g) => g.exerciseId).join(',');
+  const lastTimes = useDbQuery(
+    () => new Map(exerciseKey ? exerciseKey.split(',').map((id) => [id, workout ? lastSessionSets(id, workout.id) : []] as const) : []),
+    ['workouts'],
+    [workout?.id, exerciseKey],
+  );
   const unit = profile?.unitPref ?? 'kg';
   const engineRecords = records.map((r) => ({ ...r, achievedAt: r.achievedAt.getTime() }));
 
@@ -214,7 +222,7 @@ export default function ActiveWorkout() {
               key={exerciseId}
               exercise={ex}
               sets={exSets}
-              lastTime={lastSessionSets(exerciseId, workout.id)}
+              lastTime={lastTimes.get(exerciseId) ?? []}
               unit={unit}
               planning={planning}
               prSetIds={prSetIds}

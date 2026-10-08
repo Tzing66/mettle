@@ -1,5 +1,5 @@
 import { Alert, View } from 'react-native';
-import Animated, { FadeInDown, FadeOut, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import type { ExerciseRow } from '@/db/repositories/exercises';
 import type { SetRow as SetRowData } from '@/db/repositories/workouts';
@@ -42,7 +42,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
   const workingNumbers = numberWorkingSets(sets);
 
   return (
-    <Animated.View entering={FadeInDown.duration(motion.duration.slow)} exiting={FadeOut.duration(motion.duration.fast)} layout={LinearTransition.duration(motion.duration.base)}>
+    <Animated.View entering={FadeInDown.duration(motion.duration.slow)} exiting={FadeOut.duration(motion.duration.fast)}>
       <Card style={styles.card}>
         <View style={styles.header}>
           <View style={[styles.code, { backgroundColor: tone.tint }]}>

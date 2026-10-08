@@ -4,7 +4,6 @@ import Animated, {
   FadeIn,
   FadeOut,
   interpolateColor,
-  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -129,7 +128,7 @@ export function SetRow(props: SetRowProps) {
   const decimals = (field: NumericField) => (field === 'weightKg' ? 1 : field === 'distanceM' && !swim ? 2 : 0);
 
   return (
-    <Animated.View layout={LinearTransition.duration(motion.duration.base)} style={[styles.row, rowStyle]}>
+    <Animated.View style={[styles.row, rowStyle]}>
       <Pressable onPress={openMenu} accessibilityLabel={`Set ${number} options`} hitSlop={6} style={[styles.index, set.isWarmup && styles.warmup]}>
         <Text variant="caption" color={set.isWarmup ? 'xpInk' : 'inkMuted'} tabular>
           {set.isWarmup ? 'W' : number}
