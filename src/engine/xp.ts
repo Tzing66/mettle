@@ -11,10 +11,12 @@ import {
 } from './config';
 import { benchmarksFor, benchmarkValue, findBenchmark, newTiers } from './benchmarks';
 import { exceedsEliteCeiling, isSuspiciousE1rmJump } from './plausibility';
+import { epley } from './e1rm';
 import { detectRecords, type RecordOutcome } from './records';
 import { streakMultiplier } from './streaks';
 import type {
   BenchmarkUnlock,
+  RecordMetric,
   ExerciseInfo,
   PersonalRecord,
   Profile,
@@ -37,6 +39,11 @@ export interface WorkoutContext {
   today: { consistencyXp: number; cardioMinutes: number; prsCounted: number };
   /** Consecutive goal-hit weeks (see streakWeeks). */
   streakWeeks: number;
+  /**
+   * Placement window: benchmark tiers are still recorded as unlocked, but pay
+   * no XP (the placement award covers them).
+   */
+  deferBenchmarkXp?: boolean;
 }
 
 export interface WorkoutXpResult {
@@ -101,6 +108,44 @@ export function cardioXp(minutesSoFar: number, addMinutes: number, rules: XpRule
   return xp;
 }
 
+const PRIMARY_METRIC: Partial<Record<ExerciseInfo['trackingType'], RecordMetric>> = {
+  weight_reps: 'e1rm',
+  reps: 'max_reps',
+  time: 'max_duration',
+};
+
+/** How a set compares to your best for that exercise (1 = matched your best). Null if there's no best yet. */
+export function setIntensity(set: SetInput, exercise: ExerciseInfo, records: PersonalRecord[]): number | null {
+  const metric = PRIMARY_METRIC[exercise.trackingType];
+  if (!metric) return null;
+  const best = records.find((r) => r.exerciseId === exercise.id && r.metric === metric);
+  if (!best || best.value <= 0) return null;
+  const value =
+    metric === 'e1rm'
+      ? set.weightKg && set.reps
+        ? epley(set.weightKg, set.reps) // uncapped reps: this is only a comparison
+        : 0
+      : metric === 'max_reps'
+        ? (set.reps ?? 0)
+        : (set.durationS ?? 0);
+  return value / best.value;
+}
+
+/** XP for one working set: more the closer it is to your best for that exercise. */
+export function setXpFor(set: SetInput, exercise: ExerciseInfo, records: PersonalRecord[], rules: XpRules = xpRules): number {
+  const { bands, firstSession } = rules.consistency.setXp;
+  const ratio = setIntensity(set, exercise, records);
+  if (ratio === null) return firstSession;
+  return (bands.find((b) => ratio >= b.minRatio) ?? bands[bands.length - 1]).xp;
+}
+
+/** PR XP grows with the size of the improvement. */
+export function prXpFor(metric: RecordMetric, value: number, previous: number, rules: XpRules = xpRules): number {
+  const { base, perPercent, max } = rules.progress.personalRecord;
+  const improvement = metric === 'best_pace' ? (previous - value) / previous : (value - previous) / previous;
+  return Math.min(max, base + Math.round(Math.max(0, improvement) * 100 * perPercent));
+}
+
 export function computeWorkoutXp(
   workout: WorkoutInput,
   ctx: WorkoutContext,
@@ -122,8 +167,12 @@ export function computeWorkoutXp(
   const consistency: XpEventDraft[] = [];
   if (qualifies)
     consistency.push(event({ amount: c.workoutComplete, reason: 'workout_complete', sourceType: 'workout', sourceId: workout.id, meta: workoutMeta }));
-  if (workingSets > 0)
-    consistency.push(event({ amount: Math.min(workingSets * c.perWorkingSet, c.maxSetXpPerWorkout), reason: 'working_sets', sourceType: 'workout', sourceId: workout.id, meta: { ...workoutMeta, sets: workingSets } }));
+  if (workingSets > 0) {
+    const setXp = workout.sets
+      .filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId]))
+      .reduce((sum, s) => sum + setXpFor(s, exercises[s.exerciseId], ctx.records, rules), 0);
+    consistency.push(event({ amount: Math.min(setXp, c.maxSetXpPerWorkout), reason: 'working_sets', sourceType: 'workout', sourceId: workout.id, meta: { ...workoutMeta, sets: workingSets } }));
+  }
   const cardio = cardioXp(ctx.today.cardioMinutes, cardioMinutes, rules);
   if (cardio > 0)
     consistency.push(event({ amount: cardio, reason: 'cardio_minutes', sourceType: 'workout', sourceId: workout.id, meta: { ...workoutMeta, minutes: cardioMinutes } }));
@@ -161,7 +210,7 @@ export function computeWorkoutXp(
       (record.metric === 'e1rm' && benchmark?.kind === 'bodyweight_multiple' && !!ctx.bodyweightKg &&
         exceedsEliteCeiling(benchmark, record.value / ctx.bodyweightKg, ctx.profile.sex, rules));
     progress.push(event({
-      amount: p.personalRecord,
+      amount: prXpFor(record.metric, record.value, previous.value, rules),
       reason: 'personal_record',
       sourceType: 'set',
       sourceId: record.setId,
@@ -175,12 +224,18 @@ export function computeWorkoutXp(
   // --- Progress: firsts ------------------------------------------------------
   const seenExercises = new Set(ctx.seenExerciseIds);
   const seenActivities = new Set(ctx.seenActivities);
+  let firstsLeft = p.maxFirstsPerWorkout;
   for (const exerciseId of uniqueInOrder(workout.sets.map((s) => s.exerciseId))) {
     const exercise = exercises[exerciseId];
     if (!exercise) continue;
     if (!seenExercises.has(exerciseId)) {
       seenExercises.add(exerciseId);
-      progress.push(event({ amount: p.firstExercise, reason: 'first_exercise', sourceType: 'exercise', sourceId: exerciseId, meta: workoutMeta }));
+      // Only real efforts count, and only a few per workout, so variety can't be farmed.
+      const working = workout.sets.filter((s) => s.exerciseId === exerciseId && !s.isWarmup).length;
+      if (firstsLeft > 0 && working >= (isCardio(exercise) ? 1 : p.firstExerciseMinSets)) {
+        firstsLeft--;
+        progress.push(event({ amount: p.firstExercise, reason: 'first_exercise', sourceType: 'exercise', sourceId: exerciseId, meta: workoutMeta }));
+      }
     }
     if (exercise.activity && !seenActivities.has(exercise.activity)) {
       seenActivities.add(exercise.activity);
@@ -211,6 +266,7 @@ export function computeWorkoutXp(
 
     for (const tier of newTiers(benchmark, result.value, ctx.profile.sex, ctx.benchmarkUnlocks, benchmarks)) {
       benchmarkUnlocks.push({ benchmarkId, tier, value: result.value, unlockedAt: at, status });
+      if (ctx.deferBenchmarkXp) continue;
       progress.push(event({
         amount: p.benchmarkTier[tier],
         reason: 'benchmark_tier',

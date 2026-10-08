@@ -1,6 +1,9 @@
 // Recomputes XP ledger, personal records and benchmark unlocks from the sets.
 // Derived data is never synced; each device rebuilds it after pulling history.
 
+import { eq, ne, sql } from 'drizzle-orm';
+
+import { xpRules } from '@/engine/config';
 import { replayHistory } from '@/engine/replay';
 
 import { db } from '../client';
@@ -34,4 +37,24 @@ export function rebuildDerivedData(): { events: number; xp: number } {
   });
 
   return { events: out.events.length, xp: out.events.reduce((s, e) => s + e.amount, 0) };
+}
+
+/**
+ * After an XP rules change, replays everyone's history under the new rules
+ * once (the ledger records which rule version produced each event).
+ */
+export function rebuildIfRulesChanged(): boolean {
+  const stale = db
+    .select({ n: sql<number>`count(*)` })
+    .from(xpEvents)
+    .where(ne(xpEvents.ruleVersion, xpRules.version))
+    .get();
+  if (!stale?.n) return false;
+  rebuildDerivedData();
+  return true;
+}
+
+/** True once a placement award exists (the user has been placed). */
+export function isPlaced(): boolean {
+  return !!db.select({ id: xpEvents.id }).from(xpEvents).where(eq(xpEvents.reason, 'placement')).get();
 }

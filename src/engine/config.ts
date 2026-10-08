@@ -4,7 +4,7 @@
 import ageGradingJson from '@config/age-grading.road2025.json';
 import benchmarksJson from '@config/benchmarks.v1.json';
 import ranksJson from '@config/ranks.v1.json';
-import xpRulesJson from '@config/xp-rules.v1.json';
+import xpRulesJson from '@config/xp-rules.v2.json';
 
 import type { BenchmarkTier, Sex } from './types';
 
@@ -19,7 +19,8 @@ export interface XpRules {
     workoutComplete: number;
     workoutMinWorkingSets: number;
     workoutMinCardioMinutes: number;
-    perWorkingSet: number;
+    /** Working-set XP by how close the set is to your best for that exercise. */
+    setXp: { bands: { minRatio: number; xp: number }[]; firstSession: number };
     maxSetXpPerWorkout: number;
     cardioBands: CardioBand[];
     weeklyGoal: number;
@@ -28,11 +29,17 @@ export interface XpRules {
     dailyCap: number;
   };
   progress: {
-    personalRecord: number;
+    personalRecord: { base: number; perPercent: number; max: number };
     maxPrsPerDay: number;
     firstExercise: number;
+    maxFirstsPerWorkout: number;
+    firstExerciseMinSets: number;
     firstActivity: number;
     benchmarkTier: Record<BenchmarkTier, number>;
+  };
+  placement: {
+    /** Documentation only: placement happens at the first workout with a benchmark test. */
+    trigger: string;
   };
   e1rm: { formula: 'epley' | 'brzycki'; maxReps: number };
   records: { minPaceDistanceM: number };

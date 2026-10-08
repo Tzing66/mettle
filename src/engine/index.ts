@@ -10,3 +10,4 @@ export * from './units';
 export * from './xp';
 export * from './session';
 export * from './replay';
+export * from './placement';

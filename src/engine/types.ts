@@ -24,9 +24,10 @@ export type XpReason =
   | 'personal_record'
   | 'first_exercise'
   | 'first_activity'
-  | 'benchmark_tier';
+  | 'benchmark_tier'
+  | 'placement';
 
-export type XpSourceType = 'workout' | 'week' | 'set' | 'exercise' | 'activity' | 'benchmark';
+export type XpSourceType = 'workout' | 'week' | 'set' | 'exercise' | 'activity' | 'benchmark' | 'placement';
 
 export interface ExerciseInfo {
   id: string;

@@ -38,8 +38,8 @@ function input(overrides: Partial<FinishInput> = {}): FinishInput {
 
 describe('finishSession', () => {
   it('derives today’s consistency XP from the ledger for the daily cap', () => {
-    const out = finishSession(input({ ledger: [event({ amount: 120, createdAt: NOW - 3600_000 })] }));
-    expect(out.result.consistencyXp).toBe(30);
+    const out = finishSession(input({ ledger: [event({ amount: 200, createdAt: NOW - 3600_000 })] }));
+    expect(out.result.consistencyXp).toBe(20);
     expect(out.result.capped).toBe(true);
   });
 

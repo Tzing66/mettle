@@ -59,7 +59,7 @@ export function ageStandardSeconds(
   return byAge[String(clamped)] ?? null;
 }
 
-function ageAt(birthYear: number, at: number): number {
+export function ageAt(birthYear: number, at: number): number {
   return new Date(at).getFullYear() - birthYear;
 }
 

@@ -27,7 +27,7 @@ import { Button, Chip, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon, PlusIcon } from '@/design/icons/Icons';
 import { motion, radii, space } from '@/design/tokens';
-import { cardioXp, formatDuration, setBeatsRecords, xpRules } from '@/engine';
+import { cardioXp, formatDuration, setBeatsRecords, setXpFor, xpRules } from '@/engine';
 import { useProfile } from '@/features/profile/useProfile';
 import { ExerciseCard } from '@/features/workout/ExerciseCard';
 import { finishWorkout } from '@/features/workout/finishWorkout';
@@ -64,7 +64,10 @@ export default function ActiveWorkout() {
     !planning && setBeatsRecords(toSetInput(s), toExerciseInfo(ex), engineRecords).length > 0;
   const prSetIds = new Set(sets.filter((s) => byId.has(s.exerciseId) && isPrSet(s, byId.get(s.exerciseId)!)).map((s) => s.id));
 
-  const completedWorking = sets.filter((s) => s.completedAt && !s.isWarmup && byId.get(s.exerciseId)?.category !== 'cardio').length;
+  const setXp = (s: SetRow) => setXpFor(toSetInput(s), toExerciseInfo(byId.get(s.exerciseId)!), engineRecords);
+  const earnedSetXp = sets
+    .filter((s) => s.completedAt && !s.isWarmup && byId.has(s.exerciseId) && byId.get(s.exerciseId)!.category !== 'cardio')
+    .reduce((sum, s) => sum + setXp(s), 0);
   const cardioMinutesDone = Math.floor(
     sets.filter((s) => s.completedAt && !s.isWarmup && byId.get(s.exerciseId)?.category === 'cardio').reduce((m, s) => m + (s.durationS ?? 0), 0) / 60,
   );
@@ -73,8 +76,9 @@ export default function ActiveWorkout() {
     const ex = byId.get(s.exerciseId);
     if (!ex || s.isWarmup) return null;
     if (ex.category === 'cardio') return cardioXp(cardioMinutesDone, Math.floor((s.durationS ?? 0) / 60)) || null;
-    const { perWorkingSet, maxSetXpPerWorkout } = xpRules.consistency;
-    return (completedWorking + 1) * perWorkingSet <= maxSetXpPerWorkout ? perWorkingSet : null;
+    // What this set adds, within the per-workout set XP cap.
+    const room = xpRules.consistency.maxSetXpPerWorkout - earnedSetXp;
+    return room > 0 ? Math.min(setXp(s), room) : null;
   };
 
   const complete = (s: SetRow) => {

@@ -1,5 +1,6 @@
 import { exerciseInfoMap, listExercises } from '@/db/repositories/exercises';
 import { completedSetsForWorkouts, finishedWorkoutInputs, getActiveWorkout, listFinishedWorkouts } from '@/db/repositories/workouts';
+import { isPlaced } from '@/db/repositories/derived';
 import { totalXpFromDb, weeklyGoalWeeks, xpByWorkout } from '@/db/repositories/xp';
 import { useDbQuery } from '@/db/useDbQuery';
 import { dayKey, qualifiesAsWorkout, rankFor, streakWeeks, weekKey, weekStart } from '@/engine';
@@ -23,6 +24,7 @@ function readHomeStats() {
     weekGoalHit: goalWeeks.includes(weekKey(now)),
     daysThisWeek: trainingDays.size,
     activeWorkout: getActiveWorkout(),
+    placed: isPlaced(),
     lastWorkout: last
       ? {
           id: last.id,

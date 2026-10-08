@@ -4,6 +4,7 @@
 // the inputs and writes the outputs.
 
 import { xpRules, type XpRules } from './config';
+import { placementEvent, placementTests } from './placement';
 import { confirmedPendingIds, rollingBodyweight, type BodyweightLog, type Performance } from './plausibility';
 import { setMetrics } from './records';
 import { dayKey, streakWeeks, weekKey, weeklyGoalEvent } from './streaks';
@@ -37,6 +38,8 @@ export interface FinishOutput {
   confirmedEventIds: string[];
   streakWeeks: number;
   bodyweightKg: number | null;
+  /** The placement award, when this workout placed the user. */
+  placement: XpEventDraft | null;
 }
 
 const CONSISTENCY: XpReason[] = ['workout_complete', 'working_sets', 'cardio_minutes', 'streak_bonus'];
@@ -52,6 +55,13 @@ export function finishSession(input: FinishInput, rules: XpRules = xpRules): Fin
   const goalWeeks = ledger.filter((e) => e.reason === 'weekly_goal').map((e) => e.sourceId);
   const streak = streakWeeks(goalWeeks, at);
   const bodyweightKg = rollingBodyweight(input.bodyweightLogs, at, rules);
+
+  // --- Placement: the first workout with a benchmark test places the user ------
+  const placed = ledger.some((e) => e.reason === 'placement');
+  const tests = placed
+    ? []
+    : placementTests([workout], { exercises, sex: input.profile.sex, bodyweightKg, birthYear: input.profile.birthYear }, rules);
+  const placeNow = tests.length > 0;
 
   const seenActivities = new Set<string>();
   for (const id of input.seenExerciseIds) {
@@ -75,9 +85,23 @@ export function finishSession(input: FinishInput, rules: XpRules = xpRules): Fin
         prsCounted: todaysEvents.filter((e) => e.reason === 'personal_record').length,
       },
       streakWeeks: streak,
+      deferBenchmarkXp: placeNow,
     },
     rules,
   );
+
+  // Placement is awarded after the workout's own XP, topping total XP up to the placed rank's floor.
+  const placement = placeNow
+    ? placementEvent(
+        {
+          at,
+          tests,
+          totalXpSoFar: ledger.reduce((s, e) => s + e.amount, 0) + result.events.reduce((s, e) => s + e.amount, 0),
+          tierXp: result.benchmarkUnlocks.reduce((s, u) => s + rules.progress.benchmarkTier[u.tier], 0),
+        },
+        rules,
+      )
+    : null;
 
   const trainingDays = input.recentWorkouts
     .filter((w) => weekKey(w.endedAt) === thisWeek && qualifiesAsWorkout(w.sets, exercises, rules))
@@ -110,9 +134,10 @@ export function finishSession(input: FinishInput, rules: XpRules = xpRules): Fin
   return {
     result,
     weeklyGoal,
-    events: weeklyGoal ? [...result.events, weeklyGoal] : result.events,
+    events: [...result.events, ...(placement ? [placement] : []), ...(weeklyGoal ? [weeklyGoal] : [])],
     confirmedEventIds: confirmedPendingIds(pending, performances),
     streakWeeks: streak,
     bodyweightKg,
+    placement,
   };
 }

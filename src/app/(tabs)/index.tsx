@@ -91,6 +91,20 @@ export default function Home() {
         </Card>
       </Animated.View>
 
+      {!stats.placed ? (
+        <Animated.View entering={enter(3)}>
+          <Card tone="accentSoft" style={styles.placementHint}>
+            <Text variant="label" color="accentInk">
+              Your first workout places you
+            </Text>
+            <Text variant="caption" color="inkMuted">
+              Log a normal session with lifts like bench, squat, rows, pulldowns, curls, leg press, push-ups, or a 5 km run. Mettle compares
+              them with standards for your size, age and sex and starts you at the right rank, up to A1.
+            </Text>
+          </Card>
+        </Animated.View>
+      ) : null}
+
       <Animated.View entering={enter(3)}>
         <Button
           label={!active ? 'Start workout' : active.status === 'planning' ? 'Continue planning' : 'Resume workout'}
@@ -135,6 +149,7 @@ export default function Home() {
 }
 
 const useStyles = makeStyles((colors) => ({
+  placementHint: { gap: space.xs },
   greeting: { gap: space.xxs, paddingTop: space.sm },
   flex: { flex: 1, gap: space.xxs },
   rankCard: { gap: space.md },

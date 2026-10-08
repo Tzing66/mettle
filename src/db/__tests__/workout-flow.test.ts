@@ -116,25 +116,26 @@ describe('workout flow', () => {
     discardWorkout(id);
   });
 
-  it('first bench session: baseline, first-exercise XP and benchmark tiers', () => {
-    // 80 × 5 → e1RM 93.3 kg at 75 kg = 1.24× → beginner, novice (intermediate is 1.25×).
+  it('first bench session places the user (v2): baseline, first-exercise XP, tiers recorded but paid via placement', () => {
+    // 80 × 5 → e1RM 93.3 kg at 75 kg = 1.24×: tiers beginner + novice; placement score ≈ 2.98 → C5.
     const { id, summary } = logLifts(MONDAY, 'bench_press', [
       [80, 5],
       [80, 5],
       [80, 5],
     ]);
     expect(summary).not.toBeNull();
-    const reasons = Object.fromEntries(summary!.events.filter((e) => e.reason !== 'benchmark_tier').map((e) => [e.reason, e.amount]));
+    const reasons = Object.fromEntries(summary!.events.filter((e) => e.reason !== 'placement').map((e) => [e.reason, e.amount]));
     expect(reasons).toEqual({ workout_complete: 50, working_sets: 15, first_exercise: 20 });
     expect(summary!.unlocks.map((u) => u.tier)).toEqual(['beginner', 'novice']);
+    expect(summary!.events.find((e) => e.reason === 'placement')?.meta).toMatchObject({ placedAt: 'C5' });
     expect(summary!.prs).toEqual([]);
 
     expect(totalXpFromDb()).toBe(summary!.xpGained);
-    expect(summary!.xpGained).toBe(50 + 15 + 20 + 250 + 750);
+    expect(summary!.rank.after.label).toBe('C5');
     expect(xpByWorkout([id]).get(id)).toBe(summary!.xpGained);
     expect(listRecords()).toEqual([expect.objectContaining({ exerciseId: 'bench_press', metric: 'e1rm' })]);
     expect(listBenchmarkUnlocks()).toHaveLength(2);
-    expect(summary!.rank.rankUp).toBe(false); // 1,085 XP: still E
+    expect(summary!.rank.rankUp).toBe(true); // E → C on the first workout
   });
 
   it('next session pre-fills from last time and a heavier set is a PR', () => {
@@ -154,7 +155,8 @@ describe('workout flow', () => {
     const summary = finishWorkout(id)!;
 
     expect(summary.prs).toEqual([expect.objectContaining({ exerciseName: 'Bench press' })]);
-    expect(summary.events.find((e) => e.reason === 'personal_record')).toMatchObject({ amount: 25, status: 'granted' });
+    // e1RM 96.25 vs 93.3 = +3.1% → 25 + 16
+    expect(summary.events.find((e) => e.reason === 'personal_record')).toMatchObject({ amount: 41, status: 'granted' });
     // The unfinished third set was dropped; only 2 working sets → no completion bonus.
     expect(setsForWorkout(id)).toHaveLength(2);
     expect(summary.events.some((e) => e.reason === 'workout_complete')).toBe(false);

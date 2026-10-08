@@ -33,10 +33,11 @@ function ledger(sessions: ReturnType<typeof session>[], offset = 0) {
 describe('computeServerLedger', () => {
   it('scores synced sets with the app’s rules and catalogue', () => {
     const out = ledger([session('w1', Date.UTC(2026, 9, 5, 18), 'bench_press', 60)]);
-    const reasons = Object.fromEntries(out.events.filter((e) => e.reason !== 'benchmark_tier').map((e) => [e.reason, e.amount]));
-    expect(reasons).toEqual({ workout_complete: 50, working_sets: 15, first_exercise: 20 });
-    expect(out.events.filter((e) => e.reason === 'benchmark_tier').map((e) => e.source_id)).toEqual(['bench_press:beginner']);
-    expect(out.ruleVersion).toBe('xp-rules.v1');
+    const reasons = Object.fromEntries(out.events.map((e) => [e.reason, e.amount]));
+    // 60×5 bench at 80 kg = 0.875× → placement score 1.75 → 6,500 XP on the ladder (D3), topped up after 85 XP.
+    expect(reasons).toEqual({ workout_complete: 50, working_sets: 15, first_exercise: 20, placement: 6415 });
+    expect(out.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
+    expect(out.ruleVersion).toBe('xp-rules.v2');
     expect(out.events.every((e) => e.workout_id === 'w1')).toBe(true);
   });
 
@@ -71,8 +72,8 @@ describe('computeServerLedger', () => {
     const utc = ledger([heavy('a', first), heavy('b', second)], 0);
     const bConsistency = (out: ReturnType<typeof ledger>) =>
       out.events.filter((e) => e.workout_id === 'b' && ['workout_complete', 'working_sets'].includes(e.reason)).reduce((s, e) => s + e.amount, 0);
-    expect(bConsistency(ist)).toBe(90); // new day: full 50 + 40
-    expect(bConsistency(utc)).toBe(60); // same UTC day: capped at 150 total
+    expect(bConsistency(ist)).toBe(146); // new day: 50 + 8 sets × 12 (matching your best)
+    expect(bConsistency(utc)).toBe(130); // same UTC day: capped at 220 total after 90 earlier
   });
 
   it('reports times in real UTC, not shifted', () => {

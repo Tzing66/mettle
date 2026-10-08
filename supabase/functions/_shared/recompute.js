@@ -3442,28 +3442,75 @@ var benchmarks_v1_default = {
   ]
 };
 
-// config/xp-rules.v1.json
-var xp_rules_v1_default = {
-  version: "xp-rules.v1",
+// config/ranks.v1.json
+var ranks_v1_default = {
+  version: "ranks.v1",
+  levelsPerRank: 5,
+  ranks: [
+    { rank: "E", minXp: 0 },
+    { rank: "D", minXp: 2e3 },
+    { rank: "C", minXp: 8e3 },
+    { rank: "B", minXp: 2e4 },
+    { rank: "A", minXp: 45e3 },
+    { rank: "S", minXp: 1e5 }
+  ],
+  sLevelSpanXp: 25e3
+};
+
+// config/xp-rules.v2.json
+var xp_rules_v2_default = {
+  version: "xp-rules.v2",
   consistency: {
     workoutComplete: 50,
     workoutMinWorkingSets: 3,
     workoutMinCardioMinutes: 15,
-    perWorkingSet: 5,
-    maxSetXpPerWorkout: 40,
+    setXp: {
+      bands: [
+        {
+          minRatio: 0.95,
+          xp: 12
+        },
+        {
+          minRatio: 0.85,
+          xp: 9
+        },
+        {
+          minRatio: 0.7,
+          xp: 6
+        },
+        {
+          minRatio: 0,
+          xp: 4
+        }
+      ],
+      firstSession: 5
+    },
+    maxSetXpPerWorkout: 100,
     cardioBands: [
-      { upToMinutes: 30, xpPerMinute: 2 },
-      { upToMinutes: 60, xpPerMinute: 1 }
+      {
+        upToMinutes: 30,
+        xpPerMinute: 2
+      },
+      {
+        upToMinutes: 60,
+        xpPerMinute: 1
+      }
     ],
     weeklyGoal: 100,
     streakBonusPerWeek: 0.05,
     streakBonusMax: 0.25,
-    dailyCap: 150
+    dailyCap: 220
   },
   progress: {
-    personalRecord: 25,
+    personalRecord: {
+      base: 25,
+      perPercent: 5,
+      max: 100
+    },
     maxPrsPerDay: 3,
     firstExercise: 20,
+    maxFirstsPerWorkout: 3,
+    firstExerciseMinSets: 2,
     firstActivity: 100,
     benchmarkTier: {
       beginner: 250,
@@ -3472,6 +3519,9 @@ var xp_rules_v1_default = {
       advanced: 5e3,
       elite: 12e3
     }
+  },
+  placement: {
+    trigger: "first workout with an exercise that has a placement standard (config/placement-standards.v1.json)"
   },
   e1rm: {
     formula: "epley",
@@ -3491,10 +3541,62 @@ var xp_rules_v1_default = {
 };
 
 // src/engine/config.ts
-var xpRules = xp_rules_v1_default;
+var xpRules = xp_rules_v2_default;
+var ranksConfig = ranks_v1_default;
 var benchmarksConfig = benchmarks_v1_default;
 var ageGrading = age_grading_road2025_default;
 var DAY_MS = 24 * 60 * 60 * 1e3;
+
+// config/placement-standards.v1.json
+var placement_standards_v1_default = {
+  version: "placement-standards.v1",
+  _sources: `Strength Level bodyweight ratios (strengthlevel.com/strength-standards, accessed 2026-10-09) and WMA/USATF 2025 age grading for runs. Entries with "benchmark" reuse that benchmark's thresholds from benchmarks.v1.json.`,
+  maxRepsForEstimate: 15,
+  scoreToRank: [
+    { score: 0, rank: "E" },
+    { score: 1, rank: "D" },
+    { score: 2, rank: "C" },
+    { score: 3, rank: "B" },
+    { score: 4, rank: "A" }
+  ],
+  standards: [
+    { benchmark: "bench_press", exerciseIds: ["bench_press"] },
+    { benchmark: "back_squat", exerciseIds: ["back_squat"] },
+    { benchmark: "deadlift", exerciseIds: ["deadlift"] },
+    { benchmark: "overhead_press", exerciseIds: ["overhead_press"] },
+    { benchmark: "pull_ups", exerciseIds: ["pull_up"] },
+    { benchmark: "push_ups", exerciseIds: ["push_up"] },
+    { benchmark: "run_5k", exerciseIds: ["outdoor_run", "treadmill_run"] },
+    {
+      id: "hammer_curl",
+      name: "Hammer curl (per dumbbell)",
+      exerciseIds: ["hammer_curl"],
+      kind: "bodyweight_multiple",
+      thresholds: { male: [0.1, 0.2, 0.3, 0.4, 0.55], female: [0.1, 0.15, 0.2, 0.25, 0.35] }
+    },
+    {
+      id: "leg_press",
+      name: "Leg press",
+      exerciseIds: ["leg_press"],
+      kind: "bodyweight_multiple",
+      thresholds: { male: [1.25, 2, 2.75, 4, 5.25], female: [0.75, 1.5, 2.25, 3.25, 4.5] }
+    },
+    {
+      id: "barbell_row",
+      name: "Bent-over row",
+      exerciseIds: ["barbell_row"],
+      kind: "bodyweight_multiple",
+      thresholds: { male: [0.5, 0.75, 1, 1.5, 1.75], female: [0.3, 0.45, 0.7, 0.95, 1.25] }
+    },
+    {
+      id: "lat_pulldown",
+      name: "Lat pulldown",
+      exerciseIds: ["lat_pulldown"],
+      kind: "bodyweight_multiple",
+      thresholds: { male: [0.5, 0.75, 1, 1.5, 1.75], female: [0.35, 0.5, 0.75, 0.95, 1.25] }
+    }
+  ]
+};
 
 // src/engine/e1rm.ts
 function epley(weightKg, reps) {
@@ -3507,6 +3609,184 @@ function estimateOneRepMax(weightKg, reps, rules = xpRules) {
   if (!weightKg || weightKg <= 0 || !reps || reps < 1) return null;
   if (reps > rules.e1rm.maxReps) return null;
   return rules.e1rm.formula === "brzycki" ? brzycki(weightKg, reps) : epley(weightKg, reps);
+}
+
+// src/engine/benchmarks.ts
+function findBenchmark(id, config = benchmarksConfig) {
+  return config.benchmarks.find((b) => b.id === id);
+}
+function exerciseFeeds(benchmark, exercise) {
+  const tag = exercise?.benchmarkId;
+  return !!tag && (tag === benchmark.id || (benchmark.matches?.includes(tag) ?? false));
+}
+function benchmarksFor(exercises, config = benchmarksConfig) {
+  return config.benchmarks.filter((b) => exercises.some((e) => exerciseFeeds(b, e)));
+}
+function ageStandardSeconds(sex, age, distanceM, tables = ageGrading) {
+  const byAge = tables.standards[sex]?.[String(distanceM)];
+  if (!byAge) return null;
+  const ages = Object.keys(byAge).map(Number);
+  const clamped = Math.min(Math.max(Math.round(age), Math.min(...ages)), Math.max(...ages));
+  return byAge[String(clamped)] ?? null;
+}
+function ageAt(birthYear, at) {
+  return new Date(at).getFullYear() - birthYear;
+}
+function benchmarkValue(benchmark, sets, exercises, ctx, rules = xpRules) {
+  let best = null;
+  const consider = (r) => {
+    if (!best || r.value > best.value) best = r;
+  };
+  for (const set of sets) {
+    const exercise = exercises[set.exerciseId];
+    if (set.isWarmup || !exerciseFeeds(benchmark, exercise)) continue;
+    const base = { benchmarkId: benchmark.id, setId: set.id, achievedAt: set.completedAt };
+    switch (benchmark.kind) {
+      case "bodyweight_multiple": {
+        const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
+        if (e1rm === null || !ctx.bodyweightKg) break;
+        consider({
+          ...base,
+          value: e1rm / ctx.bodyweightKg,
+          performance: { exerciseId: exercise.id, metric: "e1rm", value: e1rm }
+        });
+        break;
+      }
+      case "max_reps":
+        if (!set.reps) break;
+        consider({
+          ...base,
+          value: set.reps,
+          performance: { exerciseId: exercise.id, metric: "max_reps", value: set.reps }
+        });
+        break;
+      case "run_age_graded": {
+        if (!set.distanceM || !set.durationS || set.distanceM < benchmark.distanceM) break;
+        const projected = set.durationS * (benchmark.distanceM / set.distanceM);
+        const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, set.completedAt), benchmark.distanceM);
+        if (!standard) break;
+        const ageGrade = standard / projected * 100;
+        const pace = set.durationS / (set.distanceM / 1e3);
+        consider({
+          ...base,
+          value: ageGrade,
+          performance: { exerciseId: exercise.id, metric: "best_pace", value: pace }
+        });
+        break;
+      }
+    }
+  }
+  return best;
+}
+function tiersReached(benchmark, value, sex, config = benchmarksConfig) {
+  const thresholds = benchmark.thresholds[sex];
+  return config.tiers.filter((_, i) => value >= thresholds[i]);
+}
+function newTiers(benchmark, value, sex, unlocked, config = benchmarksConfig) {
+  const have = new Set(unlocked.filter((u) => u.benchmarkId === benchmark.id).map((u) => u.tier));
+  return tiersReached(benchmark, value, sex, config).filter((t) => !have.has(t));
+}
+
+// src/engine/ranks.ts
+function rankFor(totalXp, config = ranksConfig) {
+  const xp = Math.max(0, totalXp);
+  const ranks = config.ranks;
+  let i = 0;
+  while (i + 1 < ranks.length && xp >= ranks[i + 1].minXp) i++;
+  const current = ranks[i];
+  const next = ranks[i + 1];
+  const span = next ? (next.minXp - current.minXp) / config.levelsPerRank : config.sLevelSpanXp;
+  const levelIndex = Math.floor((xp - current.minXp) / span);
+  const level = next ? Math.min(levelIndex, config.levelsPerRank - 1) + 1 : levelIndex + 1;
+  const levelStartXp = Math.round(current.minXp + (level - 1) * span);
+  const nextLevelXp = Math.round(current.minXp + level * span);
+  return {
+    rank: current.rank,
+    level,
+    label: `${current.rank}${level}`,
+    totalXp: xp,
+    levelStartXp,
+    nextLevelXp,
+    levelProgress: (xp - levelStartXp) / (nextLevelXp - levelStartXp),
+    nextRank: next?.rank ?? null,
+    xpToNextRank: next ? next.minXp - xp : null
+  };
+}
+
+// src/engine/placement.ts
+var placementConfig = placement_standards_v1_default;
+function placementStandards(config = placementConfig, benchmarks = benchmarksConfig) {
+  return config.standards.flatMap((s) => {
+    if ("benchmark" in s) {
+      const b = findBenchmark(s.benchmark, benchmarks);
+      if (!b) return [];
+      return [{ id: b.id, name: b.name, exerciseIds: s.exerciseIds, kind: b.kind, thresholds: b.thresholds, distanceM: b.kind === "run_age_graded" ? b.distanceM : void 0 }];
+    }
+    return [s];
+  });
+}
+function standardScore(value, thresholds) {
+  if (value <= 0) return 0;
+  if (value < thresholds[0]) return value / thresholds[0];
+  for (let i = 0; i < thresholds.length - 1; i++) {
+    if (value < thresholds[i + 1]) return i + 1 + (value - thresholds[i]) / (thresholds[i + 1] - thresholds[i]);
+  }
+  return thresholds.length;
+}
+function placementTests(workouts, ctx, rules = xpRules, config = placementConfig) {
+  const sets = workouts.flatMap((w) => w.sets).filter((s) => !s.isWarmup);
+  const tests = [];
+  for (const std of placementStandards(config)) {
+    let best = 0;
+    for (const s of sets) {
+      if (!std.exerciseIds.includes(s.exerciseId)) continue;
+      let value = 0;
+      if (std.kind === "bodyweight_multiple") {
+        if (!ctx.bodyweightKg || !s.weightKg || !s.reps || s.reps > config.maxRepsForEstimate) continue;
+        value = epley(s.weightKg, s.reps) / ctx.bodyweightKg;
+      } else if (std.kind === "max_reps") {
+        value = s.reps ?? 0;
+      } else if (std.distanceM && s.distanceM && s.durationS && s.distanceM >= std.distanceM) {
+        const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, s.completedAt), std.distanceM);
+        if (standard) value = standard / (s.durationS * (std.distanceM / s.distanceM)) * 100;
+      }
+      best = Math.max(best, value);
+    }
+    const thresholds = std.thresholds[ctx.sex];
+    if (best <= 0 || best > thresholds[thresholds.length - 1] * rules.plausibility.eliteMultiplier) continue;
+    tests.push({ standardId: std.id, value: best, score: standardScore(best, thresholds) });
+  }
+  return tests;
+}
+function placementTarget(tests, config = placementConfig, ranks = ranksConfig) {
+  const score = tests.length ? tests.reduce((s, t) => s + t.score, 0) / tests.length : 0;
+  const anchors = config.scoreToRank.map((a) => ({ score: a.score, xp: ranks.ranks.find((r) => r.rank === a.rank)?.minXp ?? 0 }));
+  const top = anchors[anchors.length - 1];
+  let xp = top.xp;
+  if (score < top.score) {
+    const i = Math.max(0, anchors.findIndex((a, k) => score >= a.score && score < anchors[k + 1].score));
+    const lo = anchors[i];
+    const hi = anchors[i + 1];
+    xp = Math.round(lo.xp + (score - lo.score) / (hi.score - lo.score) * (hi.xp - lo.xp));
+  }
+  return { score, xp, label: rankFor(xp, ranks).label };
+}
+function placementEvent(args, rules = xpRules) {
+  const target = placementTarget(args.tests);
+  return {
+    amount: Math.max(0, target.xp - args.totalXpSoFar, args.tierXp ?? 0),
+    reason: "placement",
+    sourceType: "placement",
+    sourceId: "placement",
+    ruleVersion: rules.version,
+    status: "granted",
+    createdAt: args.at,
+    meta: {
+      placedAt: target.label,
+      score: Math.round(target.score * 100) / 100,
+      tests: args.tests.map((t) => ({ id: t.standardId, score: Math.round(t.score * 100) / 100 }))
+    }
+  };
 }
 
 // src/engine/records.ts
@@ -3649,82 +3929,6 @@ function pad(n) {
   return String(n).padStart(2, "0");
 }
 
-// src/engine/benchmarks.ts
-function findBenchmark(id, config = benchmarksConfig) {
-  return config.benchmarks.find((b) => b.id === id);
-}
-function exerciseFeeds(benchmark, exercise) {
-  const tag = exercise?.benchmarkId;
-  return !!tag && (tag === benchmark.id || (benchmark.matches?.includes(tag) ?? false));
-}
-function benchmarksFor(exercises, config = benchmarksConfig) {
-  return config.benchmarks.filter((b) => exercises.some((e) => exerciseFeeds(b, e)));
-}
-function ageStandardSeconds(sex, age, distanceM, tables = ageGrading) {
-  const byAge = tables.standards[sex]?.[String(distanceM)];
-  if (!byAge) return null;
-  const ages = Object.keys(byAge).map(Number);
-  const clamped = Math.min(Math.max(Math.round(age), Math.min(...ages)), Math.max(...ages));
-  return byAge[String(clamped)] ?? null;
-}
-function ageAt(birthYear, at) {
-  return new Date(at).getFullYear() - birthYear;
-}
-function benchmarkValue(benchmark, sets, exercises, ctx, rules = xpRules) {
-  let best = null;
-  const consider = (r) => {
-    if (!best || r.value > best.value) best = r;
-  };
-  for (const set of sets) {
-    const exercise = exercises[set.exerciseId];
-    if (set.isWarmup || !exerciseFeeds(benchmark, exercise)) continue;
-    const base = { benchmarkId: benchmark.id, setId: set.id, achievedAt: set.completedAt };
-    switch (benchmark.kind) {
-      case "bodyweight_multiple": {
-        const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
-        if (e1rm === null || !ctx.bodyweightKg) break;
-        consider({
-          ...base,
-          value: e1rm / ctx.bodyweightKg,
-          performance: { exerciseId: exercise.id, metric: "e1rm", value: e1rm }
-        });
-        break;
-      }
-      case "max_reps":
-        if (!set.reps) break;
-        consider({
-          ...base,
-          value: set.reps,
-          performance: { exerciseId: exercise.id, metric: "max_reps", value: set.reps }
-        });
-        break;
-      case "run_age_graded": {
-        if (!set.distanceM || !set.durationS || set.distanceM < benchmark.distanceM) break;
-        const projected = set.durationS * (benchmark.distanceM / set.distanceM);
-        const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, set.completedAt), benchmark.distanceM);
-        if (!standard) break;
-        const ageGrade = standard / projected * 100;
-        const pace = set.durationS / (set.distanceM / 1e3);
-        consider({
-          ...base,
-          value: ageGrade,
-          performance: { exerciseId: exercise.id, metric: "best_pace", value: pace }
-        });
-        break;
-      }
-    }
-  }
-  return best;
-}
-function tiersReached(benchmark, value, sex, config = benchmarksConfig) {
-  const thresholds = benchmark.thresholds[sex];
-  return config.tiers.filter((_, i) => value >= thresholds[i]);
-}
-function newTiers(benchmark, value, sex, unlocked, config = benchmarksConfig) {
-  const have = new Set(unlocked.filter((u) => u.benchmarkId === benchmark.id).map((u) => u.tier));
-  return tiersReached(benchmark, value, sex, config).filter((t) => !have.has(t));
-}
-
 // src/engine/xp.ts
 function isCardio(exercise) {
   return exercise?.category === "cardio";
@@ -3752,6 +3956,30 @@ function cardioXp(minutesSoFar, addMinutes, rules = xpRules) {
   }
   return xp;
 }
+var PRIMARY_METRIC = {
+  weight_reps: "e1rm",
+  reps: "max_reps",
+  time: "max_duration"
+};
+function setIntensity(set, exercise, records) {
+  const metric = PRIMARY_METRIC[exercise.trackingType];
+  if (!metric) return null;
+  const best = records.find((r) => r.exerciseId === exercise.id && r.metric === metric);
+  if (!best || best.value <= 0) return null;
+  const value = metric === "e1rm" ? set.weightKg && set.reps ? epley(set.weightKg, set.reps) : 0 : metric === "max_reps" ? set.reps ?? 0 : set.durationS ?? 0;
+  return value / best.value;
+}
+function setXpFor(set, exercise, records, rules = xpRules) {
+  const { bands, firstSession } = rules.consistency.setXp;
+  const ratio = setIntensity(set, exercise, records);
+  if (ratio === null) return firstSession;
+  return (bands.find((b) => ratio >= b.minRatio) ?? bands[bands.length - 1]).xp;
+}
+function prXpFor(metric, value, previous, rules = xpRules) {
+  const { base, perPercent, max } = rules.progress.personalRecord;
+  const improvement = metric === "best_pace" ? (previous - value) / previous : (value - previous) / previous;
+  return Math.min(max, base + Math.round(Math.max(0, improvement) * 100 * perPercent));
+}
 function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarksConfig) {
   const { exercises } = ctx;
   const at = workout.endedAt;
@@ -3764,8 +3992,10 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
   const consistency = [];
   if (qualifies)
     consistency.push(event({ amount: c.workoutComplete, reason: "workout_complete", sourceType: "workout", sourceId: workout.id, meta: workoutMeta }));
-  if (workingSets > 0)
-    consistency.push(event({ amount: Math.min(workingSets * c.perWorkingSet, c.maxSetXpPerWorkout), reason: "working_sets", sourceType: "workout", sourceId: workout.id, meta: { ...workoutMeta, sets: workingSets } }));
+  if (workingSets > 0) {
+    const setXp = workout.sets.filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId])).reduce((sum, s) => sum + setXpFor(s, exercises[s.exerciseId], ctx.records, rules), 0);
+    consistency.push(event({ amount: Math.min(setXp, c.maxSetXpPerWorkout), reason: "working_sets", sourceType: "workout", sourceId: workout.id, meta: { ...workoutMeta, sets: workingSets } }));
+  }
   const cardio = cardioXp(ctx.today.cardioMinutes, cardioMinutes, rules);
   if (cardio > 0)
     consistency.push(event({ amount: cardio, reason: "cardio_minutes", sourceType: "workout", sourceId: workout.id, meta: { ...workoutMeta, minutes: cardioMinutes } }));
@@ -3795,7 +4025,7 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
     const benchmark = benchmarkFor(exercises[record.exerciseId], benchmarks);
     const flagged = record.metric === "e1rm" && isSuspiciousE1rmJump(record.value, record.achievedAt, previous, rules) || record.metric === "e1rm" && benchmark?.kind === "bodyweight_multiple" && !!ctx.bodyweightKg && exceedsEliteCeiling(benchmark, record.value / ctx.bodyweightKg, ctx.profile.sex, rules);
     progress.push(event({
-      amount: p.personalRecord,
+      amount: prXpFor(record.metric, record.value, previous.value, rules),
       reason: "personal_record",
       sourceType: "set",
       sourceId: record.setId,
@@ -3807,12 +4037,17 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
   }
   const seenExercises = new Set(ctx.seenExerciseIds);
   const seenActivities = new Set(ctx.seenActivities);
+  let firstsLeft = p.maxFirstsPerWorkout;
   for (const exerciseId of uniqueInOrder(workout.sets.map((s) => s.exerciseId))) {
     const exercise = exercises[exerciseId];
     if (!exercise) continue;
     if (!seenExercises.has(exerciseId)) {
       seenExercises.add(exerciseId);
-      progress.push(event({ amount: p.firstExercise, reason: "first_exercise", sourceType: "exercise", sourceId: exerciseId, meta: workoutMeta }));
+      const working = workout.sets.filter((s) => s.exerciseId === exerciseId && !s.isWarmup).length;
+      if (firstsLeft > 0 && working >= (isCardio(exercise) ? 1 : p.firstExerciseMinSets)) {
+        firstsLeft--;
+        progress.push(event({ amount: p.firstExercise, reason: "first_exercise", sourceType: "exercise", sourceId: exerciseId, meta: workoutMeta }));
+      }
     }
     if (exercise.activity && !seenActivities.has(exercise.activity)) {
       seenActivities.add(exercise.activity);
@@ -3836,6 +4071,7 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
     const status = flagged ? "pending_review" : "granted";
     for (const tier of newTiers(benchmark, result.value, ctx.profile.sex, ctx.benchmarkUnlocks, benchmarks)) {
       benchmarkUnlocks.push({ benchmarkId, tier, value: result.value, unlockedAt: at, status });
+      if (ctx.deferBenchmarkXp) continue;
       progress.push(event({
         amount: p.benchmarkTier[tier],
         reason: "benchmark_tier",
@@ -3877,6 +4113,9 @@ function finishSession(input, rules = xpRules) {
   const goalWeeks = ledger.filter((e) => e.reason === "weekly_goal").map((e) => e.sourceId);
   const streak = streakWeeks(goalWeeks, at);
   const bodyweightKg = rollingBodyweight(input.bodyweightLogs, at, rules);
+  const placed = ledger.some((e) => e.reason === "placement");
+  const tests = placed ? [] : placementTests([workout], { exercises, sex: input.profile.sex, bodyweightKg, birthYear: input.profile.birthYear }, rules);
+  const placeNow = tests.length > 0;
   const seenActivities = /* @__PURE__ */ new Set();
   for (const id of input.seenExerciseIds) {
     const activity = exercises[id]?.activity;
@@ -3897,10 +4136,20 @@ function finishSession(input, rules = xpRules) {
         cardioMinutes: todaysWorkouts.reduce((s, w) => s + countCardioMinutes(w.sets, exercises), 0),
         prsCounted: todaysEvents.filter((e) => e.reason === "personal_record").length
       },
-      streakWeeks: streak
+      streakWeeks: streak,
+      deferBenchmarkXp: placeNow
     },
     rules
   );
+  const placement = placeNow ? placementEvent(
+    {
+      at,
+      tests,
+      totalXpSoFar: ledger.reduce((s, e) => s + e.amount, 0) + result.events.reduce((s, e) => s + e.amount, 0),
+      tierXp: result.benchmarkUnlocks.reduce((s, u) => s + rules.progress.benchmarkTier[u.tier], 0)
+    },
+    rules
+  ) : null;
   const trainingDays = input.recentWorkouts.filter((w) => weekKey(w.endedAt) === thisWeek && qualifiesAsWorkout(w.sets, exercises, rules)).map((w) => dayKey(w.endedAt));
   if (result.qualifies) trainingDays.push(today);
   const weeklyGoal = weeklyGoalEvent(
@@ -3923,10 +4172,11 @@ function finishSession(input, rules = xpRules) {
   return {
     result,
     weeklyGoal,
-    events: weeklyGoal ? [...result.events, weeklyGoal] : result.events,
+    events: [...result.events, ...placement ? [placement] : [], ...weeklyGoal ? [weeklyGoal] : []],
     confirmedEventIds: confirmedPendingIds(pending, performances),
     streakWeeks: streak,
-    bodyweightKg
+    bodyweightKg,
+    placement
   };
 }
 

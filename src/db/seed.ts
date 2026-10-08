@@ -4,6 +4,7 @@ import { sql } from 'drizzle-orm';
 import type { ExerciseCategory, TrackingType } from '@/engine/types';
 
 import { db } from './client';
+import { rebuildIfRulesChanged } from './repositories/derived';
 import { exercises } from './schema';
 
 interface CatalogueEntry {
@@ -60,9 +61,10 @@ export function seedExercises() {
 
 let seeded = false;
 
-/** Seeds once per app launch. */
+/** Seeds once per app launch, then rebalances XP if the rules changed since last launch. */
 export function ensureSeeded() {
   if (seeded) return;
   seedExercises();
+  rebuildIfRulesChanged();
   seeded = true;
 }

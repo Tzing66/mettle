@@ -41,6 +41,8 @@ export default function Summary() {
   }
 
   const { rank } = summary;
+  const placement = summary.events.find((e) => e.reason === 'placement');
+  const placementTests = Array.isArray(placement?.meta?.tests) ? placement.meta.tests.length : 0;
   const pending = summary.events.some((e) => e.status === 'pending_review');
 
   return (
@@ -100,6 +102,21 @@ export default function Summary() {
           </Animated.View>
         )}
 
+        {placement ? (
+          <Animated.View entering={FadeInDown.delay(250 + totalDelay).duration(300)}>
+            <Card tone="accentSoft" style={styles.placement}>
+              <Text variant="overline" color="accentInk">
+                Placement
+              </Text>
+              <Text variant="title">You placed at {String(placement.meta?.placedAt ?? '')}</Text>
+              <Text color="inkMuted">
+                Based on {placementTests} exercise{placementTests === 1 ? '' : 's'} from this workout, compared with strength and fitness standards
+                for your bodyweight, age and sex. From here, every workout moves you up.
+              </Text>
+            </Card>
+          </Animated.View>
+        ) : null}
+
         {summary.unlocks.length > 0 && (
           <Animated.View entering={FadeInDown.delay(380 + totalDelay).duration(300)} style={styles.section}>
             <Text variant="overline" color="inkMuted">
@@ -155,6 +172,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 
 const useStyles = makeStyles((colors) => ({
+  placement: { gap: space.sm },
   safe: { flex: 1, backgroundColor: colors.bg },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   content: { padding: space.lg, gap: space.lg, paddingBottom: space.xxxl },

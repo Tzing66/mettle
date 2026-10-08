@@ -1,4 +1,4 @@
-import { cardioXp, computeWorkoutXp } from '../xp';
+import { cardioXp, computeWorkoutXp, prXpFor, setXpFor } from '../xp';
 import type { XpEventDraft } from '../types';
 import { context, daysAgo, lift, record, set, workout } from './fixtures';
 
@@ -8,15 +8,15 @@ const sum = (events: XpEventDraft[]) => events.reduce((s, e) => s + e.amount, 0)
 const strengthSets = (n: number) => Array.from({ length: n }, () => lift('curl', 15, 12));
 
 describe('consistency XP (§6.2)', () => {
-  it('3+ working sets complete a workout: 50 + 5/set', () => {
+  it('3+ working sets complete a workout: 50 + 5/set on a first session', () => {
     const r = computeWorkoutXp(workout(strengthSets(4)), context());
     expect(byReason(r.events)).toEqual({ workout_complete: 50, working_sets: 20 });
     expect(r.qualifies).toBe(true);
   });
 
-  it('set XP caps at 40 per workout', () => {
-    const r = computeWorkoutXp(workout(strengthSets(12)), context());
-    expect(byReason(r.events).working_sets).toBe(40);
+  it('set XP caps at 100 per workout', () => {
+    const r = computeWorkoutXp(workout(strengthSets(25)), context());
+    expect(byReason(r.events).working_sets).toBe(100);
   });
 
   it('warm-ups earn nothing and do not count toward completion', () => {
@@ -71,32 +71,32 @@ describe('streak multiplier', () => {
   });
 });
 
-describe('daily cap (150 consistency XP)', () => {
+describe('daily cap (220 consistency XP)', () => {
   it('stops double-session farming, trimming the last lines first', () => {
-    const ctx = context({ today: { consistencyXp: 100, cardioMinutes: 0, prsCounted: 0 } });
+    const ctx = context({ today: { consistencyXp: 190, cardioMinutes: 0, prsCounted: 0 } });
     const r = computeWorkoutXp(workout(strengthSets(8)), ctx);
-    expect(byReason(r.events)).toEqual({ workout_complete: 50 });
+    expect(byReason(r.events)).toEqual({ workout_complete: 30 });
     expect(r.capped).toBe(true);
-    expect(r.consistencyXp).toBe(50);
+    expect(r.consistencyXp).toBe(30);
   });
 
   it('earns nothing once capped, but progress XP still pays', () => {
     const ctx = context({
-      today: { consistencyXp: 150, cardioMinutes: 0, prsCounted: 0 },
+      today: { consistencyXp: 220, cardioMinutes: 0, prsCounted: 0 },
       records: [record('curl', 'e1rm', 10)],
     });
     const sets = [lift('curl', 15, 8), lift('curl', 15, 8), lift('curl', 15, 8)];
     const r = computeWorkoutXp(workout(sets), ctx);
-    expect(byReason(r.events)).toEqual({ personal_record: 25 });
+    expect(byReason(r.events)).toEqual({ personal_record: 100 }); // a +90% jump hits the PR cap
   });
 });
 
 describe('progress XP (§6.3)', () => {
-  it('a PR pays 25', () => {
+  it('PR XP grows with the improvement: +10% pays 75', () => {
     const ctx = context({ records: [record('bench', 'e1rm', 100)] });
-    const r = computeWorkoutXp(workout([lift('bench', 100, 3)]), ctx);
+    const r = computeWorkoutXp(workout([lift('bench', 100, 3)]), ctx); // e1RM 110
     const pr = r.events.find((e) => e.reason === 'personal_record');
-    expect(pr).toMatchObject({ amount: 25, status: 'granted', sourceType: 'set' });
+    expect(pr).toMatchObject({ amount: 75, status: 'granted', sourceType: 'set' });
     expect(pr?.meta?.performance).toMatchObject({ exerciseId: 'bench', metric: 'e1rm' });
   });
 
@@ -114,7 +114,7 @@ describe('progress XP (§6.3)', () => {
 
   it('first time on an exercise pays 20; first new activity pays 100', () => {
     const ctx = context({ seenExerciseIds: ['curl'], seenActivities: ['cycle'] });
-    const r = computeWorkoutXp(workout([lift('curl', 10, 10), set('run', { durationS: 600, distanceM: 2000 })]), ctx);
+    const r = computeWorkoutXp(workout([lift('curl', 10, 10), lift('curl', 10, 10), set('run', { durationS: 600, distanceM: 2000 })]), ctx);
     expect(r.events.filter((e) => e.reason === 'first_exercise').map((e) => e.sourceId)).toEqual(['run']);
     expect(r.events.filter((e) => e.reason === 'first_activity')).toEqual([
       expect.objectContaining({ amount: 100, sourceId: 'run' }),
@@ -193,12 +193,56 @@ describe('engine guarantees', () => {
   it('tags every event with the rule version and workout end time', () => {
     const w = workout(strengthSets(3));
     const r = computeWorkoutXp(w, context());
-    expect(r.events.every((e) => e.ruleVersion === 'xp-rules.v1' && e.createdAt === w.endedAt)).toBe(true);
+    expect(r.events.every((e) => e.ruleVersion === 'xp-rules.v2' && e.createdAt === w.endedAt)).toBe(true);
   });
 
   it('a typical session lands near the plan’s ~85 XP', () => {
     // 1 exercise × 3 sets + 2 × 2 sets = 7 working sets.
     const r = computeWorkoutXp(workout(strengthSets(7)), context());
     expect(sum(r.events)).toBe(85);
+  });
+});
+
+describe('v2: set XP by how close you are to your best', () => {
+  const best = [record('curl', 'e1rm', 20)];
+  it('bands: <70% → 4, 70–85% → 6, 85–95% → 9, ≥95% → 12', () => {
+    const xp = (kg: number) => setXpFor(lift('curl', kg, 8), { id: 'curl', category: 'free_weight', trackingType: 'weight_reps' }, best);
+    expect([xp(10), xp(13), xp(14), xp(15)]).toEqual([4, 6, 9, 12]); // e1RM 12.7, 16.5, 17.7, 19 vs best 20
+  });
+
+  it('first session of an exercise pays 5 per set', () => {
+    expect(setXpFor(lift('curl', 10, 8), { id: 'curl', category: 'free_weight', trackingType: 'weight_reps' }, [])).toBe(5);
+  });
+
+  it('hard sessions earn more than easy ones', () => {
+    const hard = computeWorkoutXp(workout([lift('curl', 15, 8), lift('curl', 15, 8), lift('curl', 15, 8)]), context({ records: best }));
+    const easy = computeWorkoutXp(workout([lift('curl', 10, 8), lift('curl', 10, 8), lift('curl', 10, 8)]), context({ records: best }));
+    expect(byReason(hard.events).working_sets).toBe(36);
+    expect(byReason(easy.events).working_sets).toBe(12);
+  });
+});
+
+describe('v2: PR XP', () => {
+  it('scales with improvement and caps at 100', () => {
+    expect(prXpFor('e1rm', 101, 100)).toBe(30);
+    expect(prXpFor('e1rm', 150, 100)).toBe(100);
+    expect(prXpFor('best_pace', 285, 300)).toBe(50); // 5% faster
+  });
+});
+
+describe('v2: new-exercise bonus can’t be farmed', () => {
+  it('max 3 per workout, and only with at least 2 working sets', () => {
+    const ctx = context({ seenExerciseIds: [] });
+    const two = (id: string) => [lift(id, 20, 8), lift(id, 20, 8)];
+    const r = computeWorkoutXp(workout([lift('plank', 0, 0), ...two('curl'), ...two('bench'), ...two('squat'), ...two('leg_press')]), ctx);
+    expect(r.events.filter((e) => e.reason === 'first_exercise').map((e) => e.sourceId)).toEqual(['curl', 'bench', 'squat']);
+  });
+});
+
+describe('v2: benchmark XP can be deferred (placement)', () => {
+  it('records the unlocks but pays no tier XP', () => {
+    const r = computeWorkoutXp(workout([lift('bench', 104, 1)]), context({ deferBenchmarkXp: true }));
+    expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
+    expect(r.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
   });
 });

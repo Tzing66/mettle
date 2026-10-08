@@ -1,0 +1,49 @@
+{
+  "version": "placement-standards.v1",
+  "_sources": "Strength Level bodyweight ratios (strengthlevel.com/strength-standards, accessed 2026-10-09) and WMA/USATF 2025 age grading for runs. Entries with \"benchmark\" reuse that benchmark's thresholds from benchmarks.v1.json.",
+  "maxRepsForEstimate": 15,
+  "scoreToRank": [
+    { "score": 0, "rank": "E" },
+    { "score": 1, "rank": "D" },
+    { "score": 2, "rank": "C" },
+    { "score": 3, "rank": "B" },
+    { "score": 4, "rank": "A" }
+  ],
+  "standards": [
+    { "benchmark": "bench_press", "exerciseIds": ["bench_press"] },
+    { "benchmark": "back_squat", "exerciseIds": ["back_squat"] },
+    { "benchmark": "deadlift", "exerciseIds": ["deadlift"] },
+    { "benchmark": "overhead_press", "exerciseIds": ["overhead_press"] },
+    { "benchmark": "pull_ups", "exerciseIds": ["pull_up"] },
+    { "benchmark": "push_ups", "exerciseIds": ["push_up"] },
+    { "benchmark": "run_5k", "exerciseIds": ["outdoor_run", "treadmill_run"] },
+    {
+      "id": "hammer_curl",
+      "name": "Hammer curl (per dumbbell)",
+      "exerciseIds": ["hammer_curl"],
+      "kind": "bodyweight_multiple",
+      "thresholds": { "male": [0.1, 0.2, 0.3, 0.4, 0.55], "female": [0.1, 0.15, 0.2, 0.25, 0.35] }
+    },
+    {
+      "id": "leg_press",
+      "name": "Leg press",
+      "exerciseIds": ["leg_press"],
+      "kind": "bodyweight_multiple",
+      "thresholds": { "male": [1.25, 2.0, 2.75, 4.0, 5.25], "female": [0.75, 1.5, 2.25, 3.25, 4.5] }
+    },
+    {
+      "id": "barbell_row",
+      "name": "Bent-over row",
+      "exerciseIds": ["barbell_row"],
+      "kind": "bodyweight_multiple",
+      "thresholds": { "male": [0.5, 0.75, 1.0, 1.5, 1.75], "female": [0.3, 0.45, 0.7, 0.95, 1.25] }
+    },
+    {
+      "id": "lat_pulldown",
+      "name": "Lat pulldown",
+      "exerciseIds": ["lat_pulldown"],
+      "kind": "bodyweight_multiple",
+      "thresholds": { "male": [0.5, 0.75, 1.0, 1.5, 1.75], "female": [0.35, 0.5, 0.75, 0.95, 1.25] }
+    }
+  ]
+}
