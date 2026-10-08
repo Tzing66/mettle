@@ -5,7 +5,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listExercises } from '@/db/repositories/exercises';
-import { getWorkout, groupByExercise, setsForWorkout } from '@/db/repositories/workouts';
+import { getActiveWorkout, getWorkout, groupByExercise, repeatWorkout, setsForWorkout } from '@/db/repositories/workouts';
 import { eventsForWorkout } from '@/db/repositories/xp';
 import { useDbQuery } from '@/db/useDbQuery';
 import { Button, Card, Chip, ExerciseGlyph, PressableScale, Text } from '@/design/components';
@@ -46,6 +46,20 @@ export default function WorkoutDetail() {
   const profile = useProfile();
   const unit = profile?.unitPref ?? 'kg';
   const data = useDbQuery(() => readWorkout(id), ['workouts', 'workout_sets', 'xp_events', 'personal_records'], [id]);
+
+  // Plans the same exercises and sets as a new workout.
+  const doAgain = () => {
+    if (getActiveWorkout()) {
+      Alert.alert('You have a workout open', 'Finish or discard it before starting another.', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Go to it', onPress: () => router.push('/workout/active') },
+      ]);
+      return;
+    }
+    haptics.success();
+    repeatWorkout(id);
+    router.push('/workout/active');
+  };
 
   const confirmDelete = () =>
     Alert.alert(
@@ -144,6 +158,7 @@ export default function WorkoutDetail() {
             );
           })}
 
+          <Button label="Do this again" variant="secondary" onPress={doAgain} />
           <Button label="Delete workout" variant="ghost" onPress={confirmDelete} />
         </ScrollView>
       )}

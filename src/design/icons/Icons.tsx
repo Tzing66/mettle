@@ -85,3 +85,8 @@ export const RepeatIcon = ({ color, size, strokeWidth }: IconProps) => (
     <Path d="M4 11V9a3 3 0 0 1 3-3h12m-3-3 3 3-3 3M20 13v2a3 3 0 0 1-3 3H5m3 3-3-3 3-3" {...s(color, strokeWidth)} />
   </Icon>
 );
+export const CalendarIcon = ({ color, size, strokeWidth }: IconProps) => (
+  <Icon size={size}>
+    <Path d="M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM4 10h16M8 3v4M16 3v4" {...s(color, strokeWidth)} />
+  </Icon>
+);

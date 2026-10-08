@@ -10,7 +10,7 @@ import { completedSetsForWorkouts, listFinishedWorkouts, planWorkout, repeatWork
 import { useDbQuery } from '@/db/useDbQuery';
 import { PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
-import { ChevronRightIcon, ListIcon, PlayIcon, RepeatIcon } from '@/design/icons/Icons';
+import { ChevronRightIcon, CalendarIcon, ListIcon, PlayIcon, RepeatIcon } from '@/design/icons/Icons';
 import { motion, radii, space } from '@/design/tokens';
 import { formatDay } from '@/features/format';
 import { makeStyles, useTheme } from '@/design/theme';
@@ -70,6 +70,13 @@ export default function StartSheet() {
             onPress={() => go(() => repeatWorkout(last.id))}
           />
         ) : null}
+        <Option
+          title="Log a past workout"
+          body="Forgot to log one? Add it with its day and time."
+          tone={colors.sunken}
+          glyph={<CalendarIcon color={colors.ink} />}
+          onPress={() => router.replace('/workout/past')}
+        />
       </Animated.View>
     </View>
   );

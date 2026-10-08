@@ -33,6 +33,45 @@ export function planWorkout(): string {
 }
 
 /** Moves a planned workout to active and starts its clock now. */
+/** A workout that already happened: planned like any other, but dated in the past. */
+export function planPastWorkout(startedAt: Date): string {
+  const id = newId();
+  db.insert(workouts).values({ id, status: 'planning', startedAt }).run();
+  return id;
+}
+
+/**
+ * Saves a past workout: drops empty sets, marks the rest completed, spread
+ * evenly across the session, and closes it. Returns the number of sets kept
+ * (0 deletes the workout).
+ */
+export function savePastWorkout(id: string, startedAt: Date, endedAt: Date): number {
+  const all = db.select().from(workoutSets).where(eq(workoutSets.workoutId, id)).orderBy(sql`rowid`).all();
+  const kept = all.filter((s) => s.weightKg !== null || s.reps !== null || s.durationS !== null || s.distanceM !== null);
+  const span = endedAt.getTime() - startedAt.getTime();
+  db.transaction((tx) => {
+    for (const s of all) if (!kept.includes(s)) tx.delete(workoutSets).where(eq(workoutSets.id, s.id)).run();
+    if (kept.length === 0) {
+      tx.delete(workouts).where(eq(workouts.id, id)).run();
+      return;
+    }
+    kept.forEach((s, i) => {
+      const at = startedAt.getTime() + Math.round((span * (i + 1)) / kept.length);
+      tx.update(workoutSets).set({ completedAt: new Date(at) }).where(eq(workoutSets.id, s.id)).run();
+    });
+    tx.update(workouts).set({ status: 'active', startedAt, endedAt }).where(eq(workouts.id, id)).run();
+  });
+  return kept.length;
+}
+
+/** Earliest day a past workout may be logged: the day you started using Mettle. */
+export function pastWorkoutFloor(profileCreatedAt: Date): Date {
+  const first = db.select({ at: workouts.startedAt }).from(workouts).where(isNotNull(workouts.endedAt)).orderBy(asc(workouts.startedAt)).get();
+  const floor = new Date(Math.min(profileCreatedAt.getTime(), first?.at.getTime() ?? Infinity));
+  floor.setHours(0, 0, 0, 0);
+  return floor;
+}
+
 export function beginWorkout(id: string) {
   db.update(workouts).set({ status: 'active', startedAt: new Date() }).where(eq(workouts.id, id)).run();
 }

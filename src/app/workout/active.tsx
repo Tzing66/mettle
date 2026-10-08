@@ -31,6 +31,8 @@ import { cardioXp, formatDuration, setBeatsRecords, setXpFor, xpRules } from '@/
 import { useProfile } from '@/features/profile/useProfile';
 import { ExerciseCard } from '@/features/workout/ExerciseCard';
 import { finishWorkout } from '@/features/workout/finishWorkout';
+import { savePast } from '@/features/workout/savePast';
+import { formatDay } from '@/features/format';
 import { RestTimerBar } from '@/features/workout/RestTimerBar';
 import { requestSync } from '@/features/sync/useSync';
 import { useWorkoutUi } from '@/features/workout/store';
@@ -44,9 +46,11 @@ export default function ActiveWorkout() {
   const sets = useDbQuery(() => (workout ? setsForWorkout(workout.id) : []), ['workout_sets'], [workout?.id]);
   const exercises = useDbQuery(listExercises, ['exercises']);
   const records = useDbQuery(listRecords, ['personal_records']);
-  const { startRest, stopRest, setLastSummary } = useWorkoutUi();
+  const { startRest, stopRest, setLastSummary, past: pastState, setPast } = useWorkoutUi();
 
   const planning = workout?.status === 'planning';
+  // Logging a workout that already happened: planning UI, saved with its own date.
+  const past = planning && workout && pastState?.workoutId === workout.id ? pastState : null;
   const byId = new Map(exercises.map((e) => [e.id, e]));
   const groups = groupByExercise(sets);
   // "Last time" only depends on finished workouts, so read it once per exercise
@@ -106,6 +110,18 @@ export default function ActiveWorkout() {
     if (ex?.category !== 'cardio' && restS > 0) startRest(restS);
   };
 
+  const savePastWorkout = () => {
+    if (!workout || !past) return;
+    if (!savePast(workout.id, workout.startedAt, past.durationMin)) {
+      Alert.alert('Nothing to save', 'Fill in at least one set first.');
+      return;
+    }
+    haptics.success();
+    setPast(null);
+    requestSync();
+    router.replace(`/workout/${workout.id}`);
+  };
+
   const start = () => {
     if (!workout) return;
     haptics.success();
@@ -133,9 +149,17 @@ export default function ActiveWorkout() {
         { text: 'Discard', style: 'destructive', onPress: run },
       ]);
     } else if (done < sets.length) {
-      Alert.alert('Finish workout?', `${sets.length - done} unfinished set${sets.length - done === 1 ? '' : 's'} will be dropped.`, [
+      const left = sets.length - done;
+      Alert.alert('Finish workout?', `${left} set${left === 1 ? ' isn’t' : 's aren’t'} ticked yet.`, [
         { text: 'Keep training', style: 'cancel' },
-        { text: 'Finish', onPress: run },
+        { text: 'Drop them', style: 'destructive', onPress: run },
+        {
+          text: 'Mark them done',
+          onPress: () => {
+            for (const s of sets) if (s.completedAt === null) setCompleted(s.id, true);
+            run();
+          },
+        },
       ]);
     } else {
       run();
@@ -151,6 +175,7 @@ export default function ActiveWorkout() {
         style: 'destructive',
         onPress: () => {
           stopRest();
+          setPast(null);
           discardWorkout(workout.id);
           router.replace('/');
         },
@@ -185,7 +210,15 @@ export default function ActiveWorkout() {
           <ChevronLeftIcon color={colors.ink} />
         </PressableScale>
         <View style={styles.headerText}>
-          {planning ? (
+          {past ? (
+            <Animated.View entering={FadeIn}>
+              <Text variant="heading">Past workout</Text>
+              <Text variant="caption" color="inkMuted">
+                {formatDay(workout.startedAt)} · {workout.startedAt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} ·{' '}
+                {past.durationMin} min
+              </Text>
+            </Animated.View>
+          ) : planning ? (
             <Animated.View entering={FadeIn}>
               <Text variant="heading">Plan your workout</Text>
               <Text variant="caption" color="inkMuted">
@@ -199,17 +232,23 @@ export default function ActiveWorkout() {
             </Animated.View>
           )}
         </View>
-        {planning ? <Chip label="Planning" tone="accentSoft" textColor="accentInk" /> : <Button label="Finish" onPress={finish} silent />}
+        {planning ? (
+          <Chip label={past ? 'Past' : 'Planning'} tone="accentSoft" textColor="accentInk" />
+        ) : (
+          <Button label="Finish" onPress={finish} silent />
+        )}
       </View>
 
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         {groups.length === 0 ? (
           <Animated.View entering={FadeInDown.duration(motion.duration.slow)} style={styles.emptyWorkout}>
             <Text variant="title" align="center">
-              {planning ? 'What are you training?' : 'Let’s get moving'}
+              {past ? 'What did you train?' : planning ? 'What are you training?' : 'Let’s get moving'}
             </Text>
             <Text color="inkMuted" align="center">
-              {planning
+              {past
+                ? 'Add the exercises and fill in what you did. Empty sets are left out.'
+                : planning
                 ? 'Add your exercises and set targets. Sets come pre-filled from last time.'
                 : 'Add exercises as you go. Sets come pre-filled from last time.'}
             </Text>
@@ -256,7 +295,11 @@ export default function ActiveWorkout() {
 
       {planning ? (
         <Animated.View entering={FadeInDown.duration(motion.duration.base)} style={styles.startBar}>
-          <Button label="Start workout" size="lg" onPress={start} disabled={groups.length === 0} silent />
+          {past ? (
+            <Button label="Save workout" size="lg" onPress={savePastWorkout} disabled={groups.length === 0} silent />
+          ) : (
+            <Button label="Start workout" size="lg" onPress={start} disabled={groups.length === 0} silent />
+          )}
         </Animated.View>
       ) : (
         <View style={styles.restSlot} pointerEvents="box-none">

@@ -86,6 +86,12 @@ export function SetRow(props: SetRowProps) {
     props.onToggleComplete();
   };
 
+  // A tap that only closes the keypad shouldn't also tick the set.
+  const tapRow = () => {
+    if (Keyboard.isVisible()) Keyboard.dismiss();
+    else toggleComplete();
+  };
+
   const openMenu = () => {
     haptics.tick();
     Alert.alert(`Set ${set.isWarmup ? '(warm-up)' : number}`, undefined, [
@@ -128,56 +134,62 @@ export function SetRow(props: SetRowProps) {
   const decimals = (field: NumericField) => (field === 'weightKg' ? 1 : field === 'distanceM' && !swim ? 2 : 0);
 
   return (
-    <Animated.View style={[styles.row, rowStyle]}>
-      <Pressable onPress={openMenu} accessibilityLabel={`Set ${number} options`} hitSlop={6} style={[styles.index, set.isWarmup && styles.warmup]}>
-        <Text variant="caption" color={set.isWarmup ? 'xpInk' : 'inkMuted'} tabular>
-          {set.isWarmup ? 'W' : number}
-        </Text>
-      </Pressable>
+    // While training, tapping anywhere on the row outside the number fields ticks the set.
+    <Pressable
+      onPress={planning ? undefined : tapRow}
+      disabled={planning}
+      accessibilityLabel={planning ? undefined : `Set ${number}, tap to ${done ? 'undo' : 'complete'}`}>
+      <Animated.View style={[styles.row, rowStyle]}>
+        <Pressable onPress={openMenu} accessibilityLabel={`Set ${number} options`} hitSlop={6} style={[styles.index, set.isWarmup && styles.warmup]}>
+          <Text variant="caption" color={set.isWarmup ? 'xpInk' : 'inkMuted'} tabular>
+            {set.isWarmup ? 'W' : number}
+          </Text>
+        </Pressable>
 
-      <View style={styles.fields}>
-        {cols.map((c, i) => (
-          <View key={c.field} style={styles.fieldWrap}>
-            {i > 0 && tracking === 'weight_reps' ? (
-              <Text variant="caption" color="inkFaint" style={styles.times}>
-                ×
-              </Text>
-            ) : null}
-            <NumberField
-              value={toDisplay(c.field)}
-              decimals={decimals(c.field)}
-              width={c.field === 'reps' ? 52 : 68}
-              accessibilityLabel={`Set ${number} ${c.label}`}
-              editable={!done}
-              onCommit={(v) => props.onField(c.field, fromDisplay(c.field, v))}
-            />
-          </View>
-        ))}
-        {isPr ? (
-          <Animated.View entering={FadeIn.duration(motion.duration.base)} exiting={FadeOut}>
-            <Chip label="PR" tone="pr" textColor="prInk" />
-          </Animated.View>
-        ) : null}
-      </View>
-
-      {planning ? null : (
-        <View>
-          <PressableScale
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: done }}
-            accessibilityLabel={`Set ${number} complete`}
-            onPress={toggleComplete}
-            scaleTo={1}>
-            <Animated.View style={[styles.check, checkStyle]}>
-              <CheckIcon color={done ? colors.onAccent : colors.inkFaint} size={18} />
-            </Animated.View>
-          </PressableScale>
-          {floats.map((id) => (
-            <XPFloat key={id} amount={xpOnComplete ?? 0} tone={isPr ? 'pr' : 'xp'} onDone={() => setFloats((f) => f.filter((x) => x !== id))} />
+        <View style={styles.fields}>
+          {cols.map((c, i) => (
+            <View key={c.field} style={styles.fieldWrap}>
+              {i > 0 && tracking === 'weight_reps' ? (
+                <Text variant="caption" color="inkFaint" style={styles.times}>
+                  ×
+                </Text>
+              ) : null}
+              <NumberField
+                value={toDisplay(c.field)}
+                decimals={decimals(c.field)}
+                width={c.field === 'reps' ? 52 : 68}
+                accessibilityLabel={`Set ${number} ${c.label}`}
+                editable={!done}
+                onCommit={(v) => props.onField(c.field, fromDisplay(c.field, v))}
+              />
+            </View>
           ))}
+          {isPr ? (
+            <Animated.View entering={FadeIn.duration(motion.duration.base)} exiting={FadeOut}>
+              <Chip label="PR" tone="pr" textColor="prInk" />
+            </Animated.View>
+          ) : null}
         </View>
-      )}
-    </Animated.View>
+
+        {planning ? null : (
+          <View>
+            <PressableScale
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: done }}
+              accessibilityLabel={`Set ${number} complete`}
+              onPress={toggleComplete}
+              scaleTo={1}>
+              <Animated.View style={[styles.check, checkStyle]}>
+                <CheckIcon color={done ? colors.onAccent : colors.inkFaint} size={18} />
+              </Animated.View>
+            </PressableScale>
+            {floats.map((id) => (
+              <XPFloat key={id} amount={xpOnComplete ?? 0} tone={isPr ? 'pr' : 'xp'} onDone={() => setFloats((f) => f.filter((x) => x !== id))} />
+            ))}
+          </View>
+        )}
+      </Animated.View>
+    </Pressable>
   );
 }
 

@@ -18,6 +18,15 @@ interface WorkoutUiState {
 
   lastSummary: WorkoutSummary | null;
   setLastSummary: (s: WorkoutSummary | null) => void;
+
+  /** The planning workout being logged after the fact, and how long it lasted. */
+  past: PastWorkout | null;
+  setPast: (p: PastWorkout | null) => void;
+}
+
+export interface PastWorkout {
+  workoutId: string;
+  durationMin: number;
 }
 
 export const useWorkoutUi = create<WorkoutUiState>((set) => ({
@@ -29,4 +38,7 @@ export const useWorkoutUi = create<WorkoutUiState>((set) => ({
 
   lastSummary: null,
   setLastSummary: (lastSummary) => set({ lastSummary }),
+
+  past: null,
+  setPast: (past) => set({ past }),
 }));

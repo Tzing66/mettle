@@ -20,7 +20,10 @@ import {
   discardWorkout,
   exerciseHistory,
   getActiveWorkout,
+  getWorkout,
   listRecords,
+  pastWorkoutFloor,
+  planPastWorkout,
   planWorkout,
   repeatWorkout,
   setCompleted,
@@ -37,6 +40,7 @@ import { db } from '@/db/client';
 import { xpEvents } from '@/db/schema';
 import { buildWorkoutExport } from '@/features/export/exportData';
 import { finishWorkout } from '@/features/workout/finishWorkout';
+import { savePast } from '@/features/workout/savePast';
 
 const DAY = 86_400_000;
 // Monday 2026-10-05, 18:00 UTC (tests run with TZ=UTC).
@@ -364,5 +368,44 @@ describe('deleting a workout', () => {
     expect(totalXpFromDb()).toBe(before - bigXp);
     expect(listRecords().find((r) => r.exerciseId === 'dip')?.value).toBe(10);
     expect(eventsForWorkout(easy.id).length).toBeGreaterThan(0);
+  });
+});
+
+describe('logging a past workout', () => {
+  it('saves only filled sets, dated across the session, and scores it in history order', () => {
+    at(MONDAY + 40 * DAY);
+    const start = new Date(MONDAY + 39 * DAY);
+    const id = planPastWorkout(start);
+    addExerciseToWorkout(id, getExercise('hammer_curl')!);
+    const [a, b, c] = setsForWorkout(id);
+    updateSet(a.id, { weightKg: 14, reps: 10 });
+    updateSet(b.id, { weightKg: 14, reps: 9 });
+    updateSet(c.id, { weightKg: 14, reps: 8 });
+    const empty = addSet(id, 'hammer_curl');
+    updateSet(empty, { weightKg: null, reps: null }); // left blank: not saved
+
+    expect(savePast(id, start, 60)).toBe(true);
+
+    const end = start.getTime() + 60 * 60_000;
+    expect(getWorkout(id)).toMatchObject({ status: 'active', endedAt: new Date(end) });
+    const sets = setsForWorkout(id);
+    expect(sets).toHaveLength(3);
+    expect(sets.every((s) => s.completedAt && s.completedAt.getTime() > start.getTime() && s.completedAt.getTime() <= end)).toBe(true);
+    const events = eventsForWorkout(id);
+    expect(events.find((e) => e.reason === 'workout_complete')?.createdAt.getTime()).toBe(end);
+  });
+
+  it('an empty past workout is not saved', () => {
+    const id = planPastWorkout(new Date(MONDAY + 38 * DAY));
+    addExerciseToWorkout(id, getExercise('hammer_curl')!);
+    for (const s of setsForWorkout(id)) updateSet(s.id, { weightKg: null, reps: null });
+    expect(savePast(id, new Date(MONDAY + 38 * DAY), 45)).toBe(false);
+    expect(getWorkout(id)).toBeNull();
+  });
+
+  it('goes back no further than the day you joined', () => {
+    const floor = pastWorkoutFloor(getProfile()!.createdAt);
+    // The profile row is stamped by SQLite's real clock here, so the first logged workout (Monday) sets the floor.
+    expect(floor.getTime()).toBe(Date.UTC(2026, 9, 5));
   });
 });
