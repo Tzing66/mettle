@@ -18,6 +18,10 @@ export const profile = sqliteTable('profile', {
   weeklyTargetDays: integer('weekly_target_days').notNull().default(3),
   /** Rest timer after a working set; 0 turns it off. */
   restSeconds: integer('rest_seconds').notNull().default(90),
+  about: text('about'),
+  goals: text('goals'),
+  /** Photo in the cloud 'avatars' bucket (<user id>/<file>); null for none. */
+  avatarPath: text('avatar_path'),
   createdAt: createdAt(),
 });
 

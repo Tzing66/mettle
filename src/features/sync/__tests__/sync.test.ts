@@ -100,6 +100,16 @@ describe('ongoing sync', () => {
     expect(cloud.rows('bodyweight_logs')).toHaveLength(2);
   });
 
+  it('syncs about me, goals and the photo path both ways', async () => {
+    updateProfile({ about: 'Lifting since 2020', goals: 'Bench 100', avatarPath: `${USER}/1.jpg` });
+    await syncAccount(client(), USER);
+    expect(cloud.rows('profiles')[0]).toMatchObject({ about: 'Lifting since 2020', goals: 'Bench 100', avatar_path: `${USER}/1.jpg` });
+
+    cloud.write('profiles', USER, { goals: 'Bench 110', avatar_path: null });
+    await syncAccount(client(), USER);
+    expect(getProfile()).toMatchObject({ about: 'Lifting since 2020', goals: 'Bench 110', avatarPath: null });
+  });
+
   it('holds back unfinished workouts until they are finished', async () => {
     jest.setSystemTime(T0 + 2 * DAY);
     const id = startWorkout();

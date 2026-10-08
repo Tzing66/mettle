@@ -4,11 +4,12 @@ import { Alert, RefreshControl, ScrollView, Share, StyleSheet, View } from 'reac
 import Animated, { FadeInDown, LinearTransition } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button, Card, Chip, PressableScale, RankBadge, SegmentedTabs, Text } from '@/design/components';
+import { Avatar, Button, Card, Chip, PressableScale, RankBadge, SegmentedTabs, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon } from '@/design/icons/Icons';
 import { motion, radii, space } from '@/design/tokens';
 import { formatNumber } from '@/features/format';
+import { avatarUrl } from '@/features/profile/avatar';
 import { getGroup, groupLeaderboard, leaveGroup } from '@/features/social/api';
 import { rankLeaderboard, type Period } from '@/features/social/leaderboard';
 import { useRemote } from '@/features/social/useRemote';
@@ -19,6 +20,7 @@ export default function GroupScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [period, setPeriod] = useState<Period>('week');
+  const [open, setOpen] = useState<string | null>(null);
   const group = useRemote(() => getGroup(id));
   const board = useRemote(() => groupLeaderboard(id));
   const ranked = board.data ? rankLeaderboard(board.data, period) : [];
@@ -85,24 +87,53 @@ export default function GroupScreen() {
                 key={r.user_id}
                 layout={LinearTransition.duration(motion.duration.slow)}
                 entering={FadeInDown.delay(i * 40).duration(240)}
-                style={[styles.row, i > 0 && styles.divider, r.is_me && styles.me]}>
-                <Text variant="heading" color={r.place !== null && r.place <= 3 ? 'ink' : 'inkMuted'} tabular style={styles.place}>
-                  {r.place ?? '–'}
-                </Text>
-                <RankBadge rank={r.rank} size={36} />
-                <View style={styles.flex}>
-                  <Text variant="label" numberOfLines={1}>
-                    {r.display_name}
-                    {r.is_me ? ' (you)' : ''}
+                style={[i > 0 && styles.divider, r.is_me && styles.me]}>
+                <PressableScale
+                  accessibilityLabel={`${r.display_name}, show profile`}
+                  scaleTo={0.99}
+                  onPress={() => {
+                    haptics.tick();
+                    setOpen(open === r.user_id ? null : r.user_id);
+                  }}
+                  style={styles.row}>
+                  <Text variant="heading" color={r.place !== null && r.place <= 3 ? 'ink' : 'inkMuted'} tabular style={styles.place}>
+                    {r.place ?? '–'}
                   </Text>
-                  <Text variant="caption" color="inkMuted">
-                    Level {r.levelLabel}
-                    {r.role === 'owner' ? ' · owner' : ''}
+                  <Avatar uri={avatarUrl(r.avatar_path)} name={r.display_name} size={36} />
+                  <View style={styles.flex}>
+                    <Text variant="label" numberOfLines={1}>
+                      {r.display_name}
+                      {r.is_me ? ' (you)' : ''}
+                    </Text>
+                    <Text variant="caption" color="inkMuted">
+                      Level {r.levelLabel}
+                      {r.role === 'owner' ? ' · owner' : ''}
+                    </Text>
+                  </View>
+                  <RankBadge rank={r.rank} size={24} />
+                  <Text variant="label" tabular style={styles.xp}>
+                    {r.xp > 0 ? `${formatNumber(r.xp)} XP` : '–'}
                   </Text>
-                </View>
-                <Text variant="label" tabular>
-                  {r.xp > 0 ? `${formatNumber(r.xp)} XP` : '–'}
-                </Text>
+                </PressableScale>
+                {open === r.user_id ? (
+                  <Animated.View entering={FadeInDown.duration(motion.duration.base)} style={styles.card}>
+                    {r.about || r.goals ? (
+                      <>
+                        {r.about ? <Text>{r.about}</Text> : null}
+                        {r.goals ? (
+                          <Text color="inkMuted">
+                            <Text variant="label" color="inkMuted">
+                              Goals:{' '}
+                            </Text>
+                            {r.goals}
+                          </Text>
+                        ) : null}
+                      </>
+                    ) : (
+                      <Text color="inkFaint">{r.is_me ? 'Add an about me and goals on your Profile tab.' : 'Nothing here yet.'}</Text>
+                    )}
+                  </Animated.View>
+                ) : null}
               </Animated.View>
             ))}
           </Card>
@@ -142,6 +173,8 @@ const useStyles = makeStyles((colors) => ({
   divider: { borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: colors.line },
   me: { backgroundColor: colors.accentSoft },
   place: { width: 24, textAlign: 'center' },
+  xp: { minWidth: 64, textAlign: 'right' },
+  card: { gap: space.xs, paddingHorizontal: space.md, paddingBottom: space.md, paddingLeft: 24 + space.md * 2 + 36 },
   invite: { gap: space.md },
   codeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   code: { letterSpacing: 6 },

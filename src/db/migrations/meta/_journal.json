@@ -50,6 +50,13 @@
       "when": 1791382511760,
       "tag": "0006_drop_height",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1791462218372,
+      "tag": "0007_profile_about_avatar",
+      "breakpoints": true
     }
   ]
 }

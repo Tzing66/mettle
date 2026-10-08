@@ -30,6 +30,9 @@ export function profileToCloud(p: ProfileRow, userId: string, favouriteIds: stri
     unit_pref: p.unitPref,
     weekly_target_days: p.weeklyTargetDays,
     rest_seconds: p.restSeconds,
+    about: p.about,
+    goals: p.goals,
+    avatar_path: p.avatarPath,
     favourite_exercise_ids: favouriteIds,
     // Lets the server count days and weeks in the user's local time.
     utc_offset_minutes: -new Date().getTimezoneOffset() || 0, // `|| 0` avoids -0 at UTC
@@ -92,6 +95,9 @@ export function profileFromCloud(r: CloudRow) {
     unitPref: r.unit_pref as ProfileRow['unitPref'],
     weeklyTargetDays: r.weekly_target_days as number,
     restSeconds: r.rest_seconds as number,
+    about: (r.about as string | null) ?? null,
+    goals: (r.goals as string | null) ?? null,
+    avatarPath: (r.avatar_path as string | null) ?? null,
     favouriteIds: (r.favourite_exercise_ids as string[] | null) ?? [],
   };
 }

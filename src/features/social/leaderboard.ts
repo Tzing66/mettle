@@ -7,6 +7,10 @@ export interface LeaderboardEntry {
   week_xp: number;
   total_xp: number;
   is_me: boolean;
+  /** Profile card fields; absent from servers older than 2026-10-08. */
+  about?: string | null;
+  goals?: string | null;
+  avatar_path?: string | null;
 }
 
 export type Period = 'week' | 'all';

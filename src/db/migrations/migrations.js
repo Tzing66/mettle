@@ -8,6 +8,7 @@ import m0003 from './0003_rest_seconds.sql';
 import m0004 from './0004_sync_tables.sql';
 import m0005 from './0005_sync_triggers.sql';
 import m0006 from './0006_drop_height.sql';
+import m0007 from './0007_profile_about_avatar.sql';
 
   export default {
     journal,
@@ -18,7 +19,8 @@ m0002,
 m0003,
 m0004,
 m0005,
-m0006
+m0006,
+m0007
     }
   }
   

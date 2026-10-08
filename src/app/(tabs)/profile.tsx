@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { addBodyweight, listBodyweight, updateProfile } from '@/db/repositories/profile';
 import { listBenchmarkUnlocks, listLedger, totalXpFromDb } from '@/db/repositories/xp';
 import { useDbQuery } from '@/db/useDbQuery';
-import { Button, Card, RankBadge, Screen, SegmentedTabs, Stepper, Text } from '@/design/components';
+import { Avatar, Button, Card, PressableScale, RankBadge, Screen, SegmentedTabs, Stepper, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { radii, rankColors, space } from '@/design/tokens';
 import {
@@ -19,6 +19,8 @@ import {
 import { formatDay, formatNumber, formatWeight, TIER_LABELS } from '@/features/format';
 import { shareWorkoutExport } from '@/features/export/exportData';
 import { AccountCard } from '@/features/account/AccountCard';
+import { AboutCard } from '@/features/profile/AboutCard';
+import { AvatarError, avatarUrl, pickAndUploadAvatar, removeAvatar } from '@/features/profile/avatar';
 import { resetTrainingData } from '@/features/profile/resetData';
 import { XpLedger } from '@/features/profile/XpLedger';
 import { requestSync } from '@/features/sync/useSync';
@@ -61,6 +63,7 @@ export default function Profile() {
   const latest = data.logs[data.logs.length - 1];
   const [draftKg, setDraftKg] = useState(latest?.weightKg ?? 75);
   const [exporting, setExporting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   if (!profile) return null;
   const unit = profile.unitPref;
@@ -89,6 +92,38 @@ export default function Profile() {
         },
       ],
     );
+
+  const changePhoto = () => {
+    const pick = async () => {
+      setUploading(true);
+      try {
+        if (await pickAndUploadAvatar()) {
+          haptics.success();
+          requestSync();
+        }
+      } catch (e) {
+        Alert.alert('Couldn’t add the photo', e instanceof AvatarError || e instanceof Error ? e.message : String(e));
+      } finally {
+        setUploading(false);
+      }
+    };
+    if (!profile?.avatarPath) {
+      pick();
+      return;
+    }
+    Alert.alert('Profile photo', undefined, [
+      { text: 'Choose a new photo', onPress: pick },
+      {
+        text: 'Remove photo',
+        style: 'destructive',
+        onPress: async () => {
+          await removeAvatar().catch(() => undefined);
+          requestSync();
+        },
+      },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
+  };
 
   const exportCsv = async () => {
     setExporting(true);
@@ -120,16 +155,25 @@ export default function Profile() {
   return (
     <Screen>
       <View style={styles.header}>
-        <RankBadge rank={rank.rank} size={56} />
+        <PressableScale accessibilityLabel={profile.avatarPath ? 'Change profile photo' : 'Add a profile photo'} onPress={changePhoto} disabled={uploading}>
+          <Avatar uri={avatarUrl(profile.avatarPath)} name={profile.displayName} size={64} />
+          <View style={styles.photoBadge}>
+            <Text variant="caption" color="onPrimary">
+              {uploading ? '…' : profile.avatarPath ? 'Edit' : '+'}
+            </Text>
+          </View>
+        </PressableScale>
         <View style={styles.flex}>
           <Text variant="title">{profile.displayName}</Text>
           <Text variant="caption" color="inkMuted" tabular>
             Level {rank.label} · {formatNumber(data.totalXp)} XP
           </Text>
         </View>
+        <RankBadge rank={rank.rank} size={44} />
       </View>
 
       <AccountCard />
+      <AboutCard />
 
       <Card style={styles.card}>
         <Text variant="overline" color="inkMuted">
@@ -297,6 +341,20 @@ function Setting({ label, children }: { label: string; children: React.ReactNode
 
 const useStyles = makeStyles((colors) => ({
   header: { flexDirection: 'row', alignItems: 'center', gap: space.lg, paddingTop: space.sm },
+  photoBadge: {
+    position: 'absolute',
+    right: -4,
+    bottom: -4,
+    minWidth: 26,
+    height: 22,
+    paddingHorizontal: space.xs,
+    borderRadius: radii.pill,
+    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.bg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   flex: { flex: 1, gap: space.xxs },
   card: { gap: space.md },
   bwTop: { flexDirection: 'row', justifyContent: 'space-between' },

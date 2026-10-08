@@ -1,5 +1,5 @@
 // delete-account: permanently deletes the caller's Mettle account and all of
-// their cloud data. Groups they belong to survive (ownership is handed to the
+// their cloud data, including profile photos. Groups they belong to survive (ownership is handed to the
 // longest-standing member); everything else cascades from auth.users.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -32,6 +32,13 @@ Deno.serve(async (req) => {
   try {
     const { error: prepError } = await admin.rpc('prepare_account_deletion', { p_user_id: userId });
     if (prepError) throw new Error(`prepare: ${prepError.message}`);
+
+    // Profile photos don't cascade from auth.users; remove them explicitly.
+    const { data: photos } = await admin.storage.from('avatars').list(userId, { limit: 1000 });
+    if (photos?.length) {
+      const { error: photoError } = await admin.storage.from('avatars').remove(photos.map((f) => `${userId}/${f.name}`));
+      if (photoError) throw new Error(`photos: ${photoError.message}`);
+    }
 
     const { error: deleteError } = await admin.auth.admin.deleteUser(userId);
     if (deleteError) throw new Error(`delete: ${deleteError.message}`);
