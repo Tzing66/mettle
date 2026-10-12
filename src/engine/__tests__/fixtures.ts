@@ -15,6 +15,10 @@ export const exercises: Record<string, ExerciseInfo> = {
   plank: { id: 'plank', category: 'bodyweight', trackingType: 'time' },
   run: { id: 'run', category: 'cardio', trackingType: 'distance_time', activity: 'run', benchmarkId: 'run' },
   bike: { id: 'bike', category: 'cardio', trackingType: 'distance_time', activity: 'cycle' },
+  // Real catalogue ids, which placement standards and tiers are keyed to.
+  bench_press: { id: 'bench_press', category: 'free_weight', trackingType: 'weight_reps', benchmarkId: 'bench_press' },
+  outdoor_run: { id: 'outdoor_run', category: 'cardio', trackingType: 'distance_time', activity: 'run', benchmarkId: 'run' },
+  dip: { id: 'dip', category: 'bodyweight', trackingType: 'reps' },
 };
 
 let setCounter = 0;

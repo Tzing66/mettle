@@ -16,14 +16,18 @@ export function setMetrics(
   if (set.isWarmup) return [];
   const out: MetricValue[] = [];
   switch (exercise.trackingType) {
-    case 'weight_reps': {
-      const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
-      if (e1rm !== null) out.push({ metric: 'e1rm', value: e1rm });
+    // Weight is optional on rep exercises: weighted sets set e1RM bests,
+    // unweighted sets set rep bests. The two never mix.
+    case 'weight_reps':
+    case 'reps': {
+      if (set.weightKg && set.weightKg > 0) {
+        const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
+        if (e1rm !== null) out.push({ metric: 'e1rm', value: e1rm });
+      } else if (set.reps && set.reps > 0) {
+        out.push({ metric: 'max_reps', value: set.reps });
+      }
       break;
     }
-    case 'reps':
-      if (set.reps && set.reps > 0) out.push({ metric: 'max_reps', value: set.reps });
-      break;
     case 'time':
       if (set.durationS && set.durationS > 0)
         out.push({ metric: 'max_duration', value: set.durationS });

@@ -18,7 +18,7 @@ import {
 import { listBenchmarkUnlocks, listLedger, toLedgerEvent, totalXpFromDb } from '@/db/repositories/xp';
 import { benchmarkUnlocks, personalRecords, workoutSets, workouts, xpEvents } from '@/db/schema';
 import {
-  findBenchmark,
+  standardName,
   finishSession,
   rankChange,
   weekStart,
@@ -124,7 +124,7 @@ export function finishWorkout(workoutId: string): WorkoutSummary | null {
     prs: out.result.records
       .filter((o): o is Extract<RecordOutcome, { kind: 'pr' }> => o.kind === 'pr')
       .map((o) => ({ ...o, exerciseName: names.get(o.record.exerciseId) ?? o.record.exerciseId })),
-    unlocks: out.result.benchmarkUnlocks.map((u) => ({ ...u, benchmarkName: findBenchmark(u.benchmarkId)?.name ?? u.benchmarkId })),
+    unlocks: out.result.benchmarkUnlocks.map((u) => ({ ...u, benchmarkName: standardName(u.benchmarkId) })),
     rank: rankChange(xpBefore, xpBefore + xpGained),
     xpGained,
     capped: out.result.capped,

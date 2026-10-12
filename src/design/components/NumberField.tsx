@@ -12,13 +12,15 @@ export interface NumberFieldProps {
   width?: number;
   accessibilityLabel: string;
   editable?: boolean;
+  /** Shown when empty (e.g. "BW" where weight is optional). */
+  placeholder?: string;
 }
 
 /**
  * Inline number you tap and type into. Commits on blur/submit, so typing
  * "6", "5" doesn't write 6 first. Text is selected on focus for quick overwrite.
  */
-export function NumberField({ value, onCommit, decimals = 1, width = 64, accessibilityLabel, editable = true }: NumberFieldProps) {
+export function NumberField({ value, onCommit, decimals = 1, width = 64, accessibilityLabel, editable = true, placeholder = '0' }: NumberFieldProps) {
   const styles = useStyles();
   const { colors, scheme } = useTheme();
   const format = (v: number | null) => (v === null ? '' : String(Math.round(v * 10 ** decimals) / 10 ** decimals));
@@ -48,7 +50,7 @@ export function NumberField({ value, onCommit, decimals = 1, width = 64, accessi
       inputAccessoryViewID={Platform.OS === 'ios' ? KEYBOARD_DONE_ID : undefined}
       selectTextOnFocus
       accessibilityLabel={accessibilityLabel}
-      placeholder="0"
+      placeholder={placeholder}
       placeholderTextColor={colors.inkFaint}
       style={[styles.field, { width }, focused && styles.focused]}
     />

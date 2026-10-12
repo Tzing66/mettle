@@ -4803,9 +4803,9 @@ var ranks_v1_default = {
   sLevelSpanXp: 25e3
 };
 
-// config/xp-rules.v2.json
-var xp_rules_v2_default = {
-  version: "xp-rules.v2",
+// config/xp-rules.v3.json
+var xp_rules_v3_default = {
+  version: "xp-rules.v3",
   consistency: {
     workoutComplete: 50,
     workoutMinWorkingSets: 3,
@@ -4859,12 +4859,13 @@ var xp_rules_v2_default = {
     firstExerciseMinSets: 2,
     firstActivity: 100,
     benchmarkTier: {
-      beginner: 250,
-      novice: 750,
-      intermediate: 2e3,
-      advanced: 5e3,
-      elite: 12e3
-    }
+      beginner: 150,
+      novice: 300,
+      intermediate: 600,
+      advanced: 1200,
+      elite: 2500
+    },
+    maxTierAwardsPerWorkout: 3
   },
   placement: {
     trigger: "first workout with an exercise that has a placement standard (config/placement-standards.v1.json)"
@@ -4887,7 +4888,7 @@ var xp_rules_v2_default = {
 };
 
 // src/engine/config.ts
-var xpRules = xp_rules_v2_default;
+var xpRules = xp_rules_v3_default;
 var ranksConfig = ranks_v1_default;
 var benchmarksConfig = benchmarks_v1_default;
 var ageGrading = age_grading_road2025_default;
@@ -4895,8 +4896,8 @@ var DAY_MS = 24 * 60 * 60 * 1e3;
 
 // config/placement-standards.v1.json
 var placement_standards_v1_default = {
-  version: "placement-standards.v1",
-  _sources: 'Strength Level community standards (strengthlevel.com/strength-standards, Entire Community levels, fetched 2026-10-08): bodyweight ratios for weighted lifts (dumbbell = one dumbbell), reps for bodyweight moves, seconds for holds. Runs use WMA/USATF 2025 age grading. Entries with "benchmark" reuse benchmarks.v1.json thresholds. A standard only covers the exact exercise (or a single-arm/attachment variant of the same movement).',
+  version: "placement-standards.v2",
+  _sources: 'Strength Level community standards (strengthlevel.com/strength-standards, Entire Community levels, fetched 2026-10-08): bodyweight ratios for weighted lifts (dumbbell = one dumbbell), reps for bodyweight moves, seconds for holds. Runs use WMA/USATF 2025 age grading. Rowing, swimming and cycling use Rowing Level, Swimming Level and Cycling Level finish times by age and sex (fetched 2026-10-12); an effort is compared at the nearest tabled distance via Riegel (T2 = T1 \xD7 (D2/D1)^1.06). Entries with "benchmark" reuse benchmarks.v1.json thresholds. A standard only covers the exact exercise (or a single-arm/attachment variant of the same movement).',
   maxRepsForEstimate: 15,
   scoreToRank: [
     {
@@ -4920,6 +4921,8 @@ var placement_standards_v1_default = {
       rank: "A"
     }
   ],
+  riegelExponent: 1.06,
+  maxDistanceRatio: 2,
   standards: [
     { benchmark: "bench_press", exerciseIds: ["bench_press"] },
     { benchmark: "back_squat", exerciseIds: ["back_squat"] },
@@ -5129,9 +5132,27 @@ var placement_standards_v1_default = {
     { id: "side_plank", name: "Side Plank", exerciseIds: ["side_plank"], kind: "max_duration", thresholds: { male: [6, 24, 44, 69, 95], female: [9, 24, 40, 61, 83] } },
     { id: "flutter_kick", name: "Flutter Kicks", exerciseIds: ["flutter_kick"], kind: "max_reps", thresholds: { male: [1, 19, 51, 93, 145], female: [1, 12, 39, 75, 120] } },
     { id: "mountain_climber", name: "Mountain Climbers", exerciseIds: ["mountain_climber"], kind: "max_reps", thresholds: { male: [1, 18, 47, 85, 131], female: [1, 14, 38, 70, 108] } },
-    { id: "superman", name: "Superman", exerciseIds: ["superman"], kind: "max_reps", thresholds: { male: [1, 8, 25, 46, 70], female: [1, 10, 24, 40, 57] } }
+    { id: "superman", name: "Superman", exerciseIds: ["superman"], kind: "max_reps", thresholds: { male: [1, 8, 25, 46, 70], female: [1, 10, 24, 40, 57] } },
+    { id: "rowing", name: "Rowing machine", exerciseIds: ["rowing_machine"], kind: "time_for_distance", times: { male: { "500": { "10": [141, 129.9, 119.1, 109.2, 100.5], "15": [120.7, 111.1, 101.9, 93.4, 86], "20": [113.9, 104.8, 96.1, 88.2, 81.2], "25": [111.9, 103, 94.5, 86.6, 79.8], "30": [110.4, 101.6, 93.2, 85.4, 78.7], "35": [111.2, 102.4, 93.9, 86.1, 79.2], "40": [115.4, 106.2, 97.4, 89.3, 82.2], "45": [115.4, 106.2, 97.4, 89.3, 82.2], "50": [115.4, 106.2, 97.4, 89.3, 82.2], "55": [117.5, 108.1, 99.2, 90.9, 83.7], "60": [127.9, 117.7, 108, 99, 91.1], "65": [132.8, 122.2, 112.1, 102.8, 94.6], "70": [137.6, 126.7, 116.2, 106.5, 98.1], "75": [144.3, 132.9, 121.8, 111.7, 102.9], "80": [151.1, 139.1, 127.5, 116.9, 107.7], "85": [165.7, 152.6, 139.9, 128.3, 118.1], "90": [180.4, 166.1, 152.3, 139.6, 128.6] }, "1000": { "10": [286, 266.6, 247.6, 230, 214.4], "15": [248.3, 231.4, 215, 199.7, 186.1], "20": [235.6, 219.6, 204, 189.5, 176.6], "25": [234.2, 218.3, 202.8, 188.4, 175.6], "30": [234.1, 218.2, 202.7, 188.3, 175.5], "35": [235.3, 219.3, 203.7, 189.3, 176.4], "40": [238.5, 222.3, 206.5, 191.8, 178.8], "45": [243.4, 226.9, 210.7, 195.7, 182.4], "50": [248.3, 231.4, 215, 199.7, 186.1], "55": [255.9, 238.5, 221.6, 205.8, 191.9], "60": [263.6, 245.7, 228.2, 212, 197.6], "65": [273.8, 255.2, 237.1, 220.2, 205.3], "70": [284.1, 264.8, 246, 228.5, 213], "75": [298.4, 278.1, 258.4, 240, 223.7], "80": [312.7, 291.5, 270.8, 251.5, 234.4], "85": [338, 315, 292.7, 271.9, 253.4], "90": [363.3, 338.6, 314.5, 292.2, 272.3] }, "2000": { "10": [605.1, 566, 527.6, 491.9, 460.1], "15": [528.6, 494.4, 460.9, 429.7, 401.9], "20": [497.6, 465.4, 433.9, 404.5, 378.3], "25": [490.6, 458.8, 427.8, 398.8, 373], "30": [486.9, 455.4, 424.6, 395.9, 370.2], "35": [493.6, 461.6, 430.4, 401.3, 375.3], "40": [503.7, 471.1, 439.2, 409.5, 383], "45": [513.8, 480.5, 448, 417.7, 390.7], "50": [523.9, 490, 456.8, 425.9, 398.3], "55": [539.6, 504.7, 470.6, 438.7, 410.3], "60": [551.4, 515.7, 480.8, 448.2, 419.2], "65": [569.9, 533, 497, 463.3, 433.3], "70": [596.8, 558.2, 520.4, 485.2, 453.8], "75": [615.9, 576.1, 537.1, 500.7, 468.3], "80": [646.8, 605, 564, 525.8, 491.8], "85": [686.8, 642.4, 598.9, 558.3, 522.2], "90": [756.6, 707.6, 659.7, 615.1, 575.3] }, "5000": { "10": [1650.5, 1547.4, 1446.4, 1351.9, 1267.5], "15": [1449.4, 1359, 1270.2, 1187.2, 1113.1], "20": [1351.4, 1267, 1184.2, 1106.9, 1037.8], "25": [1330.2, 1247.1, 1165.7, 1089.5, 1021.5], "30": [1325.1, 1242.3, 1161.2, 1085.4, 1017.6], "35": [1336.2, 1252.8, 1171, 1094.5, 1026.2], "40": [1351.1, 1266.7, 1184, 1106.7, 1037.6], "45": [1390.5, 1303.7, 1218.6, 1139, 1067.9], "50": [1436.1, 1346.4, 1258.5, 1176.3, 1102.8], "55": [1472, 1380.1, 1289.9, 1205.7, 1130.4], "60": [1507.9, 1413.7, 1321.4, 1235.1, 1158], "65": [1547, 1450.5, 1355.7, 1267.2, 1188.1], "70": [1586.2, 1487.2, 1390, 1299.2, 1218.1], "75": [1676.4, 1571.7, 1469.1, 1373.1, 1287.4], "80": [1766.6, 1656.3, 1548.1, 1447, 1356.7], "85": [1920.5, 1800.6, 1683, 1573.1, 1474.9], "90": [2074.4, 1944.9, 1817.9, 1699.1, 1593.1] }, "6000": { "10": [2005.7, 1880, 1756.7, 1641.5, 1538.6], "15": [1761.4, 1651, 1542.7, 1441.6, 1351.2], "20": [1642.2, 1539.3, 1438.3, 1344, 1259.7], "25": [1616.5, 1515.1, 1415.8, 1322.9, 1240], "30": [1610.3, 1509.3, 1410.4, 1317.9, 1235.2], "35": [1623.8, 1522, 1422.2, 1329, 1245.7], "40": [1641.9, 1539, 1438, 1343.7, 1259.5], "45": [1689.8, 1583.9, 1480, 1382.9, 1296.2], "50": [1745.2, 1635.8, 1528.5, 1428.3, 1338.7], "55": [1788.8, 1676.7, 1566.7, 1464, 1372.2], "60": [1832.4, 1717.6, 1604.9, 1499.7, 1405.7], "65": [1880, 1762.2, 1646.6, 1538.6, 1442.2], "70": [1927.6, 1806.8, 1688.3, 1577.6, 1478.7], "75": [2037.2, 1909.5, 1784.3, 1667.3, 1562.8], "80": [2146.8, 2012.3, 1880.3, 1757, 1646.8], "85": [2333.9, 2187.6, 2044.1, 1910, 1790.3], "90": [2520.9, 2362.8, 2207.9, 2063.1, 1933.8] }, "10000": { "10": [3512.6, 3288.8, 3069.6, 2865, 2682.5], "15": [2973.2, 2783.8, 2598.3, 2425.1, 2270.6], "20": [2849.9, 2668.3, 2490.5, 2324.5, 2176.4], "25": [2796.7, 2618.5, 2444, 2281.1, 2135.8], "30": [2758.5, 2582.8, 2410.6, 2250, 2106.6], "35": [2774.3, 2597.5, 2424.4, 2262.8, 2118.6], "40": [2819.3, 2639.6, 2463.7, 2299.5, 2153], "45": [2864.2, 2681.7, 2503, 2336.2, 2187.3], "50": [2941.6, 2754.2, 2570.6, 2399.3, 2246.4], "55": [3008.4, 2816.7, 2629, 2453.7, 2297.4], "60": [3075.2, 2879.2, 2687.3, 2508.2, 2348.4], "65": [3170.6, 2968.6, 2770.7, 2586.1, 2421.3], "70": [3266.1, 3058, 2854.2, 2663.9, 2494.2], "75": [3436.9, 3217.9, 3003.5, 2803.3, 2624.7], "80": [3608, 3377.9, 3152.8, 2942.6, 2755.2], "85": [3939, 3688, 3441.8, 3212.4, 3007.7], "90": [4269, 3997, 3731, 3482.2, 3260.3] } }, female: { "500": { "10": [170.1, 154, 138.7, 124.9, 113.1], "15": [156.1, 141.3, 127.2, 114.6, 103.8], "20": [145.8, 132, 118.9, 107.1, 96.9], "25": [145.2, 131.4, 118.4, 106.7, 96.5], "30": [147.7, 133.7, 120.4, 108.5, 98.2], "35": [148.6, 134.5, 121.2, 109.2, 98.8], "40": [146.2, 132.3, 119.2, 107.4, 97.2], "45": [148, 134, 120.7, 108.7, 98.4], "50": [156.3, 141.4, 127.4, 114.8, 103.9], "55": [161.2, 145.9, 131.4, 118.4, 107.2], "60": [169.1, 153, 137.9, 124.2, 112.4], "65": [179.6, 162.6, 146.5, 131.9, 119.4], "70": [190.2, 172.1, 155, 139.7, 126.4], "75": [199.5, 180.6, 162.7, 146.5, 132.6], "80": [208.8, 189, 170.3, 153.4, 138.8], "85": [244.6, 221.3, 199.4, 179.6, 162.6], "90": [280.3, 253.7, 228.5, 205.9, 186.3] }, "1000": { "10": [320.7, 293.1, 266.7, 242.7, 221.8], "15": [318.1, 290.7, 264.5, 240.7, 220], "20": [297.1, 271.5, 247, 224.8, 205.4], "25": [293.9, 268.6, 244.4, 222.4, 203.3], "30": [301.3, 275.4, 250.6, 228, 208.4], "35": [301.3, 275.3, 250.5, 228, 208.3], "40": [301.2, 275.3, 250.5, 227.9, 208.3], "45": [305.6, 279.2, 254.1, 231.2, 211.3], "50": [316.5, 289.2, 263.2, 239.5, 218.9], "55": [327.3, 299.1, 272.2, 247.7, 226.3], "60": [338.1, 308.9, 281.1, 255.8, 233.8], "65": [350.6, 320.4, 291.5, 265.3, 242.4], "70": [363.1, 331.8, 302, 274.8, 251.1], "75": [385, 351.9, 320.2, 291.3, 266.2], "80": [406.9, 371.9, 338.4, 307.9, 281.4], "85": [484.7, 443, 403.1, 366.8, 335.2], "90": [562.5, 514, 467.7, 425.6, 389] }, "2000": { "10": [710.5, 649, 590.2, 536.8, 490.4], "15": [664, 606.6, 551.7, 501.7, 458.3], "20": [616.3, 562.9, 512, 465.6, 425.3], "25": [608.2, 555.5, 505.3, 459.5, 419.7], "30": [614.2, 561, 510.2, 464, 423.9], "35": [631.4, 576.7, 524.5, 477.1, 435.8], "40": [651.4, 595, 541.2, 492.2, 449.6], "45": [658.5, 601.5, 547.1, 497.6, 454.5], "50": [665.6, 608, 553, 502.9, 459.4], "55": [686.4, 627, 570.2, 518.6, 473.7], "60": [710.2, 648.7, 590, 536.6, 490.2], "65": [734.9, 671.3, 610.5, 555.3, 507.2], "70": [767.3, 700.9, 637.4, 579.7, 529.6], "75": [790.8, 722.3, 656.9, 597.5, 545.8], "80": [841.8, 768.9, 699.4, 636.1, 581], "85": [916.6, 837.2, 761.4, 692.5, 632.6], "90": [1068.7, 976.2, 887.8, 807.5, 737.6] }, "5000": { "10": [1869.4, 1721, 1578.2, 1447.2, 1332.3], "15": [1729.6, 1592.3, 1460.1, 1338.9, 1232.7], "20": [1606.5, 1479, 1356.2, 1243.6, 1144.9], "25": [1572.9, 1448, 1327.8, 1217.6, 1121], "30": [1582.6, 1457, 1336.1, 1225.2, 1127.9], "35": [1603.2, 1475.9, 1353.4, 1241.1, 1142.6], "40": [1711.6, 1575.7, 1445, 1325, 1219.8], "45": [1722, 1585.3, 1453.7, 1333.1, 1227.3], "50": [1732.4, 1594.9, 1462.5, 1341.1, 1234.7], "55": [1766.1, 1625.9, 1490.9, 1367.2, 1258.7], "60": [1805.6, 1662.3, 1524.3, 1397.8, 1286.8], "65": [1875.5, 1726.7, 1583.3, 1451.9, 1336.7], "70": [1965.8, 1809.7, 1659.5, 1521.8, 1401], "75": [2075.5, 1910.8, 1752.2, 1606.7, 1479.2], "80": [2185.2, 2011.8, 1844.8, 1691.7, 1557.4], "85": [2941.9, 2708.4, 2483.6, 2277.5, 2096.7], "90": [3699, 3405.1, 3122.4, 2863.3, 2636] }, "6000": { "10": [2235, 2066.5, 1903.5, 1753.4, 1621.2], "15": [2067.8, 1911.9, 1761.1, 1622.2, 1499.9], "20": [1920.6, 1775.8, 1635.8, 1506.8, 1393.2], "25": [1880.4, 1738.6, 1601.5, 1475.2, 1364], "30": [1892.1, 1749.4, 1611.5, 1484.4, 1372.4], "35": [1916.7, 1772.2, 1632.4, 1503.7, 1390.3], "40": [2046.3, 1892, 1742.8, 1605.4, 1484.3], "45": [2058.7, 1903.5, 1753.4, 1615.1, 1493.3], "50": [2071.1, 1915, 1764, 1624.8, 1502.3], "55": [2111.4, 1952.2, 1798.3, 1656.4, 1531.5], "60": [2158.7, 1995.9, 1838.5, 1693.5, 1565.8], "65": [2242.3, 2073.2, 1909.7, 1759.1, 1626.5], "70": [2350.2, 2173, 2001.6, 1843.8, 1704.7], "75": [2481.4, 2294.3, 2113.3, 1946.7, 1799.9], "80": [2612.5, 2415.5, 2225, 2049.6, 1895], "85": [3517.2, 3252, 2995.5, 2759.3, 2551.2], "90": [4422, 4089, 3766, 3469.1, 3207.5] }, "10000": { "10": [3614, 3400.4, 3189.9, 2992.5, 2815.5], "15": [3334.3, 3137.1, 2943, 2760.8, 2597.5], "20": [3106.2, 2922.4, 2741.6, 2571.9, 2419.8], "25": [3064.7, 2883.4, 2704.9, 2537.5, 2387.5], "30": [3050.4, 2870, 2692.4, 2525.7, 2376.3], "35": [3103, 2919.5, 2738.8, 2569.3, 2417.3], "40": [3255.9, 3063.3, 2873.7, 2695.9, 2536.4], "45": [3275.3, 3081.6, 2890.8, 2711.9, 2551.5], "50": [3294.7, 3099.8, 2908, 2728, 2566.6], "55": [3386, 3185.7, 2988.6, 2803.6, 2637.8], "60": [3495.3, 3288.6, 3085.1, 2894.1, 2723], "65": [3617, 3402.8, 3192.2, 2994.7, 2817.6], "70": [3738, 3517.1, 3299.4, 3095.2, 2912.2], "75": [3980, 3744, 3512.7, 3295.3, 3100.4], "80": [4221, 3972, 3726, 3495.3, 3288.5], "85": [4221, 3972, 3726, 3495.3, 3288.5], "90": [4221, 3972, 3726, 3495.3, 3288.5] } } } },
+    { id: "swimming", name: "Swimming (freestyle)", exerciseIds: ["swim"], kind: "time_for_distance", times: { male: { "400": { "10": [853, 680, 536, 423, 337], "15": [738, 589, 464, 366, 292], "20": [713, 569, 448, 354, 282], "25": [713, 569, 448, 354, 282], "30": [714, 569, 449, 354, 282], "35": [726, 578, 456, 360, 287], "40": [751, 598, 472, 372, 297], "45": [779, 621, 490, 386, 308], "50": [810, 645, 509, 401, 320], "55": [843, 672, 530, 418, 333], "60": [878, 700, 552, 435, 347], "65": [917, 731, 577, 455, 362], "70": [963, 768, 606, 477, 381], "75": [1035, 825, 651, 513, 409], "80": [1146, 913, 720, 568, 453], "85": [1319, 1051, 829, 654, 521], "90": [1607, 1281, 1010, 796, 635] }, "1000": { "10": [2192, 1747, 1378, 1086, 866], "15": [1897, 1512, 1192, 940, 749], "20": [1833, 1461, 1152, 908, 724], "25": [1833, 1461, 1152, 908, 724], "30": [1835, 1462, 1153, 909, 725], "35": [1864, 1486, 1172, 924, 736], "40": [1929, 1538, 1212, 956, 762], "45": [2002, 1595, 1258, 992, 791], "50": [2080, 1658, 1307, 1031, 822], "55": [2165, 1725, 1361, 1073, 855], "60": [2257, 1799, 1418, 1118, 891], "65": [2357, 1879, 1481, 1168, 931], "70": [2475, 1973, 1556, 1227, 978], "75": [2659, 2120, 1671, 1318, 1051], "80": [2943, 2346, 1850, 1459, 1163], "85": [3388, 2701, 2130, 1679, 1338], "90": [4128, 3291, 2595, 2046, 1631] }, "1500": { "10": [3328, 2653, 2092, 1649, 1315], "15": [2880, 2296, 1810, 1427, 1138], "20": [2783, 2218, 1749, 1379, 1099], "25": [2783, 2218, 1749, 1379, 1099], "30": [2785, 2220, 1751, 1380, 1100], "35": [2831, 2256, 1779, 1403, 1118], "40": [2928, 2334, 1841, 1451, 1157], "45": [3039, 2422, 1910, 1506, 1200], "50": [3158, 2517, 1985, 1565, 1247], "55": [3286, 2620, 2066, 1629, 1298], "60": [3426, 2731, 2153, 1698, 1353], "65": [3578, 2852, 2249, 1773, 1413], "70": [3758, 2995, 2362, 1862, 1484], "75": [4037, 3218, 2538, 2001, 1595], "80": [4468, 3562, 2809, 2215, 1765], "85": [5144, 4100, 3233, 2549, 2032], "90": [6268, 4996, 3940, 3106, 2476] } }, female: { "400": { "10": [853, 697, 564, 456, 373], "15": [766, 626, 506, 410, 335], "20": [729, 596, 482, 390, 319], "25": [729, 596, 482, 390, 319], "30": [729, 596, 482, 390, 319], "35": [734, 600, 485, 393, 321], "40": [749, 612, 495, 401, 327], "45": [776, 634, 513, 415, 339], "50": [816, 667, 539, 436, 356], "55": [863, 705, 570, 461, 377], "60": [915, 748, 605, 490, 400], "65": [975, 796, 644, 521, 426], "70": [1042, 852, 689, 558, 455], "75": [1120, 915, 740, 599, 489], "80": [1213, 991, 802, 649, 530], "85": [1366, 1116, 903, 730, 597], "90": [1646, 1344, 1088, 880, 719] }, "1000": { "10": [2198, 1796, 1453, 1175, 960], "15": [1973, 1612, 1304, 1055, 862], "20": [1878, 1534, 1241, 1004, 821], "25": [1878, 1534, 1241, 1004, 821], "30": [1878, 1534, 1241, 1004, 821], "35": [1890, 1544, 1250, 1011, 826], "40": [1930, 1576, 1275, 1032, 843], "45": [1998, 1633, 1321, 1069, 873], "50": [2102, 1717, 1389, 1124, 918], "55": [2222, 1816, 1469, 1189, 971], "60": [2358, 1926, 1558, 1261, 1030], "65": [2511, 2051, 1660, 1343, 1097], "70": [2685, 2194, 1775, 1436, 1173], "75": [2886, 2357, 1907, 1543, 1261], "80": [3124, 2552, 2065, 1670, 1365], "85": [3517, 2873, 2325, 1881, 1537], "90": [4239, 3463, 2802, 2267, 1852] }, "1500": { "10": [3341, 2729, 2208, 1787, 1460], "15": [2999, 2450, 1982, 1604, 1310], "20": [2855, 2332, 1887, 1527, 1247], "25": [2855, 2332, 1887, 1527, 1247], "30": [2855, 2332, 1887, 1527, 1247], "35": [2873, 2347, 1899, 1537, 1255], "40": [2933, 2396, 1938, 1568, 1281], "45": [3038, 2482, 2008, 1624, 1327], "50": [3194, 2610, 2111, 1708, 1396], "55": [3378, 2760, 2233, 1807, 1476], "60": [3584, 2928, 2369, 1917, 1566], "65": [3816, 3118, 2523, 2041, 1667], "70": [4081, 3334, 2698, 2183, 1783], "75": [4386, 3583, 2899, 2346, 1916], "80": [4748, 3879, 3138, 2539, 2074], "85": [5346, 4367, 3534, 2859, 2336], "90": [6443, 5263, 4258, 3446, 2815] } } } },
+    { id: "cycling", name: "Outdoor cycling", exerciseIds: ["outdoor_cycle"], kind: "time_for_distance", times: { male: { "5000": { "10": [876, 757, 676, 619, 577], "15": [758, 655, 585, 535, 499], "20": [732, 633, 565, 517, 482], "25": [732, 633, 565, 517, 482], "30": [732, 633, 565, 517, 482], "35": [744, 643, 575, 526, 490], "40": [771, 667, 595, 545, 508], "45": [801, 692, 618, 565, 527], "50": [832, 720, 643, 588, 548], "55": [867, 750, 669, 612, 571], "60": [904, 782, 698, 639, 596], "65": [945, 817, 730, 668, 623], "70": [994, 859, 767, 702, 654], "75": [1068, 923, 825, 754, 703], "80": [1182, 1022, 913, 835, 779], "85": [1360, 1176, 1050, 961, 896], "90": [1655, 1431, 1278, 1169, 1090] }, "10000": { "10": [1834, 1586, 1416, 1296, 1208], "15": [1588, 1373, 1226, 1122, 1046], "20": [1537, 1329, 1187, 1086, 1013], "25": [1537, 1329, 1187, 1086, 1013], "30": [1537, 1329, 1187, 1086, 1013], "35": [1551, 1341, 1198, 1096, 1022], "40": [1595, 1379, 1232, 1127, 1051], "45": [1660, 1435, 1282, 1173, 1093], "50": [1730, 1496, 1336, 1222, 1139], "55": [1806, 1562, 1395, 1276, 1190], "60": [1889, 1634, 1459, 1335, 1244], "65": [1981, 1713, 1529, 1399, 1305], "70": [2081, 1799, 1607, 1470, 1371], "75": [2219, 1918, 1713, 1567, 1461], "80": [2440, 2109, 1884, 1723, 1607], "85": [2791, 2413, 2155, 1971, 1838], "90": [3381, 2924, 2611, 2389, 2227] }, "20000": { "10": [3862, 3339, 2982, 2728, 2544], "15": [3342, 2890, 2581, 2361, 2201], "20": [3227, 2790, 2492, 2280, 2126], "25": [3227, 2790, 2492, 2280, 2126], "30": [3227, 2790, 2492, 2280, 2126], "35": [3246, 2806, 2506, 2293, 2138], "40": [3330, 2879, 2571, 2352, 2193], "45": [3467, 2998, 2677, 2449, 2284], "50": [3618, 3128, 2794, 2556, 2383], "55": [3782, 3270, 2921, 2672, 2491], "60": [3963, 3426, 3060, 2799, 2610], "65": [4161, 3598, 3213, 2939, 2741], "70": [4380, 3787, 3382, 3094, 2885], "75": [4680, 4047, 3614, 3306, 3083], "80": [5163, 4464, 3986, 3647, 3400], "85": [5936, 5132, 4583, 4193, 3910], "90": [7247, 6266, 5596, 5119, 4773] }, "30000": { "10": [5960, 5153, 4602, 4210, 3926], "15": [5158, 4459, 3982, 3643, 3397], "20": [4980, 4306, 3845, 3518, 3280], "25": [4980, 4306, 3845, 3518, 3280], "30": [4980, 4306, 3845, 3518, 3280], "35": [5008, 4330, 3867, 3537, 3298], "40": [5136, 4441, 3966, 3628, 3383], "45": [5349, 4625, 4130, 3778, 3523], "50": [5582, 4826, 4310, 3943, 3677], "55": [5836, 5046, 4507, 4123, 3844], "60": [6115, 5287, 4722, 4320, 4028], "65": [6422, 5553, 4959, 4536, 4230], "70": [6761, 5846, 5220, 4776, 4453], "75": [7228, 6250, 5581, 5106, 4761], "80": [7984, 6903, 6164, 5640, 5258], "85": [9202, 7956, 7105, 6500, 6061], "90": [11293, 9764, 8720, 7977, 7438] }, "40000": { "10": [8108, 7011, 6261, 5728, 5340], "15": [7017, 6067, 5418, 4957, 4621], "20": [6775, 5858, 5232, 4786, 4463], "25": [6775, 5858, 5232, 4786, 4463], "30": [6775, 5858, 5232, 4786, 4463], "35": [6813, 5890, 5260, 4812, 4487], "40": [6988, 6042, 5396, 4936, 4602], "45": [7277, 6292, 5619, 5140, 4793], "50": [7594, 6566, 5864, 5364, 5002], "55": [7940, 6865, 6131, 5609, 5230], "60": [8319, 7193, 6424, 5877, 5479], "65": [8737, 7554, 6746, 6172, 5754], "70": [9198, 7953, 7102, 6497, 6058], "75": [9829, 8499, 7590, 6943, 6474], "80": [10849, 9380, 8377, 7664, 7146], "85": [12496, 10804, 9649, 8827, 8230], "90": [15315, 13242, 11825, 10818, 10087] } }, female: { "5000": { "10": [1075, 908, 800, 725, 672], "15": [965, 815, 718, 651, 604], "20": [919, 776, 683, 620, 575], "25": [919, 776, 683, 620, 575], "30": [919, 776, 683, 620, 575], "35": [925, 781, 688, 624, 578], "40": [944, 797, 702, 637, 590], "45": [978, 825, 727, 660, 611], "50": [1028, 868, 765, 694, 643], "55": [1087, 918, 809, 733, 680], "60": [1154, 974, 858, 778, 721], "65": [1228, 1037, 914, 829, 768], "70": [1314, 1109, 977, 886, 821], "75": [1412, 1192, 1050, 952, 883], "80": [1528, 1290, 1136, 1031, 956], "85": [1721, 1453, 1280, 1161, 1076], "90": [2074, 1751, 1542, 1399, 1297] }, "10000": { "10": [2315, 1955, 1721, 1561, 1448], "15": [2061, 1740, 1533, 1390, 1289], "20": [1933, 1632, 1437, 1304, 1209], "25": [1929, 1629, 1435, 1301, 1206], "30": [1933, 1632, 1437, 1304, 1209], "35": [1957, 1652, 1455, 1320, 1224], "40": [2005, 1693, 1491, 1352, 1254], "45": [2079, 1755, 1546, 1402, 1300], "50": [2187, 1846, 1626, 1475, 1367], "55": [2317, 1956, 1723, 1563, 1449], "60": [2464, 2081, 1833, 1662, 1541], "65": [2631, 2222, 1957, 1775, 1646], "70": [2823, 2383, 2099, 1904, 1765], "75": [3044, 2570, 2264, 2053, 1904], "80": [3358, 2835, 2497, 2265, 2100], "85": [3887, 3282, 2890, 2622, 2431], "90": [4834, 4081, 3594, 3260, 3023] }, "20000": { "10": [5047, 4261, 3753, 3404, 3157], "15": [4413, 3726, 3282, 2977, 2760], "20": [4078, 3443, 3032, 2750, 2550], "25": [4050, 3419, 3012, 2732, 2533], "30": [4051, 3420, 3013, 2732, 2534], "35": [4090, 3453, 3042, 2759, 2558], "40": [4186, 3534, 3113, 2823, 2618], "45": [4346, 3670, 3232, 2932, 2718], "50": [4585, 3871, 3409, 3092, 2867], "55": [4870, 4112, 3621, 3285, 3046], "60": [5194, 4385, 3863, 3503, 3248], "65": [5564, 4697, 4137, 3753, 3480], "70": [5990, 5057, 4454, 4040, 3746], "75": [6488, 5478, 4825, 4376, 4058], "80": [7162, 6047, 5326, 4830, 4479], "85": [8313, 7018, 6181, 5607, 5199], "90": [10414, 8792, 7744, 7024, 6513] }, "30000": { "10": [7737, 6532, 5753, 5218, 4839], "15": [6801, 5742, 5057, 4587, 4253], "20": [6295, 5315, 4681, 4246, 3937], "25": [6250, 5277, 4647, 4215, 3909], "30": [6250, 5277, 4647, 4215, 3909], "35": [6291, 5311, 4678, 4243, 3934], "40": [6430, 5429, 4781, 4337, 4021], "45": [6679, 5639, 4967, 4505, 4177], "50": [7060, 5961, 5250, 4762, 4415], "55": [7516, 6346, 5589, 5070, 4701], "60": [8034, 6783, 5974, 5419, 5025], "65": [8630, 7286, 6417, 5821, 5397], "70": [9321, 7870, 6931, 6287, 5829], "75": [10133, 8555, 7535, 6834, 6337], "80": [11304, 9543, 8405, 7624, 7069], "85": [13326, 11251, 9909, 8988, 8334], "90": [17118, 14452, 12729, 11546, 10706] }, "40000": { "10": [10303, 8698, 7661, 6949, 6443], "15": [9162, 7736, 6813, 6180, 5730], "20": [8557, 7225, 6363, 5772, 5352], "25": [8503, 7179, 6323, 5735, 5317], "30": [8503, 7179, 6323, 5735, 5317], "35": [8536, 7207, 6347, 5757, 5338], "40": [8710, 7354, 6477, 5875, 5447], "45": [9050, 7641, 6730, 6104, 5660], "50": [9584, 8091, 7126, 6464, 5993], "55": [10221, 8629, 7600, 6894, 6392], "60": [10949, 9244, 8141, 7385, 6847], "65": [11788, 9952, 8766, 7951, 7372], "70": [12767, 10779, 9493, 8611, 7984], "75": [13932, 11762, 10360, 9397, 8713], "80": [15717, 13269, 11687, 10601, 9829], "85": [18824, 15892, 13997, 12696, 11772], "90": [24833, 20966, 18466, 16749, 15530] } } } }
   ]
 };
+
+// src/engine/benchmarks.ts
+function findBenchmark(id, config = benchmarksConfig) {
+  return config.benchmarks.find((b) => b.id === id);
+}
+function ageStandardSeconds(sex, age, distanceM, tables = ageGrading) {
+  const byAge = tables.standards[sex]?.[String(distanceM)];
+  if (!byAge) return null;
+  const ages = Object.keys(byAge).map(Number);
+  const clamped = Math.min(Math.max(Math.round(age), Math.min(...ages)), Math.max(...ages));
+  return byAge[String(clamped)] ?? null;
+}
+function ageAt(birthYear, at) {
+  return new Date(at).getFullYear() - birthYear;
+}
 
 // src/engine/e1rm.ts
 function epley(weightKg, reps) {
@@ -5144,82 +5165,6 @@ function estimateOneRepMax(weightKg, reps, rules = xpRules) {
   if (!weightKg || weightKg <= 0 || !reps || reps < 1) return null;
   if (reps > rules.e1rm.maxReps) return null;
   return rules.e1rm.formula === "brzycki" ? brzycki(weightKg, reps) : epley(weightKg, reps);
-}
-
-// src/engine/benchmarks.ts
-function findBenchmark(id, config = benchmarksConfig) {
-  return config.benchmarks.find((b) => b.id === id);
-}
-function exerciseFeeds(benchmark, exercise) {
-  const tag = exercise?.benchmarkId;
-  return !!tag && (tag === benchmark.id || (benchmark.matches?.includes(tag) ?? false));
-}
-function benchmarksFor(exercises, config = benchmarksConfig) {
-  return config.benchmarks.filter((b) => exercises.some((e) => exerciseFeeds(b, e)));
-}
-function ageStandardSeconds(sex, age, distanceM, tables = ageGrading) {
-  const byAge = tables.standards[sex]?.[String(distanceM)];
-  if (!byAge) return null;
-  const ages = Object.keys(byAge).map(Number);
-  const clamped = Math.min(Math.max(Math.round(age), Math.min(...ages)), Math.max(...ages));
-  return byAge[String(clamped)] ?? null;
-}
-function ageAt(birthYear, at) {
-  return new Date(at).getFullYear() - birthYear;
-}
-function benchmarkValue(benchmark, sets, exercises, ctx, rules = xpRules) {
-  let best = null;
-  const consider = (r) => {
-    if (!best || r.value > best.value) best = r;
-  };
-  for (const set of sets) {
-    const exercise = exercises[set.exerciseId];
-    if (set.isWarmup || !exerciseFeeds(benchmark, exercise)) continue;
-    const base = { benchmarkId: benchmark.id, setId: set.id, achievedAt: set.completedAt };
-    switch (benchmark.kind) {
-      case "bodyweight_multiple": {
-        const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
-        if (e1rm === null || !ctx.bodyweightKg) break;
-        consider({
-          ...base,
-          value: e1rm / ctx.bodyweightKg,
-          performance: { exerciseId: exercise.id, metric: "e1rm", value: e1rm }
-        });
-        break;
-      }
-      case "max_reps":
-        if (!set.reps) break;
-        consider({
-          ...base,
-          value: set.reps,
-          performance: { exerciseId: exercise.id, metric: "max_reps", value: set.reps }
-        });
-        break;
-      case "run_age_graded": {
-        if (!set.distanceM || !set.durationS || set.distanceM < benchmark.distanceM) break;
-        const projected = set.durationS * (benchmark.distanceM / set.distanceM);
-        const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, set.completedAt), benchmark.distanceM);
-        if (!standard) break;
-        const ageGrade = standard / projected * 100;
-        const pace = set.durationS / (set.distanceM / 1e3);
-        consider({
-          ...base,
-          value: ageGrade,
-          performance: { exerciseId: exercise.id, metric: "best_pace", value: pace }
-        });
-        break;
-      }
-    }
-  }
-  return best;
-}
-function tiersReached(benchmark, value, sex, config = benchmarksConfig) {
-  const thresholds = benchmark.thresholds[sex];
-  return config.tiers.filter((_, i) => value >= thresholds[i]);
-}
-function newTiers(benchmark, value, sex, unlocked, config = benchmarksConfig) {
-  const have = new Set(unlocked.filter((u) => u.benchmarkId === benchmark.id).map((u) => u.tier));
-  return tiersReached(benchmark, value, sex, config).filter((t) => !have.has(t));
 }
 
 // src/engine/ranks.ts
@@ -5249,16 +5194,21 @@ function rankFor(totalXp, config = ranksConfig) {
 }
 
 // src/engine/placement.ts
+var TIERS = ["beginner", "novice", "intermediate", "advanced", "elite"];
 var placementConfig = placement_standards_v1_default;
 function placementStandards(config = placementConfig, benchmarks = benchmarksConfig) {
   return config.standards.flatMap((s) => {
-    if ("benchmark" in s) {
-      const b = findBenchmark(s.benchmark, benchmarks);
-      if (!b) return [];
-      return [{ id: b.id, name: b.name, exerciseIds: s.exerciseIds, kind: b.kind, thresholds: b.thresholds, distanceM: b.kind === "run_age_graded" ? b.distanceM : void 0 }];
-    }
-    return [s];
+    if (!("benchmark" in s)) return [s];
+    const b = findBenchmark(s.benchmark, benchmarks);
+    if (!b) return [];
+    const base = { id: b.id, name: b.name, exerciseIds: s.exerciseIds, thresholds: b.thresholds };
+    return [b.kind === "run_age_graded" ? { ...base, kind: b.kind, distanceM: b.distanceM } : { ...base, kind: b.kind }];
   });
+}
+var standardsById = new Map(placementStandards().map((s) => [s.id, s]));
+function liftStandardFor(exerciseId) {
+  for (const s of standardsById.values()) if (s.kind === "bodyweight_multiple" && s.exerciseIds.includes(exerciseId)) return s;
+  return void 0;
 }
 function standardScore(value, thresholds) {
   if (value <= 0) return 0;
@@ -5268,35 +5218,87 @@ function standardScore(value, thresholds) {
   }
   return thresholds.length;
 }
-function placementTests(workouts, ctx, rules = xpRules, config = placementConfig) {
-  const sets = workouts.flatMap((w) => w.sets).filter((s) => !s.isWarmup);
-  const tests = [];
-  for (const std of placementStandards(config)) {
-    let best = 0;
-    for (const s of sets) {
-      if (!std.exerciseIds.includes(s.exerciseId)) continue;
-      let value = 0;
-      if (std.kind === "bodyweight_multiple") {
-        if (!ctx.bodyweightKg || !s.weightKg || !s.reps || s.reps > config.maxRepsForEstimate) continue;
-        value = epley(s.weightKg, s.reps) / ctx.bodyweightKg;
-      } else if (std.kind === "max_reps") {
-        value = s.reps ?? 0;
-      } else if (std.kind === "max_duration") {
-        value = s.durationS ?? 0;
-      } else if (std.distanceM && s.distanceM && s.durationS && s.distanceM >= std.distanceM) {
-        const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, s.completedAt), std.distanceM);
-        if (standard) value = standard / (s.durationS * (std.distanceM / s.distanceM)) * 100;
-      }
-      best = Math.max(best, value);
+function tiersForScore(score) {
+  return TIERS.slice(0, Math.min(TIERS.length, Math.floor(score + 1e-9)));
+}
+function timesAtAge(table, age) {
+  const ages = Object.keys(table).map(Number).sort((a2, b) => a2 - b);
+  const a = Math.min(Math.max(age, ages[0]), ages[ages.length - 1]);
+  const hi = ages.find((x) => x >= a) ?? ages[ages.length - 1];
+  const lo = [...ages].reverse().find((x) => x <= a) ?? ages[0];
+  if (hi === lo) return table[String(lo)];
+  const f = (a - lo) / (hi - lo);
+  return table[String(lo)].map((t, i) => t + (table[String(hi)][i] - t) * f);
+}
+function measure(std, set, ctx, config) {
+  const weighted = !!set.weightKg && set.weightKg > 0;
+  const result = (value, thresholds, performance) => value > 0 ? { value, score: standardScore(value, thresholds), thresholds, performance } : null;
+  switch (std.kind) {
+    case "bodyweight_multiple": {
+      if (!ctx.bodyweightKg || !weighted || !set.reps || set.reps > config.maxRepsForEstimate) return null;
+      const e1rm = epley(set.weightKg, set.reps);
+      return result(e1rm / ctx.bodyweightKg, std.thresholds[ctx.sex], { exerciseId: set.exerciseId, metric: "e1rm", value: e1rm });
     }
-    const thresholds = std.thresholds[ctx.sex];
-    if (best <= 0 || best > thresholds[thresholds.length - 1] * rules.plausibility.eliteMultiplier) continue;
-    tests.push({ standardId: std.id, value: best, score: standardScore(best, thresholds) });
+    // Rep and hold standards are for bodyweight alone; a weighted set is a different effort.
+    case "max_reps":
+      if (weighted || !set.reps) return null;
+      return result(set.reps, std.thresholds[ctx.sex], { exerciseId: set.exerciseId, metric: "max_reps", value: set.reps });
+    case "max_duration":
+      if (weighted || !set.durationS) return null;
+      return result(set.durationS, std.thresholds[ctx.sex], { exerciseId: set.exerciseId, metric: "max_duration", value: set.durationS });
+    case "run_age_graded": {
+      if (!set.distanceM || !set.durationS || set.distanceM < std.distanceM) return null;
+      const projected = set.durationS * (std.distanceM / set.distanceM);
+      const standard = ageStandardSeconds(ctx.sex, ageAt(ctx.birthYear, set.completedAt), std.distanceM);
+      if (!standard) return null;
+      const pace = set.durationS / (set.distanceM / 1e3);
+      return result(standard / projected * 100, std.thresholds[ctx.sex], { exerciseId: set.exerciseId, metric: "best_pace", value: pace });
+    }
+    case "time_for_distance": {
+      const distanceM = set.distanceM;
+      if (!distanceM || !set.durationS) return null;
+      const tabled = Object.keys(std.times[ctx.sex]).map(Number);
+      const d = tabled.reduce((best, x) => Math.abs(Math.log(x / distanceM)) < Math.abs(Math.log(best / distanceM)) ? x : best);
+      if (Math.max(d, distanceM) / Math.min(d, distanceM) > config.maxDistanceRatio) return null;
+      const equivalent = set.durationS * Math.pow(d / distanceM, config.riegelExponent);
+      const levels = timesAtAge(std.times[ctx.sex][String(d)], ageAt(ctx.birthYear, set.completedAt));
+      const pace = set.durationS / (distanceM / 1e3);
+      return result(
+        d / equivalent,
+        levels.map((t) => d / t),
+        { exerciseId: set.exerciseId, metric: "best_pace", value: pace }
+      );
+    }
   }
-  return tests;
+}
+function standardResults(sets, ctx, config = placementConfig, standards = placementStandards(config)) {
+  const working = sets.filter((s) => !s.isWarmup);
+  const out = [];
+  for (const std of standards) {
+    let best = null;
+    for (const set of working) {
+      if (!std.exerciseIds.includes(set.exerciseId)) continue;
+      const m = measure(std, set, ctx, config);
+      if (m && (!best || m.value > best.value)) best = { ...m, standardId: std.id, setId: set.id, achievedAt: set.completedAt };
+    }
+    if (best) out.push(best);
+  }
+  return out;
+}
+function isImplausible(r, rules = xpRules) {
+  return r.value > r.thresholds[r.thresholds.length - 1] * rules.plausibility.eliteMultiplier;
+}
+function placementTests(workouts, ctx, rules = xpRules, config = placementConfig) {
+  return standardResults(
+    workouts.flatMap((w) => w.sets),
+    ctx,
+    config
+  ).filter((r) => !isImplausible(r, rules)).map(({ standardId, value, score }) => ({ standardId, value, score }));
 }
 function placementTarget(tests, config = placementConfig, ranks = ranksConfig) {
-  const score = tests.length ? tests.reduce((s, t) => s + t.score, 0) / tests.length : 0;
+  const real = tests.filter((t) => t.score >= 1);
+  const counted = real.length ? real : tests;
+  const score = counted.length ? counted.reduce((s, t) => s + t.score, 0) / counted.length : 0;
   const anchors = config.scoreToRank.map((a) => ({ score: a.score, xp: ranks.ranks.find((r) => r.rank === a.rank)?.minXp ?? 0 }));
   const top = anchors[anchors.length - 1];
   let xp = top.xp;
@@ -5311,7 +5313,7 @@ function placementTarget(tests, config = placementConfig, ranks = ranksConfig) {
 function placementEvent(args, rules = xpRules) {
   const target = placementTarget(args.tests);
   return {
-    amount: Math.max(0, target.xp - args.totalXpSoFar, args.tierXp ?? 0),
+    amount: Math.max(0, target.xp - args.totalXpSoFar),
     reason: "placement",
     sourceType: "placement",
     sourceId: "placement",
@@ -5331,14 +5333,18 @@ function setMetrics(set, exercise, rules = xpRules) {
   if (set.isWarmup) return [];
   const out = [];
   switch (exercise.trackingType) {
-    case "weight_reps": {
-      const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
-      if (e1rm !== null) out.push({ metric: "e1rm", value: e1rm });
+    // Weight is optional on rep exercises: weighted sets set e1RM bests,
+    // unweighted sets set rep bests. The two never mix.
+    case "weight_reps":
+    case "reps": {
+      if (set.weightKg && set.weightKg > 0) {
+        const e1rm = estimateOneRepMax(set.weightKg, set.reps, rules);
+        if (e1rm !== null) out.push({ metric: "e1rm", value: e1rm });
+      } else if (set.reps && set.reps > 0) {
+        out.push({ metric: "max_reps", value: set.reps });
+      }
       break;
     }
-    case "reps":
-      if (set.reps && set.reps > 0) out.push({ metric: "max_reps", value: set.reps });
-      break;
     case "time":
       if (set.durationS && set.durationS > 0)
         out.push({ metric: "max_duration", value: set.durationS });
@@ -5493,13 +5499,19 @@ function cardioXp(minutesSoFar, addMinutes, rules = xpRules) {
   }
   return xp;
 }
-var PRIMARY_METRIC = {
-  weight_reps: "e1rm",
-  reps: "max_reps",
-  time: "max_duration"
-};
+function primaryMetric(set, exercise) {
+  switch (exercise.trackingType) {
+    case "weight_reps":
+    case "reps":
+      return set.weightKg && set.weightKg > 0 ? "e1rm" : "max_reps";
+    case "time":
+      return "max_duration";
+    default:
+      return null;
+  }
+}
 function setIntensity(set, exercise, records) {
-  const metric = PRIMARY_METRIC[exercise.trackingType];
+  const metric = primaryMetric(set, exercise);
   if (!metric) return null;
   const best = records.find((r) => r.exerciseId === exercise.id && r.metric === metric);
   if (!best || best.value <= 0) return null;
@@ -5517,7 +5529,7 @@ function prXpFor(metric, value, previous, rules = xpRules) {
   const improvement = metric === "best_pace" ? (previous - value) / previous : (value - previous) / previous;
   return Math.min(max, base + Math.round(Math.max(0, improvement) * 100 * perPercent));
 }
-function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarksConfig) {
+function computeWorkoutXp(workout, ctx, rules = xpRules) {
   const { exercises } = ctx;
   const at = workout.endedAt;
   const event = (e) => ({ ruleVersion: rules.version, status: "granted", createdAt: at, ...e });
@@ -5559,8 +5571,8 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
   for (const outcome of records) {
     if (outcome.kind !== "pr" || prSlots === 0) continue;
     const { record, previous } = outcome;
-    const benchmark = benchmarkFor(exercises[record.exerciseId], benchmarks);
-    const flagged = record.metric === "e1rm" && isSuspiciousE1rmJump(record.value, record.achievedAt, previous, rules) || record.metric === "e1rm" && benchmark?.kind === "bodyweight_multiple" && !!ctx.bodyweightKg && exceedsEliteCeiling(benchmark, record.value / ctx.bodyweightKg, ctx.profile.sex, rules);
+    const lift = liftStandardFor(record.exerciseId);
+    const flagged = record.metric === "e1rm" && isSuspiciousE1rmJump(record.value, record.achievedAt, previous, rules) || record.metric === "e1rm" && !!lift && !!ctx.bodyweightKg && exceedsEliteCeiling(lift, record.value / ctx.bodyweightKg, ctx.profile.sex, rules);
     progress.push(event({
       amount: prXpFor(record.metric, record.value, previous.value, rules),
       reason: "personal_record",
@@ -5592,23 +5604,24 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
     }
   }
   const benchmarkUnlocks = [];
-  const touched = benchmarksFor(uniqueInOrder(workout.sets.map((s) => s.exerciseId)).map((id) => exercises[id]), benchmarks);
-  for (const benchmark of touched) {
-    const benchmarkId = benchmark.id;
-    const result = benchmarkValue(
-      benchmark,
-      workout.sets,
-      exercises,
-      { sex: ctx.profile.sex, bodyweightKg: ctx.bodyweightKg, birthYear: ctx.profile.birthYear },
-      rules
-    );
-    if (!result) continue;
+  const unlocked = new Set(ctx.benchmarkUnlocks.map((u) => `${u.benchmarkId}:${u.tier}`));
+  const seenBefore = new Set(ctx.seenExerciseIds);
+  let tierAwardsLeft = p.maxTierAwardsPerWorkout;
+  const results = standardResults(workout.sets, { sex: ctx.profile.sex, bodyweightKg: ctx.bodyweightKg, birthYear: ctx.profile.birthYear });
+  for (const result of results) {
+    const benchmarkId = result.standardId;
+    const exerciseIds = new Set(workout.sets.filter((s) => s.id === result.setId).map((s) => s.exerciseId));
+    const baseline = !ctx.benchmarkUnlocks.some((u) => u.benchmarkId === benchmarkId) && ![...exerciseIds].some((id) => seenBefore.has(id));
     const previousE1rm = ctx.records.find((r) => r.exerciseId === result.performance.exerciseId && r.metric === "e1rm");
-    const flagged = exceedsEliteCeiling(benchmark, result.value, ctx.profile.sex, rules) || result.performance.metric === "e1rm" && isSuspiciousE1rmJump(result.performance.value, result.achievedAt, previousE1rm, rules);
+    const flagged = isImplausible(result, rules) || result.performance.metric === "e1rm" && isSuspiciousE1rmJump(result.performance.value, result.achievedAt, previousE1rm, rules);
     const status = flagged ? "pending_review" : "granted";
-    for (const tier of newTiers(benchmark, result.value, ctx.profile.sex, ctx.benchmarkUnlocks, benchmarks)) {
+    for (const tier of tiersForScore(result.score)) {
+      if (unlocked.has(`${benchmarkId}:${tier}`)) continue;
+      const pays = !baseline && !ctx.deferBenchmarkXp;
+      if (pays && tierAwardsLeft === 0) continue;
       benchmarkUnlocks.push({ benchmarkId, tier, value: result.value, unlockedAt: at, status });
-      if (ctx.deferBenchmarkXp) continue;
+      if (!pays) continue;
+      tierAwardsLeft--;
       progress.push(event({
         amount: p.benchmarkTier[tier],
         reason: "benchmark_tier",
@@ -5630,9 +5643,6 @@ function computeWorkoutXp(workout, ctx, rules = xpRules, benchmarks = benchmarks
     consistencyXp,
     capped
   };
-}
-function benchmarkFor(exercise, config) {
-  return exercise?.benchmarkId ? findBenchmark(exercise.benchmarkId, config) : void 0;
 }
 function uniqueInOrder(items) {
   return [...new Set(items)];
@@ -5682,8 +5692,7 @@ function finishSession(input, rules = xpRules) {
     {
       at,
       tests,
-      totalXpSoFar: ledger.reduce((s, e) => s + e.amount, 0) + result.events.reduce((s, e) => s + e.amount, 0),
-      tierXp: result.benchmarkUnlocks.reduce((s, u) => s + rules.progress.benchmarkTier[u.tier], 0)
+      totalXpSoFar: ledger.reduce((s, e) => s + e.amount, 0) + result.events.reduce((s, e) => s + e.amount, 0)
     },
     rules
   ) : null;

@@ -46,8 +46,9 @@ export function setColumns(tracking: TrackingType, category: ExerciseCategory, a
   switch (tracking) {
     case 'weight_reps':
       return [{ field: 'weightKg', label: unit }, { field: 'reps', label: 'reps' }] as const;
+    // Bodyweight moves take optional added weight.
     case 'reps':
-      return [{ field: 'reps', label: 'reps' }] as const;
+      return [{ field: 'weightKg', label: `+${unit}` }, { field: 'reps', label: 'reps' }] as const;
     case 'time':
       return [{ field: 'durationS', label: cardio ? 'min' : 'sec' }] as const;
     case 'distance_time':
@@ -149,7 +150,7 @@ export function SetRow(props: SetRowProps) {
         <View style={styles.fields}>
           {cols.map((c, i) => (
             <View key={c.field} style={styles.fieldWrap}>
-              {i > 0 && tracking === 'weight_reps' ? (
+              {i > 0 && c.field === 'reps' ? (
                 <Text variant="caption" color="inkFaint" style={styles.times}>
                   ×
                 </Text>
@@ -160,6 +161,7 @@ export function SetRow(props: SetRowProps) {
                 width={c.field === 'reps' ? 52 : 68}
                 accessibilityLabel={`Set ${number} ${c.label}`}
                 editable={!done}
+              placeholder={c.field === 'weightKg' ? (tracking === 'reps' ? '+0' : 'BW') : '0'}
                 onCommit={(v) => props.onField(c.field, fromDisplay(c.field, v))}
               />
             </View>

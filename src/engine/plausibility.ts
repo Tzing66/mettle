@@ -2,7 +2,7 @@
 // stays `pending_review` (excluded from leaderboards) until a repeat
 // performance at or above the flagged value confirms it.
 
-import { DAY_MS, xpRules, type BenchmarkDef, type XpRules } from './config';
+import { DAY_MS, xpRules, type XpRules } from './config';
 import { isBetter } from './records';
 import type { PerformanceRef, PersonalRecord, Sex } from './types';
 
@@ -25,9 +25,9 @@ export function isSuspiciousE1rmJump(
   return withinWindow && newValue / previous.value - 1 > e1rmJumpPct + 1e-9;
 }
 
-/** Benchmark value beyond the elite threshold × `eliteMultiplier`. */
+/** Standard value beyond the elite threshold × `eliteMultiplier`. */
 export function exceedsEliteCeiling(
-  benchmark: BenchmarkDef,
+  benchmark: { thresholds: Record<Sex, number[]> },
   value: number,
   sex: Sex,
   rules: XpRules = xpRules,

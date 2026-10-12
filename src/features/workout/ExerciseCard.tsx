@@ -82,7 +82,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
                 variant="overline"
                 color="inkFaint"
                 align="center"
-                style={{ width: c.field === 'reps' ? 52 : 68, marginLeft: i > 0 && exercise.trackingType === 'weight_reps' ? space.lg : 0 }}>
+                style={{ width: c.field === 'reps' ? 52 : 68, marginLeft: i > 0 && c.field === 'reps' ? space.lg : 0 }}>
                 {c.label}
               </Text>
             ))}

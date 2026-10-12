@@ -4,7 +4,7 @@
 import ageGradingJson from '@config/age-grading.road2025.json';
 import benchmarksJson from '@config/benchmarks.v1.json';
 import ranksJson from '@config/ranks.v1.json';
-import xpRulesJson from '@config/xp-rules.v2.json';
+import xpRulesJson from '@config/xp-rules.v3.json';
 
 import type { BenchmarkTier, Sex } from './types';
 
@@ -36,6 +36,8 @@ export interface XpRules {
     firstExerciseMinSets: number;
     firstActivity: number;
     benchmarkTier: Record<BenchmarkTier, number>;
+    /** Tier-ups paid per workout; the rest stay unearned until reached again. */
+    maxTierAwardsPerWorkout: number;
   };
   placement: {
     /** Documentation only: placement happens at the first workout with a benchmark test. */

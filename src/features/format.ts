@@ -37,10 +37,11 @@ export function formatSet(
   unit: UnitPref,
 ): string {
   switch (tracking) {
+    // Weight is optional: "60 kg × 8", "20 reps", or "+10 kg × 8" on a bodyweight move.
     case 'weight_reps':
-      return `${displayWeight(s.weightKg ?? 0, unit)} ${unit} × ${s.reps ?? 0}`;
+      return s.weightKg ? `${displayWeight(s.weightKg, unit)} ${unit} × ${s.reps ?? 0}` : `${s.reps ?? 0} reps`;
     case 'reps':
-      return `${s.reps ?? 0} reps`;
+      return s.weightKg ? `+${displayWeight(s.weightKg, unit)} ${unit} × ${s.reps ?? 0}` : `${s.reps ?? 0} reps`;
     case 'time':
       return formatDuration(s.durationS ?? 0);
     case 'distance_time':

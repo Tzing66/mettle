@@ -103,12 +103,14 @@ describe('placementTests', () => {
 
   it('every standard never decreases and matches its exercises’ tracking type', () => {
     const tracking = new Map(catalogue.exercises.map((e) => [e.id, e.trackingType]));
-    const expected = { bodyweight_multiple: 'weight_reps', max_reps: 'reps', max_duration: 'time', run_age_graded: 'distance_time' };
+    const expected = { bodyweight_multiple: 'weight_reps', max_reps: 'reps', max_duration: 'time', run_age_graded: 'distance_time', time_for_distance: 'distance_time' };
+    const levelLists = (std: ReturnType<typeof placementStandards>[number]): number[][] =>
+      std.kind === 'time_for_distance'
+        ? Object.values(std.times).flatMap((byDistance) => Object.values(byDistance).flatMap((byAge) => Object.values(byAge).map((t) => t.map((x) => -x))))
+        : [std.thresholds.male, std.thresholds.female];
     for (const std of placementStandards()) {
-      for (const sex of ['male', 'female'] as const) {
-        const t = std.thresholds[sex];
-        expect(t.every((v, i) => i === 0 || v >= t[i - 1])).toBe(true);
-      }
+      // Times fall as levels rise, so they're compared negated.
+      for (const t of levelLists(std)) expect(t.every((v, i) => i === 0 || v >= t[i - 1])).toBe(true);
       expect(std.exerciseIds.filter((id) => tracking.get(id) !== expected[std.kind])).toEqual([]);
     }
   });
@@ -122,15 +124,25 @@ describe('placementTests', () => {
   });
 });
 
+describe('light accessory work doesn’t drag placement down', () => {
+  it('results below Beginner are left out when something reaches Beginner', () => {
+    expect(placementTarget([t(2.9), t(2.9), t(0.6)]).score).toBeCloseTo(2.9);
+  });
+
+  it('if nothing reaches Beginner, everything counts', () => {
+    expect(placementTarget([t(0.4), t(0.6)]).score).toBeCloseTo(0.5);
+  });
+});
+
 describe('placementEvent', () => {
   it('tops XP up to the placement target', () => {
     const e = placementEvent({ at: NOW, tests: [t(2)], totalXpSoFar: 300 });
     expect(e).toMatchObject({ reason: 'placement', amount: 8000 - 300, meta: { placedAt: 'C1' } });
   });
 
-  it('never pays less than the tier XP it replaces', () => {
-    expect(placementEvent({ at: NOW, tests: [t(0.5)], totalXpSoFar: 100, tierXp: 250 }).amount).toBe(900);
-    expect(placementEvent({ at: NOW, tests: [t(0.1)], totalXpSoFar: 100, tierXp: 250 }).amount).toBe(250);
+  it('never takes XP away', () => {
+    expect(placementEvent({ at: NOW, tests: [t(0.5)], totalXpSoFar: 100 }).amount).toBe(900);
+    expect(placementEvent({ at: NOW, tests: [t(0.1)], totalXpSoFar: 5000 }).amount).toBe(0);
   });
 });
 

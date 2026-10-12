@@ -8,11 +8,12 @@ import { Avatar, Button, Card, PressableScale, RankBadge, Screen, SegmentedTabs,
 import { haptics } from '@/design/haptics';
 import { radii, rankColors, space } from '@/design/tokens';
 import {
-  benchmarksConfig,
   bodyweightNeedsConfirmation,
   displayWeight,
   rankFor,
   rollingBodyweight,
+  standardName,
+  TIERS,
   toStoredKg,
   type XpReason,
 } from '@/engine';
@@ -38,7 +39,7 @@ const REST_OPTIONS = [
 const GROUPS: { label: string; reasons: XpReason[] }[] = [
   { label: 'Showing up', reasons: ['workout_complete', 'working_sets', 'cardio_minutes', 'streak_bonus', 'weekly_goal'] },
   { label: 'Records & firsts', reasons: ['personal_record', 'first_exercise', 'first_activity'] },
-  { label: 'Benchmarks', reasons: ['benchmark_tier'] },
+  { label: 'Tier ups', reasons: ['benchmark_tier'] },
 ];
 
 function readProfileData() {
@@ -73,11 +74,19 @@ export default function Profile() {
     total: data.ledger.filter((e) => g.reasons.includes(e.reason)).reduce((s, e) => s + e.amount, 0),
   }));
   const maxGroup = Math.max(1, ...groupTotals.map((g) => g.total));
+  // Every standard you've reached a tier on, highest first.
+  const tierRows = [...new Set(data.unlocks.map((u) => u.benchmarkId))]
+    .map((id) => {
+      const mine = data.unlocks.filter((u) => u.benchmarkId === id);
+      const top = TIERS.filter((t) => mine.some((u) => u.tier === t)).pop()!;
+      return { id, name: standardName(id), top, pending: mine.some((u) => u.status === 'pending_review') };
+    })
+    .sort((a, b) => TIERS.indexOf(b.top) - TIERS.indexOf(a.top) || a.name.localeCompare(b.name));
 
   const confirmReset = () =>
     Alert.alert(
       'Reset all your training data?',
-      'This permanently deletes every workout, your XP, records, benchmark unlocks and bodyweight history, on this phone and in your backup. Your account, profile and groups stay. You may want to export your workouts first.',
+      'This permanently deletes every workout, your XP, records, tiers and bodyweight history, on this phone and in your backup. Your account, profile and groups stay. You may want to export your workouts first.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -183,7 +192,7 @@ export default function Profile() {
           <View>
             <Text variant="number">{data.rolling ? displayWeight(data.rolling, unit) : '–'}</Text>
             <Text variant="caption" color="inkMuted">
-              {unit} · 14-day average (used for benchmarks)
+              {unit} · 14-day average (used for tiers)
             </Text>
           </View>
         </View>
@@ -207,32 +216,33 @@ export default function Profile() {
 
       <Card style={styles.card}>
         <Text variant="overline" color="inkMuted">
-          Benchmarks
+          Tiers
         </Text>
-        {benchmarksConfig.benchmarks.map((b) => {
-          const mine = data.unlocks.filter((u) => u.benchmarkId === b.id);
-          const reached = benchmarksConfig.tiers.filter((t) => mine.some((u) => u.tier === t));
-          const top = reached[reached.length - 1];
-          const pending = mine.some((u) => u.status === 'pending_review');
-          return (
-            <View key={b.id} style={styles.benchRow}>
+        {tierRows.length === 0 ? (
+          <Text color="inkMuted">
+            Most exercises, plus runs, rows, swims and rides, have tiers from Beginner to Elite. Log one to see where you stand.
+          </Text>
+        ) : (
+          tierRows.map((row) => (
+            <View key={row.id} style={styles.benchRow}>
               <View style={styles.flex}>
-                <Text variant="label">{b.name}</Text>
-                <Text variant="caption" color={top ? 'accentInk' : 'inkFaint'}>
-                  {top ? TIER_LABELS[top] : 'Not yet'}
-                  {pending ? ' · pending' : ''}
+                <Text variant="label">{row.name}</Text>
+                <Text variant="caption" color="accentInk">
+                  {TIER_LABELS[row.top]}
+                  {row.pending ? ' · pending' : ''}
                 </Text>
               </View>
               <View style={styles.dots}>
-                {benchmarksConfig.tiers.map((t) => (
-                  <View key={t} style={[styles.dot, reached.includes(t) && { backgroundColor: colors.accent }]} />
+                {TIERS.map((t, i) => (
+                  <View key={t} style={[styles.dot, i <= TIERS.indexOf(row.top) && { backgroundColor: colors.accent }]} />
                 ))}
               </View>
             </View>
-          );
-        })}
+          ))
+        )}
         <Text variant="caption" color="inkFaint">
-          Lifts and reps use Strength Level’s standards (Intermediate = stronger than half of lifters). Runs are age-graded with the WMA 2025 tables.
+          Your first session with an exercise sets your starting tier. Every tier you climb after that earns the same XP on any exercise: 150 to 2,500. Lifts
+          and reps use Strength Level’s standards; runs, rows, swims and rides are compared by age and sex.
         </Text>
       </Card>
 

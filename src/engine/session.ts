@@ -56,7 +56,7 @@ export function finishSession(input: FinishInput, rules: XpRules = xpRules): Fin
   const streak = streakWeeks(goalWeeks, at);
   const bodyweightKg = rollingBodyweight(input.bodyweightLogs, at, rules);
 
-  // --- Placement: the first workout with a benchmark test places the user ------
+  // --- Placement: the first workout with a covered exercise places the user ----
   const placed = ledger.some((e) => e.reason === 'placement');
   const tests = placed
     ? []
@@ -97,7 +97,6 @@ export function finishSession(input: FinishInput, rules: XpRules = xpRules): Fin
           at,
           tests,
           totalXpSoFar: ledger.reduce((s, e) => s + e.amount, 0) + result.events.reduce((s, e) => s + e.amount, 0),
-          tierXp: result.benchmarkUnlocks.reduce((s, u) => s + rules.progress.benchmarkTier[u.tier], 0),
         },
         rules,
       )

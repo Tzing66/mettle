@@ -2,14 +2,8 @@
 // XP events to append to the ledger plus the records and unlocks to persist.
 // Pure and deterministic: no I/O, no clock, no React Native.
 
-import {
-  benchmarksConfig,
-  xpRules,
-  type BenchmarkDef,
-  type BenchmarksConfig,
-  type XpRules,
-} from './config';
-import { benchmarksFor, benchmarkValue, findBenchmark, newTiers } from './benchmarks';
+import { xpRules, type XpRules } from './config';
+import { isImplausible, liftStandardFor, standardResults, tiersForScore } from './placement';
 import { exceedsEliteCeiling, isSuspiciousE1rmJump } from './plausibility';
 import { epley } from './e1rm';
 import { detectRecords, type RecordOutcome } from './records';
@@ -39,10 +33,7 @@ export interface WorkoutContext {
   today: { consistencyXp: number; cardioMinutes: number; prsCounted: number };
   /** Consecutive goal-hit weeks (see streakWeeks). */
   streakWeeks: number;
-  /**
-   * Placement window: benchmark tiers are still recorded as unlocked, but pay
-   * no XP (the placement award covers them).
-   */
+  /** Placement workout: tiers are still recorded as unlocked, but pay no XP (the placement award covers them). */
   deferBenchmarkXp?: boolean;
 }
 
@@ -108,15 +99,26 @@ export function cardioXp(minutesSoFar: number, addMinutes: number, rules: XpRule
   return xp;
 }
 
-const PRIMARY_METRIC: Partial<Record<ExerciseInfo['trackingType'], RecordMetric>> = {
-  weight_reps: 'e1rm',
-  reps: 'max_reps',
-  time: 'max_duration',
-};
+/**
+ * What a set is measured by. Weight is optional on every rep exercise: with
+ * weight it's the estimated max, without it the reps. The two are separate
+ * bests, so a no-weight day earns as much as a weighted one.
+ */
+export function primaryMetric(set: Pick<SetInput, 'weightKg'>, exercise: ExerciseInfo): RecordMetric | null {
+  switch (exercise.trackingType) {
+    case 'weight_reps':
+    case 'reps':
+      return set.weightKg && set.weightKg > 0 ? 'e1rm' : 'max_reps';
+    case 'time':
+      return 'max_duration';
+    default:
+      return null;
+  }
+}
 
 /** How a set compares to your best for that exercise (1 = matched your best). Null if there's no best yet. */
 export function setIntensity(set: SetInput, exercise: ExerciseInfo, records: PersonalRecord[]): number | null {
-  const metric = PRIMARY_METRIC[exercise.trackingType];
+  const metric = primaryMetric(set, exercise);
   if (!metric) return null;
   const best = records.find((r) => r.exerciseId === exercise.id && r.metric === metric);
   if (!best || best.value <= 0) return null;
@@ -150,7 +152,6 @@ export function computeWorkoutXp(
   workout: WorkoutInput,
   ctx: WorkoutContext,
   rules: XpRules = xpRules,
-  benchmarks: BenchmarksConfig = benchmarksConfig,
 ): WorkoutXpResult {
   const { exercises } = ctx;
   const at = workout.endedAt;
@@ -204,11 +205,11 @@ export function computeWorkoutXp(
   for (const outcome of records) {
     if (outcome.kind !== 'pr' || prSlots === 0) continue;
     const { record, previous } = outcome;
-    const benchmark = benchmarkFor(exercises[record.exerciseId], benchmarks);
+    const lift = liftStandardFor(record.exerciseId);
     const flagged =
       (record.metric === 'e1rm' && isSuspiciousE1rmJump(record.value, record.achievedAt, previous, rules)) ||
-      (record.metric === 'e1rm' && benchmark?.kind === 'bodyweight_multiple' && !!ctx.bodyweightKg &&
-        exceedsEliteCeiling(benchmark, record.value / ctx.bodyweightKg, ctx.profile.sex, rules));
+      (record.metric === 'e1rm' && !!lift && !!ctx.bodyweightKg &&
+        exceedsEliteCeiling(lift, record.value / ctx.bodyweightKg, ctx.profile.sex, rules));
     progress.push(event({
       amount: prXpFor(record.metric, record.value, previous.value, rules),
       reason: 'personal_record',
@@ -243,30 +244,35 @@ export function computeWorkoutXp(
     }
   }
 
-  // --- Progress: benchmark tiers --------------------------------------------
+  // --- Progress: tiers ------------------------------------------------------
+  // Every exercise with a standard has tiers. Your first session with a
+  // standard sets your starting tiers (badges, no XP), like a first record;
+  // each tier you climb after that pays the same on any exercise.
   const benchmarkUnlocks: BenchmarkUnlock[] = [];
-  const touched = benchmarksFor(uniqueInOrder(workout.sets.map((s) => s.exerciseId)).map((id) => exercises[id]), benchmarks);
-  for (const benchmark of touched) {
-    const benchmarkId = benchmark.id;
-    const result = benchmarkValue(
-      benchmark,
-      workout.sets,
-      exercises,
-      { sex: ctx.profile.sex, bodyweightKg: ctx.bodyweightKg, birthYear: ctx.profile.birthYear },
-      rules,
-    );
-    if (!result) continue;
+  const unlocked = new Set(ctx.benchmarkUnlocks.map((u) => `${u.benchmarkId}:${u.tier}`));
+  const seenBefore = new Set(ctx.seenExerciseIds);
+  let tierAwardsLeft = p.maxTierAwardsPerWorkout;
+  const results = standardResults(workout.sets, { sex: ctx.profile.sex, bodyweightKg: ctx.bodyweightKg, birthYear: ctx.profile.birthYear });
+  for (const result of results) {
+    const benchmarkId = result.standardId;
+    const exerciseIds = new Set(workout.sets.filter((s) => s.id === result.setId).map((s) => s.exerciseId));
+    const baseline =
+      !ctx.benchmarkUnlocks.some((u) => u.benchmarkId === benchmarkId) && ![...exerciseIds].some((id) => seenBefore.has(id));
 
     const previousE1rm = ctx.records.find((r) => r.exerciseId === result.performance.exerciseId && r.metric === 'e1rm');
     const flagged =
-      exceedsEliteCeiling(benchmark, result.value, ctx.profile.sex, rules) ||
-      (result.performance.metric === 'e1rm' &&
-        isSuspiciousE1rmJump(result.performance.value, result.achievedAt, previousE1rm, rules));
+      isImplausible(result, rules) ||
+      (result.performance.metric === 'e1rm' && isSuspiciousE1rmJump(result.performance.value, result.achievedAt, previousE1rm, rules));
     const status = flagged ? 'pending_review' : 'granted';
 
-    for (const tier of newTiers(benchmark, result.value, ctx.profile.sex, ctx.benchmarkUnlocks, benchmarks)) {
+    for (const tier of tiersForScore(result.score)) {
+      if (unlocked.has(`${benchmarkId}:${tier}`)) continue;
+      const pays = !baseline && !ctx.deferBenchmarkXp;
+      // Past the per-workout limit, a tier stays unearned until reached again.
+      if (pays && tierAwardsLeft === 0) continue;
       benchmarkUnlocks.push({ benchmarkId, tier, value: result.value, unlockedAt: at, status });
-      if (ctx.deferBenchmarkXp) continue;
+      if (!pays) continue;
+      tierAwardsLeft--;
       progress.push(event({
         amount: p.benchmarkTier[tier],
         reason: 'benchmark_tier',
@@ -289,10 +295,6 @@ export function computeWorkoutXp(
     consistencyXp,
     capped,
   };
-}
-
-function benchmarkFor(exercise: ExerciseInfo | undefined, config: BenchmarksConfig): BenchmarkDef | undefined {
-  return exercise?.benchmarkId ? findBenchmark(exercise.benchmarkId, config) : undefined;
 }
 
 function uniqueInOrder<T>(items: T[]): T[] {

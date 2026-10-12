@@ -128,23 +128,37 @@ describe('progress XP (§6.3)', () => {
   });
 });
 
-describe('benchmark unlocks', () => {
-  it('unlocks every newly reached tier once', () => {
+describe('tiers (v3): any exercise with a standard', () => {
+  const seen = { seenExerciseIds: ['bench_press', 'push_up', 'outdoor_run'] };
+
+  it('your first session with a standard sets starting tiers: badges, no XP', () => {
     // 104 kg × 1 at 80 kg bodyweight = 1.3× → beginner, novice, intermediate.
-    const ctx = context({ benchmarkUnlocks: [{ benchmarkId: 'bench_press', tier: 'beginner' }] });
-    const r = computeWorkoutXp(workout([lift('bench', 104, 1)]), ctx);
-    const tiers = r.events.filter((e) => e.reason === 'benchmark_tier');
-    expect(tiers.map((e) => [e.sourceId, e.amount])).toEqual([
-      ['bench_press:novice', 750],
-      ['bench_press:intermediate', 2000],
+    const r = computeWorkoutXp(workout([lift('bench_press', 104, 1)]), context({ seenExerciseIds: [] }));
+    expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
+    expect(r.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
+  });
+
+  it('after that, every tier you climb pays the same on any exercise', () => {
+    const ctx = context({ ...seen, benchmarkUnlocks: [{ benchmarkId: 'bench_press', tier: 'beginner' }] });
+    const r = computeWorkoutXp(workout([lift('bench_press', 104, 1)]), ctx);
+    expect(r.events.filter((e) => e.reason === 'benchmark_tier').map((e) => [e.sourceId, e.amount])).toEqual([
+      ['bench_press:novice', 300],
+      ['bench_press:intermediate', 600],
     ]);
     expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['novice', 'intermediate']);
   });
 
-  it('works for push-ups and the 5k (age-graded)', () => {
+  it('pays at most 3 tier-ups per workout; the rest stay to be earned again', () => {
+    // 150 kg × 1 at 80 kg = 1.875× → four tiers reached.
+    const r = computeWorkoutXp(workout([lift('bench_press', 150, 1)]), context(seen));
+    expect(r.events.filter((e) => e.reason === 'benchmark_tier').map((e) => e.amount)).toEqual([150, 300, 600]);
+    expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
+  });
+
+  it('works for push-ups and runs too', () => {
     const r = computeWorkoutXp(
-      workout([set('push_up', { reps: 21 }), set('run', { distanceM: 5000, durationS: 1500 })]),
-      context(),
+      workout([set('push_up', { reps: 21 }), set('outdoor_run', { distanceM: 5000, durationS: 1500 })]),
+      context({ seenExerciseIds: [] }),
     );
     expect(r.benchmarkUnlocks.map((u) => `${u.benchmarkId}:${u.tier}`)).toEqual([
       'push_ups:beginner',
@@ -155,10 +169,26 @@ describe('benchmark unlocks', () => {
   });
 });
 
+describe('weight is optional (v3)', () => {
+  it('a no-weight set is measured on reps, a weighted one on e1RM, each against its own best', () => {
+    const records = [record('dip', 'max_reps', 15), record('dip', 'e1rm', 20)];
+    expect(setXpFor(set('dip', { reps: 15 }), { id: 'dip', category: 'bodyweight', trackingType: 'reps' }, records)).toBe(12);
+    // +10 kg × 8 → e1RM 12.7 vs best 20: 63% → lowest band.
+    expect(setXpFor(set('dip', { reps: 8, weightKg: 10 }), { id: 'dip', category: 'bodyweight', trackingType: 'reps' }, records)).toBe(4);
+  });
+
+  it('a barbell or machine exercise without weight still earns full XP and can set a rep PR', () => {
+    const records = [record('leg_press', 'max_reps', 20), record('leg_press', 'e1rm', 200)];
+    const r = computeWorkoutXp(workout([set('leg_press', { reps: 25 }), set('leg_press', { reps: 25 }), set('leg_press', { reps: 25 })]), context({ records }));
+    expect(r.events.find((e) => e.reason === 'personal_record')?.meta).toMatchObject({ performance: { metric: 'max_reps', value: 25 } });
+    expect(byReason(r.events).working_sets).toBe(36);
+  });
+});
+
 describe('plausibility → pending_review', () => {
   it('a >15% e1RM jump within 30 days is pending, along with its tier unlocks', () => {
-    const ctx = context({ records: [record('bench', 'e1rm', 60, daysAgo(7))] });
-    const r = computeWorkoutXp(workout([lift('bench', 80, 1)]), ctx);
+    const ctx = context({ records: [record('bench_press', 'e1rm', 60, daysAgo(7))], seenExerciseIds: ['bench_press'] });
+    const r = computeWorkoutXp(workout([lift('bench_press', 80, 1)]), ctx);
     const progress = r.events.filter((e) => e.reason === 'personal_record' || e.reason === 'benchmark_tier');
     expect(progress.length).toBeGreaterThan(1);
     expect(progress.every((e) => e.status === 'pending_review')).toBe(true);
@@ -173,8 +203,10 @@ describe('plausibility → pending_review', () => {
 
   it('beyond elite × 1.2 for bodyweight is pending', () => {
     // 200 kg at 80 kg bodyweight = 2.5× > 2.0 × 1.2
-    const r = computeWorkoutXp(workout([lift('bench', 200, 1)]), context());
-    expect(r.events.filter((e) => e.reason === 'benchmark_tier').every((e) => e.status === 'pending_review')).toBe(true);
+    const r = computeWorkoutXp(workout([lift('bench_press', 200, 1)]), context({ seenExerciseIds: ['bench_press'] }));
+    const tiers = r.events.filter((e) => e.reason === 'benchmark_tier');
+    expect(tiers.length).toBeGreaterThan(0);
+    expect(tiers.every((e) => e.status === 'pending_review')).toBe(true);
   });
 
   it('consistency XP is never held back', () => {
@@ -193,7 +225,7 @@ describe('engine guarantees', () => {
   it('tags every event with the rule version and workout end time', () => {
     const w = workout(strengthSets(3));
     const r = computeWorkoutXp(w, context());
-    expect(r.events.every((e) => e.ruleVersion === 'xp-rules.v2' && e.createdAt === w.endedAt)).toBe(true);
+    expect(r.events.every((e) => e.ruleVersion === 'xp-rules.v3' && e.createdAt === w.endedAt)).toBe(true);
   });
 
   it('a typical session lands near the plan’s ~85 XP', () => {
@@ -241,7 +273,7 @@ describe('v2: new-exercise bonus can’t be farmed', () => {
 
 describe('v2: benchmark XP can be deferred (placement)', () => {
   it('records the unlocks but pays no tier XP', () => {
-    const r = computeWorkoutXp(workout([lift('bench', 104, 1)]), context({ deferBenchmarkXp: true }));
+    const r = computeWorkoutXp(workout([lift('bench_press', 104, 1)]), context({ deferBenchmarkXp: true, seenExerciseIds: ['bench_press'] }));
     expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
     expect(r.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
   });

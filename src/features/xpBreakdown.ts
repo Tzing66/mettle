@@ -8,7 +8,7 @@ export const XP_LINES: { label: string; reasons: XpReason[] }[] = [
   { label: 'Cardio', reasons: ['cardio_minutes'] },
   { label: 'Personal records', reasons: ['personal_record'] },
   { label: 'Firsts', reasons: ['first_exercise', 'first_activity'] },
-  { label: 'Benchmarks', reasons: ['benchmark_tier'] },
+  { label: 'Tier ups', reasons: ['benchmark_tier'] },
   { label: 'Placement', reasons: ['placement'] },
   { label: 'Streak bonus', reasons: ['streak_bonus'] },
   { label: 'Weekly goal', reasons: ['weekly_goal'] },
