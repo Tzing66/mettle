@@ -1,0 +1,72 @@
+{
+  "version": "starter-routines.v1",
+  "_note": "Built-in routines shown to everyone. Sets have no weights: they fill in from your own history (or a sensible default) when you start one.",
+  "routines": [
+    {
+      "id": "starter_full_body",
+      "name": "Full body",
+      "blurb": "A balanced first session. Five moves, about 45 minutes.",
+      "items": [
+        { "exerciseId": "goblet_squat", "sets": 3, "reps": 10 },
+        { "exerciseId": "push_up", "sets": 3, "reps": 10 },
+        { "exerciseId": "db_row", "sets": 3, "reps": 10 },
+        { "exerciseId": "db_romanian_deadlift", "sets": 3, "reps": 10 },
+        { "exerciseId": "plank", "sets": 2, "durationS": 30 }
+      ]
+    },
+    {
+      "id": "starter_push",
+      "name": "Push",
+      "blurb": "Chest, shoulders and triceps.",
+      "items": [
+        { "exerciseId": "bench_press", "sets": 4, "reps": 8 },
+        { "exerciseId": "incline_db_press", "sets": 3, "reps": 10 },
+        { "exerciseId": "db_shoulder_press", "sets": 3, "reps": 10 },
+        { "exerciseId": "lateral_raise", "sets": 3, "reps": 12 },
+        { "exerciseId": "triceps_pushdown", "sets": 3, "reps": 12 }
+      ]
+    },
+    {
+      "id": "starter_pull",
+      "name": "Pull",
+      "blurb": "Back and biceps.",
+      "items": [
+        { "exerciseId": "lat_pulldown", "sets": 4, "reps": 10 },
+        { "exerciseId": "barbell_row", "sets": 3, "reps": 8 },
+        { "exerciseId": "seated_cable_row", "sets": 3, "reps": 10 },
+        { "exerciseId": "face_pull", "sets": 3, "reps": 15 },
+        { "exerciseId": "db_curl", "sets": 3, "reps": 12 }
+      ]
+    },
+    {
+      "id": "starter_legs",
+      "name": "Legs",
+      "blurb": "Quads, hamstrings, glutes and calves.",
+      "items": [
+        { "exerciseId": "back_squat", "sets": 4, "reps": 6 },
+        { "exerciseId": "romanian_deadlift", "sets": 3, "reps": 8 },
+        { "exerciseId": "leg_press", "sets": 3, "reps": 10 },
+        { "exerciseId": "lying_leg_curl", "sets": 3, "reps": 12 },
+        { "exerciseId": "standing_calf_raise", "sets": 3, "reps": 15 }
+      ]
+    },
+    {
+      "id": "starter_home",
+      "name": "Bodyweight at home",
+      "blurb": "No equipment needed.",
+      "items": [
+        { "exerciseId": "push_up", "sets": 3, "reps": 12 },
+        { "exerciseId": "bodyweight_squat", "sets": 3, "reps": 20 },
+        { "exerciseId": "bodyweight_lunge", "sets": 3, "reps": 10 },
+        { "exerciseId": "glute_bridge_bw", "sets": 3, "reps": 15 },
+        { "exerciseId": "plank", "sets": 3, "durationS": 45 }
+      ]
+    },
+    {
+      "id": "starter_easy_5k",
+      "name": "Easy 5k",
+      "blurb": "A steady run. Walk breaks are fine.",
+      "items": [{ "exerciseId": "outdoor_run", "sets": 1, "distanceM": 5000, "durationS": 1800 }]
+    }
+  ]
+}

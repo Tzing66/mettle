@@ -6,7 +6,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listExercises } from '@/db/repositories/exercises';
-import { deleteRoutine, listRoutines, planFromRoutine, type RoutineRow } from '@/db/repositories/routines';
+import { deleteRoutine, listRoutines, planFromItems, planFromRoutine, starterRoutines, type RoutineRow, type StarterRoutine } from '@/db/repositories/routines';
 import { getActiveWorkout } from '@/db/repositories/workouts';
 import { useDbQuery } from '@/db/useDbQuery';
 import { Button, Card, PressableScale, Text } from '@/design/components';
@@ -30,15 +30,26 @@ export default function Routines() {
   const { colors } = useTheme();
   const rows = useDbQuery(readRoutines, ['routines', 'exercises']);
   const [sharing, setSharing] = useState<string | null>(null);
+  const names = useDbQuery(() => new Map(listExercises().map((e) => [e.id, e.name])), ['exercises']);
+
+  const startStarter = (r: StarterRoutine) => {
+    if (!noOpenWorkout()) return;
+    haptics.success();
+    planFromItems(r.items);
+    router.replace('/workout/active');
+  };
+
+  const noOpenWorkout = () => {
+    if (!getActiveWorkout()) return true;
+    Alert.alert('You have a workout open', 'Finish or discard it before starting another.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Go to it', onPress: () => router.replace('/workout/active') },
+    ]);
+    return false;
+  };
 
   const start = (r: RoutineRow) => {
-    if (getActiveWorkout()) {
-      Alert.alert('You have a workout open', 'Finish or discard it before starting another.', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Go to it', onPress: () => router.replace('/workout/active') },
-      ]);
-      return;
-    }
+    if (!noOpenWorkout()) return;
     haptics.success();
     if (planFromRoutine(r.id)) router.replace('/workout/active');
   };
@@ -86,9 +97,11 @@ export default function Routines() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
+        <Text variant="overline" color="inkMuted">
+          Yours
+        </Text>
         {rows.length === 0 ? (
           <Card style={styles.empty}>
-            <Text variant="heading">No routines yet</Text>
             <Text color="inkMuted">
               Open any finished workout and tap “Save as routine”, or save a plan before you start it. Then it’s one tap from here. Got a code from a
               friend? Tap Import.
@@ -121,10 +134,27 @@ export default function Routines() {
             </PressableScale>
           </Animated.View>
         ))}
+
+        <Text variant="overline" color="inkMuted" style={styles.sectionGap}>
+          Starter routines
+        </Text>
+        {starters.map((r) => (
+          <PressableScale key={r.id} accessibilityLabel={`Start ${r.name}`} onPress={() => startStarter(r)} scaleTo={0.98}>
+            <Card style={styles.card}>
+              <Text variant="heading">{r.name}</Text>
+              <Text color="inkMuted">{r.blurb}</Text>
+              <Text variant="caption" color="inkFaint" numberOfLines={2}>
+                {r.items.map((i) => names.get(i.exerciseId) ?? i.exerciseId).join(' · ')}
+              </Text>
+            </Card>
+          </PressableScale>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const starters = starterRoutines();
 
 const useStyles = makeStyles((colors) => ({
   safe: { flex: 1, backgroundColor: colors.bg },
@@ -136,4 +166,5 @@ const useStyles = makeStyles((colors) => ({
   card: { gap: space.sm },
   row: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   menu: { padding: space.sm },
+  sectionGap: { marginTop: space.md },
 }));

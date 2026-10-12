@@ -17,9 +17,11 @@ import {
   deleteRoutine,
   fromSharedItems,
   listRoutines,
+  planFromItems,
   planFromRoutine,
   renameRoutine,
   routineItemsFromWorkout,
+  starterRoutines,
   toSharedItems,
 } from '@/db/repositories/routines';
 import {
@@ -459,6 +461,15 @@ describe('routines', () => {
     expect(sets[0]).toMatchObject({ exerciseId: 'bench_press', weightKg: 60, reps: 5 }); // your last bench was 60
     expect(sets[1]).toMatchObject({ exerciseId: custom.id, weightKg: 20, reps: 10 }); // never done: default weight
     discardWorkout(planned);
+  });
+
+  it('every starter routine plans with real exercises and no borrowed weights', () => {
+    for (const r of starterRoutines()) {
+      const planned = planFromItems(r.items);
+      const sets = setsForWorkout(planned);
+      expect(new Set(sets.map((s) => s.exerciseId))).toEqual(new Set(r.items.map((i) => i.exerciseId)));
+      discardWorkout(planned);
+    }
   });
 
   it('renames and deletes', () => {

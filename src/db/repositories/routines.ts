@@ -1,4 +1,5 @@
 // Routines: saved workouts you can start in one tap, and shared copies.
+import starterJson from '@config/starter-routines.json';
 import { desc, eq } from 'drizzle-orm';
 
 import { db } from '../client';
@@ -43,16 +44,49 @@ export function routineItemsFromWorkout(workoutId: string, completedOnly: boolea
   }));
 }
 
-/**
- * Plans a workout from a routine. Weights come from the routine, except for
- * shared routines (no weights), which use your last session or a default.
- */
+export interface StarterRoutine {
+  id: string;
+  name: string;
+  blurb: string;
+  items: RoutineItem[];
+}
+
+/** Built-in routines for everyone (config/starter-routines.json); weights come from your history. */
+export function starterRoutines(): StarterRoutine[] {
+  type Compact = { exerciseId: string; sets: number; reps?: number; durationS?: number; distanceM?: number };
+  return (starterJson.routines as { id: string; name: string; blurb: string; items: Compact[] }[]).map((r) => ({
+    id: r.id,
+    name: r.name,
+    blurb: r.blurb,
+    items: r.items.map((i) => ({
+      exerciseId: i.exerciseId,
+      fillWeights: true,
+      sets: Array.from({ length: i.sets }, () => ({
+        isWarmup: false,
+        weightKg: null,
+        reps: i.reps ?? null,
+        durationS: i.durationS ?? null,
+        distanceM: i.distanceM ?? null,
+      })),
+    })),
+  }));
+}
+
+/** Plans a workout from one of your routines. */
 export function planFromRoutine(routineId: string): string | null {
   const routine = getRoutine(routineId);
-  if (!routine) return null;
+  return routine ? planFromItems(routine.items) : null;
+}
+
+/**
+ * Plans a workout from routine items. Weights come from the items, except
+ * where they were left out (shared and starter routines), which use your last
+ * session or a default.
+ */
+export function planFromItems(items: RoutineItem[]): string {
   const id = planWorkout();
   db.transaction((tx) => {
-    for (const item of routine.items) {
+    for (const item of items) {
       const exercise = getExercise(item.exerciseId);
       if (!exercise) continue; // deleted custom exercise, or one this app version doesn't have
       const previous = item.fillWeights ? lastSessionSets(exercise.id) : [];

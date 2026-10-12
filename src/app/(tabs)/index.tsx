@@ -1,8 +1,9 @@
 import { router } from 'expo-router';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { Button, Card, PressableScale, ProgressBar, RankBadge, Ring, Screen, Text } from '@/design/components';
+import { planFromItems, starterRoutines, type StarterRoutine } from '@/db/repositories/routines';
+import { Button, Card, Chip, PressableScale, ProgressBar, RankBadge, Ring, Screen, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronRightIcon, FlameIcon, PlusIcon } from '@/design/icons/Icons';
 import { rankColors, rankInk, space } from '@/design/tokens';
@@ -12,6 +13,7 @@ import { useProfile } from '@/features/profile/useProfile';
 import { makeStyles, useTheme } from '@/design/theme';
 
 const enter = (i: number) => FadeInDown.delay(i * 60).duration(320);
+const STARTERS = starterRoutines();
 
 export default function Home() {
   const styles = useStyles();
@@ -22,6 +24,13 @@ export default function Home() {
   const target = profile?.weeklyTargetDays ?? 3;
 
   const active = stats.activeWorkout;
+  // Before the first workout, Home points at it instead of showing empty cards.
+  const firstRun = !stats.lastWorkout && !active;
+  const startStarter = (items: StarterRoutine['items']) => {
+    haptics.success();
+    planFromItems(items);
+    router.push('/workout/active');
+  };
   const start = () => {
     haptics.tick();
     router.push(active ? '/workout/active' : '/workout/start');
@@ -91,7 +100,31 @@ export default function Home() {
         </Card>
       </Animated.View>
 
-      {!stats.placed ? (
+      {firstRun ? (
+        <Animated.View entering={enter(3)}>
+          <Card style={styles.hero}>
+            <Text variant="overline" color="accentInk">
+              Your first workout
+            </Text>
+            <Text variant="title">Let’s see where you stand</Text>
+            <Text color="inkMuted">
+              Train the way you normally do. Mettle compares your sets with real-world standards for your size, age and sex, and places you
+              anywhere up to A1.
+            </Text>
+            <Button label="Start workout" size="lg" icon={<PlusIcon color={colors.onPrimary} size={20} />} onPress={start} silent />
+            <Text variant="caption" color="inkMuted" style={styles.heroOr}>
+              Or pick a starter routine
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.starters}>
+              {STARTERS.map((r) => (
+                <Chip key={r.id} label={r.name} tone="accentSoft" textColor="accentInk" onPress={() => startStarter(r.items)} />
+              ))}
+            </ScrollView>
+          </Card>
+        </Animated.View>
+      ) : null}
+
+      {!stats.placed && !firstRun ? (
         <Animated.View entering={enter(3)}>
           <Card tone="accentSoft" style={styles.placementHint}>
             <Text variant="label" color="accentInk">
@@ -105,51 +138,58 @@ export default function Home() {
         </Animated.View>
       ) : null}
 
-      <Animated.View entering={enter(3)}>
-        <Button
-          label={!active ? 'Start workout' : active.status === 'planning' ? 'Continue planning' : 'Resume workout'}
-          size="lg"
-          icon={active ? undefined : <PlusIcon color={colors.onPrimary} size={20} />}
-          onPress={start}
-          silent
-        />
-      </Animated.View>
+      {firstRun ? null : (
+        <Animated.View entering={enter(3)}>
+          <Button
+            label={!active ? 'Start workout' : active.status === 'planning' ? 'Continue planning' : 'Resume workout'}
+            size="lg"
+            icon={active ? undefined : <PlusIcon color={colors.onPrimary} size={20} />}
+            onPress={start}
+            silent
+          />
+        </Animated.View>
+      )}
 
-      <Animated.View entering={enter(4)} style={styles.section}>
-        <Text variant="overline" color="inkMuted">
-          Last workout
-        </Text>
-        {stats.lastWorkout ? (
-          <PressableScale
-            accessibilityLabel="Open last workout"
-            onPress={() => router.push({ pathname: '/workout/[id]', params: { id: stats.lastWorkout!.id } })}>
-          <Card style={styles.last}>
-            <View style={styles.lastTop}>
-              <Text variant="heading">{formatDay(stats.lastWorkout.endedAt)}</Text>
-              <Text variant="label" color="xpInk" tabular>
-                +{formatNumber(stats.lastWorkout.xp)} XP
+      {firstRun ? null : (
+        <Animated.View entering={enter(4)} style={styles.section}>
+          <Text variant="overline" color="inkMuted">
+            Last workout
+          </Text>
+          {stats.lastWorkout ? (
+            <PressableScale
+              accessibilityLabel="Open last workout"
+              onPress={() => router.push({ pathname: '/workout/[id]', params: { id: stats.lastWorkout!.id } })}>
+            <Card style={styles.last}>
+              <View style={styles.lastTop}>
+                <Text variant="heading">{formatDay(stats.lastWorkout.endedAt)}</Text>
+                <Text variant="label" color="xpInk" tabular>
+                  +{formatNumber(stats.lastWorkout.xp)} XP
+                </Text>
+              </View>
+              <Text variant="caption" color="inkMuted">
+                {formatDurationMs(stats.lastWorkout.durationMs)} · {stats.lastWorkout.sets} sets
               </Text>
-            </View>
-            <Text variant="caption" color="inkMuted">
-              {formatDurationMs(stats.lastWorkout.durationMs)} · {stats.lastWorkout.sets} sets
-            </Text>
-            <Text color="inkMuted" numberOfLines={2}>
-              {stats.lastWorkout.exercises.join(' · ')}
-            </Text>
-          </Card>
-          </PressableScale>
-        ) : (
-          <Card>
-            <Text color="inkMuted">Your first workout will show up here. Every set counts.</Text>
-          </Card>
-        )}
-      </Animated.View>
+              <Text color="inkMuted" numberOfLines={2}>
+                {stats.lastWorkout.exercises.join(' · ')}
+              </Text>
+            </Card>
+            </PressableScale>
+          ) : (
+            <Card>
+              <Text color="inkMuted">Your first workout will show up here. Every set counts.</Text>
+            </Card>
+          )}
+        </Animated.View>
+      )}
     </Screen>
   );
 }
 
 const useStyles = makeStyles((colors) => ({
   placementHint: { gap: space.xs },
+  hero: { gap: space.md },
+  heroOr: { marginTop: space.xs },
+  starters: { gap: space.xs },
   greeting: { gap: space.xxs, paddingTop: space.sm },
   flex: { flex: 1, gap: space.xxs },
   rankCard: { gap: space.md },

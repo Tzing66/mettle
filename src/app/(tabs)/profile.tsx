@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 
@@ -332,6 +333,7 @@ export default function Profile() {
         <Button label="Reset my data" variant="ghost" onPress={confirmReset} />
       </Card>
 
+      <Button label="Replay the welcome" variant="ghost" onPress={() => router.push({ pathname: '/onboarding', params: { preview: '1' } })} />
       <Text variant="caption" color="inkFaint" align="center">
         Mettle is a training log, not medical advice.
       </Text>
