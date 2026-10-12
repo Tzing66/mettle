@@ -80,6 +80,9 @@ function App() {
         <Stack.Screen name="workout/active" options={{ animation: 'slide_from_bottom' }} />
         <Stack.Screen name="workout/picker" options={{ presentation: 'modal' }} />
         <Stack.Screen name="workout/past" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="routines/index" />
+        <Stack.Screen name="routines/name" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="routines/import" options={{ presentation: 'modal' }} />
         <Stack.Screen name="workout/[id]" />
         <Stack.Screen name="workout/summary" options={{ gestureEnabled: false, animation: 'fade' }} />
         <Stack.Screen name="progress" />

@@ -154,6 +154,23 @@ export const syncOutbox = sqliteTable('sync_outbox', {
   queuedAt: integer('queued_at').notNull().default(sql`(unixepoch() * 1000)`),
 });
 
+/** One exercise in a routine, with its sets (targets; weight may be empty). */
+export interface RoutineItem {
+  exerciseId: string;
+  /** Imported from a share (no weights): fill weights from your own history when starting. */
+  fillWeights?: boolean;
+  sets: { isWarmup: boolean; weightKg: number | null; reps: number | null; durationS: number | null; distanceM: number | null }[];
+}
+
+/** Saved workouts you can start in one tap. */
+export const routines = sqliteTable('routines', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  items: text('items', { mode: 'json' }).$type<RoutineItem[]>().notNull(),
+  createdAt: createdAt(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+});
+
 /** Single row (id = 1). */
 export const syncState = sqliteTable('sync_state', {
   id: integer('id').primaryKey(),

@@ -13,6 +13,16 @@ import { eq } from 'drizzle-orm';
 import { createCustomExercise, getExercise, listExercises, recentExerciseIds, shortCodeFor, toggleFavourite } from '@/db/repositories/exercises';
 import { createProfile, getProfile } from '@/db/repositories/profile';
 import {
+  createRoutine,
+  deleteRoutine,
+  fromSharedItems,
+  listRoutines,
+  planFromRoutine,
+  renameRoutine,
+  routineItemsFromWorkout,
+  toSharedItems,
+} from '@/db/repositories/routines';
+import {
   addExerciseToWorkout,
   addSet,
   beginWorkout,
@@ -407,5 +417,55 @@ describe('logging a past workout', () => {
     const floor = pastWorkoutFloor(getProfile()!.createdAt);
     // The profile row is stamped by SQLite's real clock here, so the first logged workout (Monday) sets the floor.
     expect(floor.getTime()).toBe(Date.UTC(2026, 9, 5));
+  });
+});
+
+describe('routines', () => {
+  it('saves a finished workout as a routine and plans it with the same sets', () => {
+    at(MONDAY + 50 * DAY);
+    const { id } = logLifts(MONDAY + 50 * DAY, 'bench_press', [
+      [60, 8],
+      [60, 8],
+    ]);
+    const routineId = createRoutine('Push day', routineItemsFromWorkout(id, true));
+    expect(listRoutines().map((r) => r.name)).toContain('Push day');
+
+    const planned = planFromRoutine(routineId)!;
+    expect(getWorkout(planned)?.status).toBe('planning');
+    expect(setsForWorkout(planned).map((s) => [s.exerciseId, s.weightKg, s.reps])).toEqual([
+      ['bench_press', 60, 8],
+      ['bench_press', 60, 8],
+    ]);
+    discardWorkout(planned);
+  });
+
+  it('shares without weights, and an import fills weights from your own history', () => {
+    const custom = createCustomExercise({ name: 'Routine rig', category: 'machine', trackingType: 'weight_reps' });
+    const routineId = createRoutine('Legs', [
+      { exerciseId: 'bench_press', sets: [{ isWarmup: false, weightKg: 100, reps: 5, durationS: null, distanceM: null }] },
+      { exerciseId: custom.id, sets: [{ isWarmup: false, weightKg: 80, reps: 10, durationS: null, distanceM: null }] },
+    ]);
+    const shared = toSharedItems(listRoutines().find((r) => r.id === routineId)!.items);
+    expect(JSON.stringify(shared)).not.toContain('100');
+    expect(shared[1].custom).toEqual({ name: 'Routine rig', category: 'machine', tracking_type: 'weight_reps' });
+
+    // A friend's phone: same custom name is reused; unknown exercises are skipped.
+    const { items, skipped } = fromSharedItems([...shared, { exercise_id: 'not_in_this_version', sets: [{ reps: 5 }] }]);
+    expect(skipped).toBe(1);
+    expect(items.map((i) => i.exerciseId)).toEqual(['bench_press', custom.id]);
+
+    const planned = planFromRoutine(createRoutine('Imported', items))!;
+    const sets = setsForWorkout(planned);
+    expect(sets[0]).toMatchObject({ exerciseId: 'bench_press', weightKg: 60, reps: 5 }); // your last bench was 60
+    expect(sets[1]).toMatchObject({ exerciseId: custom.id, weightKg: 20, reps: 10 }); // never done: default weight
+    discardWorkout(planned);
+  });
+
+  it('renames and deletes', () => {
+    const id = createRoutine('Pull', [{ exerciseId: 'pull_up', sets: [{ isWarmup: false, weightKg: null, reps: 8, durationS: null, distanceM: null }] }]);
+    renameRoutine(id, '  Pull day ');
+    expect(listRoutines().find((r) => r.id === id)?.name).toBe('Pull day');
+    deleteRoutine(id);
+    expect(listRoutines().some((r) => r.id === id)).toBe(false);
   });
 });

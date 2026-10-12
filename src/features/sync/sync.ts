@@ -14,7 +14,7 @@ import { and, eq, inArray, isNotNull, lte, sql } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { rebuildDerivedData } from '@/db/repositories/derived';
 import { PROFILE_ID } from '@/db/repositories/profile';
-import { bodyweightLogs, exercises, profile, syncOutbox, syncState, workoutSets, workouts } from '@/db/schema';
+import { bodyweightLogs, exercises, profile, routines, syncOutbox, syncState, workoutSets, workouts } from '@/db/schema';
 
 import {
   bodyweightFromCloud,
@@ -23,6 +23,8 @@ import {
   customExerciseToCloud,
   profileFromCloud,
   profileToCloud,
+  routineFromCloud,
+  routineToCloud,
   PUSH_ORDER,
   setFromCloud,
   setToCloud,
@@ -97,6 +99,7 @@ export function linkAccount(userId: string): LinkResult {
     queue('workouts', tx.select({ id: workouts.id }).from(workouts).all().map((r) => r.id));
     queue('workout_sets', tx.select({ id: workoutSets.id }).from(workoutSets).all().map((r) => r.id));
     queue('bodyweight_logs', tx.select({ id: bodyweightLogs.id }).from(bodyweightLogs).all().map((r) => r.id));
+    queue('routines', tx.select({ id: routines.id }).from(routines).all().map((r) => r.id));
   });
   return 'linked';
 }
@@ -122,6 +125,7 @@ export function resetLocalForAccount(userId: string) {
       tx.delete(workoutSets).run();
       tx.delete(workouts).run();
       tx.delete(bodyweightLogs).run();
+      tx.delete(routines).run();
       tx.delete(exercises).where(eq(exercises.isBuiltin, false)).run();
       tx.update(exercises).set({ isFavourite: false }).run();
       tx.run(sql`DELETE FROM xp_events`);
@@ -209,6 +213,10 @@ async function pushChanges(client: SyncClient, userId: string): Promise<{ pushed
       const local = db.select().from(bodyweightLogs).where(inArray(bodyweightLogs.id, ids)).all();
       found = local;
       rows = local.map((b) => bodyweightToCloud(b, userId));
+    } else if (table === 'routines') {
+      const local = db.select().from(routines).where(inArray(routines.id, ids)).all();
+      found = local;
+      rows = local.map((r) => routineToCloud(r, userId));
     }
 
     await upsertChunks(client, table, rows, 'id');
@@ -322,6 +330,16 @@ async function pullChanges(
         else tx.insert(bodyweightLogs).values(b).onConflictDoUpdate({ target: bodyweightLogs.id, set: b }).run();
         pulled++;
         historyChanged = true;
+      }
+
+      // Routines don't affect XP, so they never trigger a rebuild.
+      for (const r of fetched.get('routines') ?? []) {
+        bump(r);
+        const routine = routineFromCloud(r);
+        if (isPending('routines', routine.id)) continue;
+        if (r.deleted_at) tx.delete(routines).where(eq(routines.id, routine.id)).run();
+        else tx.insert(routines).values(routine).onConflictDoUpdate({ target: routines.id, set: routine }).run();
+        pulled++;
       }
     }),
   );

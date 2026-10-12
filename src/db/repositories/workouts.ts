@@ -156,7 +156,7 @@ export function lastSessionSets(exerciseId: string, excludeWorkoutId?: string): 
 type SetValues = Pick<SetRow, 'isWarmup' | 'weightKg' | 'reps' | 'durationS' | 'distanceM'>;
 
 /** Starting values for an exercise you've never logged. */
-function defaultSetValues(exercise: ExerciseRow): SetValues {
+export function defaultSetValues(exercise: ExerciseRow): SetValues {
   const base = { isWarmup: false, weightKg: null, reps: null, durationS: null, distanceM: null };
   switch (exercise.trackingType) {
     case 'weight_reps': {

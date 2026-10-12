@@ -6,6 +6,7 @@ import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { listExercises } from '@/db/repositories/exercises';
+import { listRoutines } from '@/db/repositories/routines';
 import { completedSetsForWorkouts, listFinishedWorkouts, planWorkout, repeatWorkout, startWorkout } from '@/db/repositories/workouts';
 import { useDbQuery } from '@/db/useDbQuery';
 import { PressableScale, Text } from '@/design/components';
@@ -28,6 +29,7 @@ export default function StartSheet() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const last = useDbQuery(readLast, ['workouts']);
+  const routineCount = useDbQuery(() => listRoutines().length, ['routines']);
 
   const go = (create: () => string) => {
     haptics.success();
@@ -70,6 +72,13 @@ export default function StartSheet() {
             onPress={() => go(() => repeatWorkout(last.id))}
           />
         ) : null}
+        <Option
+          title="Routines"
+          body={routineCount ? `Start one of your ${routineCount} saved routine${routineCount === 1 ? '' : 's'}, or import a friend’s.` : 'Save workouts you repeat, or import a friend’s with a code.'}
+          tone={colors.accentSoft}
+          glyph={<ListIcon color={colors.accentInk} />}
+          onPress={() => router.replace('/routines')}
+        />
         <Option
           title="Log a past workout"
           body="Forgot to log one? Add it with its day and time."

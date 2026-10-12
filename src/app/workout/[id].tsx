@@ -160,6 +160,11 @@ export default function WorkoutDetail() {
           })}
 
           <Button label="Do this again" variant="secondary" onPress={doAgain} />
+          <Button
+            label="Save as routine"
+            variant="ghost"
+            onPress={() => router.push({ pathname: '/routines/name', params: { workoutId: id, completed: '1' } })}
+          />
           <Button label="Delete workout" variant="ghost" onPress={confirmDelete} />
         </ScrollView>
       )}

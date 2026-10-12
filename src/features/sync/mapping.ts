@@ -4,11 +4,12 @@
 import type { ExerciseRow } from '@/db/repositories/exercises';
 import type { BodyweightRow, ProfileRow } from '@/db/repositories/profile';
 import type { SetRow, WorkoutRow } from '@/db/repositories/workouts';
+import type { RoutineItem, routines } from '@/db/schema';
 
-export type CloudTable = 'profiles' | 'custom_exercises' | 'workouts' | 'workout_sets' | 'bodyweight_logs';
+export type CloudTable = 'profiles' | 'custom_exercises' | 'workouts' | 'workout_sets' | 'bodyweight_logs' | 'routines';
 
 /** Upload order respects foreign keys (sets need their workout, custom exercises before sets). */
-export const PUSH_ORDER: CloudTable[] = ['profiles', 'custom_exercises', 'workouts', 'workout_sets', 'bodyweight_logs'];
+export const PUSH_ORDER: CloudTable[] = ['profiles', 'custom_exercises', 'workouts', 'workout_sets', 'bodyweight_logs', 'routines'];
 
 const iso = (d: Date | null | undefined) => (d ? d.toISOString() : null);
 const date = (s: string | null | undefined) => (s ? new Date(s) : null);
@@ -142,4 +143,19 @@ export function setFromCloud(r: CloudRow) {
 
 export function bodyweightFromCloud(r: CloudRow) {
   return { id: r.id as string, weightKg: r.weight_kg as number, loggedAt: date(r.logged_at as string)! };
+}
+
+type RoutineRow = typeof routines.$inferSelect;
+
+export function routineToCloud(r: RoutineRow, userId: string) {
+  return { id: r.id, user_id: userId, name: r.name, items: r.items, deleted_at: null };
+}
+
+export function routineFromCloud(r: CloudRow) {
+  return {
+    id: r.id as string,
+    name: r.name as string,
+    items: (r.items as RoutineItem[] | null) ?? [],
+    updatedAt: date(r.updated_at as string) ?? new Date(),
+  };
 }

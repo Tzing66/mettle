@@ -7,6 +7,7 @@ jest.mock('@/db/client', () => require('@/test/sqliteDb').createTestDbModule());
 
 import { db } from '@/db/client';
 import { getExercise, toggleFavourite } from '@/db/repositories/exercises';
+import { createRoutine, deleteRoutine, listRoutines } from '@/db/repositories/routines';
 import { addBodyweight, createProfile, getProfile, listBodyweight, updateProfile } from '@/db/repositories/profile';
 import {
   addExerciseToWorkout,
@@ -98,6 +99,18 @@ describe('ongoing sync', () => {
     await syncAccount(client(), USER);
     expect(cloud.rows('profiles')[0].weekly_target_days).toBe(5);
     expect(cloud.rows('bodyweight_logs')).toHaveLength(2);
+  });
+
+  it('syncs routines both ways, including deletes', async () => {
+    const id = createRoutine('Push', [{ exerciseId: 'bench_press', sets: [{ isWarmup: false, weightKg: 60, reps: 8, durationS: null, distanceM: null }] }]);
+    await syncAccount(client(), USER);
+    expect(cloud.rows('routines')).toEqual([expect.objectContaining({ id, user_id: USER, name: 'Push' })]);
+
+    cloud.write('routines', 'from-tablet', { id: 'from-tablet', user_id: USER, name: 'Legs', items: [], deleted_at: null });
+    deleteRoutine(id);
+    await syncAccount(client(), USER);
+    expect(listRoutines().map((r) => r.name)).toEqual(['Legs']);
+    expect(cloud.rows('routines').find((r) => r.id === id)?.deleted_at).toBeTruthy();
   });
 
   it('syncs about me, goals and the photo path both ways', async () => {

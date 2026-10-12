@@ -290,6 +290,13 @@ export default function ActiveWorkout() {
           icon={<PlusIcon color={groups.length === 0 ? colors.onPrimary : colors.ink} size={20} />}
           onPress={() => router.push('/workout/picker')}
         />
+        {planning && !past && groups.length > 0 ? (
+          <Button
+            label="Save as routine"
+            variant="ghost"
+            onPress={() => router.push({ pathname: '/routines/name', params: { workoutId: workout.id } })}
+          />
+        ) : null}
         <Button label={planning ? 'Discard plan' : 'Discard workout'} variant="ghost" onPress={discard} />
       </ScrollView>
 
