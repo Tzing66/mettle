@@ -16,6 +16,7 @@ import { motion, radii, rankInk, space, type } from '@/design/tokens';
 import { displayWeight, toStoredKg, type RankLetter, type UnitPref } from '@/engine';
 import { accountLabel, useSession } from '@/features/account/auth';
 import { cloudConfigured } from '@/features/account/supabase';
+import { skipLaunchIntro } from '@/features/home/LaunchIntro';
 import { useProfile } from '@/features/profile/useProfile';
 import { useSyncStore } from '@/features/sync/useSync';
 
@@ -42,6 +43,10 @@ export default function Onboarding() {
   const [birthYear, setBirthYear] = useState(THIS_YEAR - 25);
   const [sex, setSex] = useState<Sex | null>(null);
   const [weeklyDays, setWeeklyDays] = useState(4);
+
+  useEffect(() => {
+    if (!preview) skipLaunchIntro();
+  }, [preview]);
 
   // Signed in to an account that already has a profile (pulled by sync): you're back.
   useEffect(() => {

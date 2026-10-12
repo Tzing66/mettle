@@ -21,6 +21,7 @@ import {
 import { formatDay, formatNumber, formatWeight, TIER_LABELS } from '@/features/format';
 import { shareWorkoutExport } from '@/features/export/exportData';
 import { AccountCard } from '@/features/account/AccountCard';
+import { useLaunchIntroSetting } from '@/features/home/LaunchIntro';
 import { AboutCard } from '@/features/profile/AboutCard';
 import { AvatarError, avatarUrl, pickAndUploadAvatar, removeAvatar } from '@/features/profile/avatar';
 import { resetTrainingData } from '@/features/profile/resetData';
@@ -57,6 +58,8 @@ function readProfileData() {
 
 export default function Profile() {
   const themePreference = useThemePreference((p) => p.preference);
+  const launchIntro = useLaunchIntroSetting((p) => p.enabled);
+  const setLaunchIntro = useLaunchIntroSetting((p) => p.setEnabled);
   const setThemePreference = useThemePreference((p) => p.setPreference);
   const styles = useStyles();
   const { colors } = useTheme();
@@ -260,6 +263,16 @@ export default function Profile() {
             ]}
             value={themePreference}
             onChange={setThemePreference}
+          />
+        </Setting>
+        <Setting label="Launch animation">
+          <SegmentedTabs
+            options={[
+              { key: 'on', label: 'On' },
+              { key: 'off', label: 'Off' },
+            ]}
+            value={launchIntro ? 'on' : 'off'}
+            onChange={(v) => setLaunchIntro(v === 'on')}
           />
         </Setting>
         <Setting label="Units">
