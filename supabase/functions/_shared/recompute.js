@@ -15,6 +15,8 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "bar",
+      barKg: 20,
       benchmarkId: "bench_press",
       source: "free-exercise-db:Barbell_Bench_Press_-_Medium_Grip"
     },
@@ -29,6 +31,8 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Incline_Bench_Press_-_Medium_Grip"
     },
     {
@@ -42,6 +46,8 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Close-Grip_Barbell_Bench_Press"
     },
     {
@@ -55,6 +61,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Bench_Press"
     },
     {
@@ -68,6 +75,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "free-exercise-db:Incline_Dumbbell_Press"
     },
     {
@@ -81,6 +89,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Flyes"
     },
     {
@@ -94,6 +103,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       benchmarkId: "back_squat",
       source: "free-exercise-db:Barbell_Full_Squat"
     },
@@ -108,6 +119,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Front_Barbell_Squat"
     },
     {
@@ -121,6 +134,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "single",
       source: "free-exercise-db:Goblet_Squat"
     },
     {
@@ -134,6 +148,8 @@ var exercises_default = {
       primaryMuscles: [
         "lower back"
       ],
+      load: "bar",
+      barKg: 20,
       benchmarkId: "deadlift",
       source: "free-exercise-db:Barbell_Deadlift"
     },
@@ -148,6 +164,8 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Romanian_Deadlift"
     },
     {
@@ -161,6 +179,8 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Sumo_Deadlift"
     },
     {
@@ -174,6 +194,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 25,
       source: "free-exercise-db:Trap_Bar_Deadlift"
     },
     {
@@ -187,6 +209,8 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Hip_Thrust"
     },
     {
@@ -200,6 +224,8 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Glute_Bridge"
     },
     {
@@ -213,6 +239,8 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Good_Morning"
     },
     {
@@ -226,6 +254,8 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "bar",
+      barKg: 20,
       benchmarkId: "overhead_press",
       source: "free-exercise-db:Standing_Military_Press"
     },
@@ -240,6 +270,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Shoulder_Press"
     },
     {
@@ -253,6 +284,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Arnold_Dumbbell_Press"
     },
     {
@@ -266,6 +298,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Side_Lateral_Raise"
     },
     {
@@ -279,6 +312,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Reverse_Flyes"
     },
     {
@@ -292,6 +326,8 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Upright_Barbell_Row"
     },
     {
@@ -305,6 +341,8 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Bent_Over_Barbell_Row"
     },
     {
@@ -318,6 +356,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "single",
       source: "free-exercise-db:One-Arm_Dumbbell_Row"
     },
     {
@@ -331,6 +370,8 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:T-Bar_Row_with_Handle"
     },
     {
@@ -344,6 +385,8 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Shrug"
     },
     {
@@ -357,6 +400,7 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Shrug"
     },
     {
@@ -370,6 +414,8 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Curl"
     },
     {
@@ -383,6 +429,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Bicep_Curl"
     },
     {
@@ -396,6 +443,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Hammer_Curls"
     },
     {
@@ -409,6 +457,8 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Preacher_Curl"
     },
     {
@@ -422,6 +472,8 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "bar",
+      barKg: 10,
       source: "free-exercise-db:EZ-Bar_Skullcrusher"
     },
     {
@@ -435,6 +487,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "single",
       source: "free-exercise-db:Standing_Dumbbell_Triceps_Extension"
     },
     {
@@ -448,6 +501,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Tricep_Dumbbell_Kickback"
     },
     {
@@ -461,6 +515,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Lunges"
     },
     {
@@ -474,6 +529,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Lunge"
     },
     {
@@ -487,6 +544,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Split_Squat_with_Dumbbells"
     },
     {
@@ -500,6 +558,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Step_Ups"
     },
     {
@@ -513,6 +572,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "single",
       source: "free-exercise-db:One-Arm_Kettlebell_Swings"
     },
     {
@@ -526,6 +586,7 @@ var exercises_default = {
       primaryMuscles: [
         "forearms"
       ],
+      load: "pair",
       source: "free-exercise-db:Farmers_Walk"
     },
     {
@@ -539,6 +600,8 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Power_Clean"
     },
     {
@@ -552,6 +615,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Leg_Press"
     },
     {
@@ -565,6 +629,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Hack_Squat"
     },
     {
@@ -578,6 +643,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Smith_Machine_Squat"
     },
     {
@@ -591,6 +657,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Leg_Extensions"
     },
     {
@@ -604,6 +671,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "free-exercise-db:Lying_Leg_Curls"
     },
     {
@@ -617,6 +685,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "free-exercise-db:Seated_Leg_Curl"
     },
     {
@@ -630,6 +699,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "plain",
       source: "free-exercise-db:Standing_Calf_Raises"
     },
     {
@@ -643,6 +713,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "plain",
       source: "free-exercise-db:Seated_Calf_Raise"
     },
     {
@@ -656,6 +727,7 @@ var exercises_default = {
       primaryMuscles: [
         "abductors"
       ],
+      load: "plain",
       source: "free-exercise-db:Thigh_Abductor"
     },
     {
@@ -669,6 +741,7 @@ var exercises_default = {
       primaryMuscles: [
         "adductors"
       ],
+      load: "plain",
       source: "free-exercise-db:Thigh_Adductor"
     },
     {
@@ -682,6 +755,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "free-exercise-db:Wide-Grip_Lat_Pulldown"
     },
     {
@@ -695,6 +769,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "free-exercise-db:Close-Grip_Front_Lat_Pulldown"
     },
     {
@@ -708,6 +783,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "free-exercise-db:Straight-Arm_Pulldown"
     },
     {
@@ -721,6 +797,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "free-exercise-db:Seated_Cable_Rows"
     },
     {
@@ -734,6 +811,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Face_Pull"
     },
     {
@@ -747,6 +825,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Leverage_Chest_Press"
     },
     {
@@ -760,6 +839,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Butterfly"
     },
     {
@@ -773,6 +853,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Crossover"
     },
     {
@@ -786,6 +867,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Machine_Shoulder_Military_Press"
     },
     {
@@ -799,6 +881,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Seated_Lateral_Raise"
     },
     {
@@ -812,6 +895,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Triceps_Pushdown"
     },
     {
@@ -825,6 +909,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Hammer_Curls_-_Rope_Attachment"
     },
     {
@@ -838,6 +923,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Crunch"
     },
     {
@@ -851,6 +937,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "free-exercise-db:Pallof_Press"
     },
     {
@@ -864,6 +951,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "added",
       benchmarkId: "push_ups",
       source: "free-exercise-db:Pushups"
     },
@@ -878,6 +966,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       benchmarkId: "pull_ups",
       source: "free-exercise-db:Pullups"
     },
@@ -892,6 +981,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       source: "free-exercise-db:Chin-Up"
     },
     {
@@ -905,6 +995,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "added",
       source: "free-exercise-db:Dips_-_Triceps_Version"
     },
     {
@@ -918,6 +1009,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "added",
       source: "free-exercise-db:Inverted_Row"
     },
     {
@@ -931,6 +1023,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "free-exercise-db:Bodyweight_Squat"
     },
     {
@@ -944,6 +1037,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Plank"
     },
     {
@@ -957,6 +1051,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Side_Bridge"
     },
     {
@@ -970,6 +1065,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Crunches"
     },
     {
@@ -983,6 +1079,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Sit-Up"
     },
     {
@@ -996,6 +1093,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Hanging_Leg_Raise"
     },
     {
@@ -1009,6 +1107,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Russian_Twist"
     },
     {
@@ -1022,6 +1121,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Ab_Roller"
     },
     {
@@ -1035,6 +1135,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "free-exercise-db:Mountain_Climbers"
     },
     {
@@ -1048,6 +1149,7 @@ var exercises_default = {
       primaryMuscles: [
         "lower back"
       ],
+      load: "added",
       source: "free-exercise-db:Hyperextensions_Back_Extensions"
     },
     {
@@ -1061,6 +1163,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "added",
       source: "free-exercise-db:Box_Jump_Multiple_Response"
     },
     {
@@ -1076,6 +1179,7 @@ var exercises_default = {
         "chest",
         "shoulders"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -1248,6 +1352,8 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Wide-Grip_Barbell_Bench_Press"
     },
     {
@@ -1261,6 +1367,8 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Decline_Barbell_Bench_Press"
     },
     {
@@ -1274,6 +1382,8 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Floor_Press"
     },
     {
@@ -1287,6 +1397,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "free-exercise-db:Decline_Dumbbell_Bench_Press"
     },
     {
@@ -1300,6 +1411,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Bench_Press_with_Neutral_Grip"
     },
     {
@@ -1313,6 +1425,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "free-exercise-db:Incline_Dumbbell_Flyes"
     },
     {
@@ -1326,6 +1439,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "single",
       source: "free-exercise-db:Straight-Arm_Dumbbell_Pullover"
     },
     {
@@ -1339,6 +1453,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Seated_Dumbbell_Press"
     },
     {
@@ -1352,6 +1467,8 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Seated_Barbell_Military_Press"
     },
     {
@@ -1365,6 +1482,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Front_Dumbbell_Raise"
     },
     {
@@ -1378,6 +1496,7 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "pair",
       source: "free-exercise-db:Standing_Dumbbell_Upright_Row"
     },
     {
@@ -1392,6 +1511,7 @@ var exercises_default = {
         "shoulders",
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -1406,6 +1526,8 @@ var exercises_default = {
         "shoulders",
         "triceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -1419,6 +1541,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Box_Squat"
     },
     {
@@ -1433,6 +1557,8 @@ var exercises_default = {
         "quadriceps",
         "glutes"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -1446,6 +1572,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Squat"
     },
     {
@@ -1459,6 +1586,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "single",
       source: "free-exercise-db:Plie_Dumbbell_Squat"
     },
     {
@@ -1473,6 +1601,7 @@ var exercises_default = {
         "quadriceps",
         "glutes"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -1486,6 +1615,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Walking_Lunge"
     },
     {
@@ -1499,6 +1630,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Rear_Lunge"
     },
     {
@@ -1512,6 +1644,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Barbell_Step_Ups"
     },
     {
@@ -1525,6 +1659,8 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Stiff-Legged_Barbell_Deadlift"
     },
     {
@@ -1538,6 +1674,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "pair",
       source: "free-exercise-db:Stiff-Legged_Dumbbell_Deadlift"
     },
     {
@@ -1551,6 +1688,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "pair",
       source: "free-exercise-db:Kettlebell_One-Legged_Deadlift"
     },
     {
@@ -1564,6 +1702,8 @@ var exercises_default = {
       primaryMuscles: [
         "lower back"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Deficit_Deadlift"
     },
     {
@@ -1577,6 +1717,8 @@ var exercises_default = {
       primaryMuscles: [
         "lower back"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Rack_Pulls"
     },
     {
@@ -1590,6 +1732,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "pair",
       source: "free-exercise-db:Standing_Dumbbell_Calf_Raise"
     },
     {
@@ -1604,6 +1747,8 @@ var exercises_default = {
         "middle back",
         "lats"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -1617,6 +1762,8 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Reverse_Grip_Bent-Over_Rows"
     },
     {
@@ -1630,6 +1777,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "pair",
       source: "free-exercise-db:Dumbbell_Incline_Row"
     },
     {
@@ -1643,6 +1791,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "pair",
       source: "free-exercise-db:Bent_Over_Two-Dumbbell_Row"
     },
     {
@@ -1656,6 +1805,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "free-exercise-db:Bent_Over_Two-Arm_Long_Bar_Row"
     },
     {
@@ -1669,6 +1819,8 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "bar",
+      barKg: 10,
       source: "free-exercise-db:EZ-Bar_Curl"
     },
     {
@@ -1682,6 +1834,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Incline_Dumbbell_Curl"
     },
     {
@@ -1695,6 +1848,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "single",
       source: "free-exercise-db:Concentration_Curls"
     },
     {
@@ -1708,6 +1862,8 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "bar",
+      barKg: 10,
       source: "free-exercise-db:Spider_Curl"
     },
     {
@@ -1721,6 +1877,8 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Reverse_Barbell_Curl"
     },
     {
@@ -1734,6 +1892,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Zottman_Curl"
     },
     {
@@ -1747,6 +1906,8 @@ var exercises_default = {
       primaryMuscles: [
         "forearms"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Palms-Up_Barbell_Wrist_Curl_Over_A_Bench"
     },
     {
@@ -1760,6 +1921,8 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:JM_Press"
     },
     {
@@ -1773,6 +1936,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "pair",
       source: "free-exercise-db:Lying_Dumbbell_Tricep_Extension"
     },
     {
@@ -1786,6 +1950,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Two-Arm_Kettlebell_Military_Press"
     },
     {
@@ -1799,6 +1964,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "pair",
       source: "free-exercise-db:One-Arm_Kettlebell_Row"
     },
     {
@@ -1812,6 +1978,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "pair",
       source: "free-exercise-db:One-Arm_Kettlebell_Clean"
     },
     {
@@ -1825,6 +1992,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "free-exercise-db:Kettlebell_Thruster"
     },
     {
@@ -1838,6 +2006,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "single",
       source: "free-exercise-db:Kettlebell_Turkish_Get-Up_Squat_style"
     },
     {
@@ -1851,6 +2020,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "single",
       source: "free-exercise-db:Kettlebell_Windmill"
     },
     {
@@ -1864,6 +2034,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Hang_Clean"
     },
     {
@@ -1877,6 +2049,8 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Clean_and_Press"
     },
     {
@@ -1890,6 +2064,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "free-exercise-db:Snatch"
     },
     {
@@ -1903,6 +2079,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "single",
       source: "free-exercise-db:Dumbbell_Side_Bend"
     },
     {
@@ -1916,6 +2093,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "free-exercise-db:Landmine_180s"
     },
     {
@@ -1929,6 +2107,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Smith_Machine_Bench_Press"
     },
     {
@@ -1942,6 +2121,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Smith_Machine_Incline_Bench_Press"
     },
     {
@@ -1955,6 +2135,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Smith_Machine_Overhead_Shoulder_Press"
     },
     {
@@ -1968,6 +2149,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "free-exercise-db:Smith_Machine_Stiff-Legged_Deadlift"
     },
     {
@@ -1981,6 +2163,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Smith_Single-Leg_Split_Squat"
     },
     {
@@ -1994,6 +2177,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Leverage_Incline_Chest_Press"
     },
     {
@@ -2007,6 +2191,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "free-exercise-db:Leverage_Iso_Row"
     },
     {
@@ -2020,6 +2205,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "free-exercise-db:Leverage_High_Row"
     },
     {
@@ -2033,6 +2219,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "free-exercise-db:Lying_T-Bar_Row"
     },
     {
@@ -2046,6 +2233,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Reverse_Machine_Flyes"
     },
     {
@@ -2059,6 +2247,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Machine_Bicep_Curl"
     },
     {
@@ -2072,6 +2261,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Machine_Preacher_Curls"
     },
     {
@@ -2085,6 +2275,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Machine_Triceps_Extension"
     },
     {
@@ -2098,6 +2289,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Dip_Machine"
     },
     {
@@ -2111,6 +2303,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "free-exercise-db:Ab_Crunch_Machine"
     },
     {
@@ -2124,6 +2317,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "free-exercise-db:Standing_Leg_Curl"
     },
     {
@@ -2137,6 +2331,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "plain",
       source: "free-exercise-db:Calf_Press_On_The_Leg_Press_Machine"
     },
     {
@@ -2150,6 +2345,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "free-exercise-db:Glute_Ham_Raise"
     },
     {
@@ -2163,6 +2359,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "free-exercise-db:Reverse_Hyperextension"
     },
     {
@@ -2176,6 +2373,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Flat_Bench_Cable_Flyes"
     },
     {
@@ -2189,6 +2387,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Incline_Cable_Flye"
     },
     {
@@ -2202,6 +2401,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Low_Cable_Crossover"
     },
     {
@@ -2215,6 +2415,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "free-exercise-db:Standing_Cable_Chest_Press"
     },
     {
@@ -2228,6 +2429,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Standing_Biceps_Cable_Curl"
     },
     {
@@ -2241,6 +2443,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Overhead_Cable_Curl"
     },
     {
@@ -2254,6 +2457,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Rope_Overhead_Triceps_Extension"
     },
     {
@@ -2267,6 +2471,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Triceps_Pushdown_-_Rope_Attachment"
     },
     {
@@ -2280,6 +2485,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Reverse_Grip_Triceps_Pushdown"
     },
     {
@@ -2293,6 +2499,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "free-exercise-db:Seated_One-arm_Cable_Pulley_Rows"
     },
     {
@@ -2306,6 +2513,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "free-exercise-db:One_Arm_Lat_Pulldown"
     },
     {
@@ -2319,6 +2527,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "free-exercise-db:Underhand_Cable_Pulldowns"
     },
     {
@@ -2332,6 +2541,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Rear_Delt_Fly"
     },
     {
@@ -2345,6 +2555,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:Front_Cable_Raise"
     },
     {
@@ -2358,6 +2569,7 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "plain",
       source: "free-exercise-db:Upright_Cable_Row"
     },
     {
@@ -2371,6 +2583,7 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Shrugs"
     },
     {
@@ -2384,6 +2597,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "free-exercise-db:External_Rotation_with_Cable"
     },
     {
@@ -2397,6 +2611,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "plain",
       source: "free-exercise-db:One-Legged_Cable_Kickback"
     },
     {
@@ -2410,6 +2625,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "plain",
       source: "free-exercise-db:Pull_Through"
     },
     {
@@ -2423,6 +2639,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "free-exercise-db:Standing_Cable_Wood_Chop"
     },
     {
@@ -2436,6 +2653,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "free-exercise-db:Cable_Hip_Adduction"
     },
     {
@@ -2449,6 +2667,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "added",
       source: "free-exercise-db:Push-Up_Wide"
     },
     {
@@ -2462,6 +2681,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "added",
       source: "free-exercise-db:Push-Ups_-_Close_Triceps_Position"
     },
     {
@@ -2475,6 +2695,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "added",
       source: "free-exercise-db:Push-Ups_With_Feet_Elevated"
     },
     {
@@ -2488,6 +2709,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "added",
       source: "free-exercise-db:Incline_Push-Up"
     },
     {
@@ -2501,6 +2723,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "added",
       source: "free-exercise-db:Plyo_Push-up"
     },
     {
@@ -2514,6 +2737,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "added",
       source: "free-exercise-db:Bench_Dips"
     },
     {
@@ -2527,6 +2751,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "added",
       source: "free-exercise-db:Ring_Dips"
     },
     {
@@ -2540,6 +2765,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       source: "free-exercise-db:Band_Assisted_Pull-Up"
     },
     {
@@ -2553,6 +2779,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       source: "free-exercise-db:Weighted_Pull_Ups"
     },
     {
@@ -2567,6 +2794,7 @@ var exercises_default = {
         "chest",
         "triceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2580,6 +2808,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       source: "free-exercise-db:Muscle_Up"
     },
     {
@@ -2593,6 +2822,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       source: "free-exercise-db:Rope_Climb"
     },
     {
@@ -2607,6 +2837,7 @@ var exercises_default = {
         "shoulders",
         "triceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2621,6 +2852,7 @@ var exercises_default = {
         "quadriceps",
         "glutes"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2634,6 +2866,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "free-exercise-db:Freehand_Jump_Squat"
     },
     {
@@ -2647,6 +2880,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "free-exercise-db:Split_Jump"
     },
     {
@@ -2660,6 +2894,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "free-exercise-db:Standing_Long_Jump"
     },
     {
@@ -2673,6 +2908,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "added",
       source: "free-exercise-db:Knee_Tuck_Jump"
     },
     {
@@ -2687,6 +2923,7 @@ var exercises_default = {
         "calves",
         "shoulders"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2700,6 +2937,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "added",
       source: "free-exercise-db:Natural_Glute_Ham_Raise"
     },
     {
@@ -2713,6 +2951,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "added",
       source: "free-exercise-db:Single_Leg_Glute_Bridge"
     },
     {
@@ -2726,6 +2965,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "added",
       source: "free-exercise-db:Butt_Lift_Bridge"
     },
     {
@@ -2739,6 +2979,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Reverse_Crunch"
     },
     {
@@ -2752,6 +2993,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Air_Bike"
     },
     {
@@ -2765,6 +3007,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Flat_Bench_Lying_Leg_Raise"
     },
     {
@@ -2778,6 +3021,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "added",
       source: "free-exercise-db:Flutter_Kicks"
     },
     {
@@ -2791,6 +3035,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Dead_Bug"
     },
     {
@@ -2804,6 +3049,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "free-exercise-db:Jackknife_Sit-Up"
     },
     {
@@ -2818,6 +3064,7 @@ var exercises_default = {
         "forearms",
         "lats"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2831,6 +3078,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2844,6 +3092,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2857,6 +3106,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -2956,6 +3206,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -2969,6 +3220,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -2982,6 +3234,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -2995,6 +3248,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -3009,6 +3263,7 @@ var exercises_default = {
         "shoulders",
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3023,6 +3278,7 @@ var exercises_default = {
         "shoulders",
         "hamstrings"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -3037,6 +3293,8 @@ var exercises_default = {
         "middle back",
         "lats"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -3051,6 +3309,7 @@ var exercises_default = {
         "forearms",
         "abdominals"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -3064,6 +3323,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3077,6 +3337,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3090,6 +3351,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3103,6 +3365,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3116,6 +3379,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3129,6 +3393,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3142,6 +3407,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3155,6 +3421,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3168,6 +3435,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3182,6 +3450,7 @@ var exercises_default = {
         "middle back",
         "lats"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3195,6 +3464,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3208,6 +3478,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3222,6 +3493,7 @@ var exercises_default = {
         "quadriceps",
         "glutes"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3235,6 +3507,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3248,6 +3521,7 @@ var exercises_default = {
       primaryMuscles: [
         "hamstrings"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3261,6 +3535,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3275,6 +3550,7 @@ var exercises_default = {
         "chest",
         "triceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -3289,6 +3565,7 @@ var exercises_default = {
         "lats",
         "biceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -3303,6 +3580,7 @@ var exercises_default = {
         "quadriceps",
         "glutes"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3316,6 +3594,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3329,6 +3608,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3342,6 +3622,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3355,6 +3636,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3368,6 +3650,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3381,6 +3664,7 @@ var exercises_default = {
       primaryMuscles: [
         "lower back"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3394,6 +3678,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3407,6 +3692,7 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3420,6 +3706,7 @@ var exercises_default = {
       primaryMuscles: [
         "traps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3433,6 +3720,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3446,6 +3734,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3459,6 +3748,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3472,6 +3762,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3485,6 +3776,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3498,6 +3790,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3511,6 +3804,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3524,6 +3818,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3537,6 +3832,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3550,6 +3846,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3563,6 +3860,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3577,6 +3875,7 @@ var exercises_default = {
         "biceps",
         "forearms"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3590,6 +3889,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3603,6 +3903,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3616,6 +3917,7 @@ var exercises_default = {
       primaryMuscles: [
         "forearms"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3629,6 +3931,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3642,6 +3945,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3655,6 +3959,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3668,6 +3973,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3681,6 +3987,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3694,6 +4001,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3707,6 +4015,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3720,6 +4029,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3733,6 +4043,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3746,6 +4057,7 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3759,6 +4071,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3772,6 +4085,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3785,6 +4099,7 @@ var exercises_default = {
       primaryMuscles: [
         "abductors"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3798,6 +4113,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "plain",
       source: "mettle"
     },
     {
@@ -3812,6 +4128,7 @@ var exercises_default = {
         "chest",
         "triceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3825,6 +4142,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3838,6 +4156,8 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -3851,6 +4171,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3864,6 +4185,7 @@ var exercises_default = {
       primaryMuscles: [
         "biceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3878,6 +4200,7 @@ var exercises_default = {
         "biceps",
         "forearms"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3891,6 +4214,7 @@ var exercises_default = {
       primaryMuscles: [
         "forearms"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3904,6 +4228,7 @@ var exercises_default = {
       primaryMuscles: [
         "forearms"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3917,6 +4242,8 @@ var exercises_default = {
       primaryMuscles: [
         "forearms"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -3930,6 +4257,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3943,6 +4271,8 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "bar",
+      barKg: 10,
       source: "mettle"
     },
     {
@@ -3956,6 +4286,7 @@ var exercises_default = {
       primaryMuscles: [
         "triceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3969,6 +4300,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3983,6 +4315,7 @@ var exercises_default = {
         "hamstrings",
         "lower back"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -3996,6 +4329,7 @@ var exercises_default = {
       primaryMuscles: [
         "glutes"
       ],
+      load: "single",
       source: "mettle"
     },
     {
@@ -4010,6 +4344,7 @@ var exercises_default = {
         "shoulders",
         "quadriceps"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -4023,6 +4358,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -4037,6 +4373,7 @@ var exercises_default = {
         "middle back",
         "abdominals"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -4050,6 +4387,7 @@ var exercises_default = {
       primaryMuscles: [
         "shoulders"
       ],
+      load: "pair",
       source: "mettle"
     },
     {
@@ -4063,6 +4401,8 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4076,6 +4416,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4090,6 +4432,8 @@ var exercises_default = {
         "quadriceps",
         "shoulders"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4103,6 +4447,8 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4117,6 +4463,8 @@ var exercises_default = {
         "shoulders",
         "quadriceps"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4131,6 +4479,8 @@ var exercises_default = {
         "quadriceps",
         "shoulders"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4144,6 +4494,8 @@ var exercises_default = {
       primaryMuscles: [
         "middle back"
       ],
+      load: "bar",
+      barKg: 20,
       source: "mettle"
     },
     {
@@ -4157,6 +4509,7 @@ var exercises_default = {
       primaryMuscles: [
         "lats"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4170,6 +4523,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4183,6 +4537,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4197,6 +4552,7 @@ var exercises_default = {
         "shoulders",
         "triceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4210,6 +4566,7 @@ var exercises_default = {
       primaryMuscles: [
         "chest"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4223,6 +4580,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4237,6 +4595,7 @@ var exercises_default = {
         "quadriceps",
         "adductors"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4250,6 +4609,7 @@ var exercises_default = {
       primaryMuscles: [
         "calves"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4263,6 +4623,7 @@ var exercises_default = {
       primaryMuscles: [
         "abdominals"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4276,6 +4637,7 @@ var exercises_default = {
       primaryMuscles: [
         "lower back"
       ],
+      load: "added",
       source: "mettle"
     },
     {
@@ -4289,6 +4651,7 @@ var exercises_default = {
       primaryMuscles: [
         "quadriceps"
       ],
+      load: "added",
       source: "mettle"
     }
   ]

@@ -35,11 +35,15 @@ export function formatSet(
   s: { weightKg: number | null; reps: number | null; durationS: number | null; distanceM: number | null },
   tracking: TrackingType,
   unit: UnitPref,
+  /** 'pair' (two dumbbells) reads "10 kg each × 8". */
+  load?: string,
 ): string {
   switch (tracking) {
     // Weight is optional: "60 kg × 8", "20 reps", or "+10 kg × 8" on a bodyweight move.
     case 'weight_reps':
-      return s.weightKg ? `${displayWeight(s.weightKg, unit)} ${unit} × ${s.reps ?? 0}` : `${s.reps ?? 0} reps`;
+      return s.weightKg
+        ? `${displayWeight(s.weightKg, unit)} ${unit}${load === 'pair' ? ' each' : ''} × ${s.reps ?? 0}`
+        : `${s.reps ?? 0} reps`;
     case 'reps':
       return s.weightKg ? `+${displayWeight(s.weightKg, unit)} ${unit} × ${s.reps ?? 0}` : `${s.reps ?? 0} reps`;
     case 'time':

@@ -10,6 +10,7 @@ import { ChevronLeftIcon } from '@/design/icons/Icons';
 import { radii, space } from '@/design/tokens';
 import { setMetrics, type RecordMetric } from '@/engine';
 import { formatDay, formatMetric, formatSet } from '@/features/format';
+import { loadStyleFor } from '@/features/workout/load';
 import { LineChart } from '@/features/history/LineChart';
 import { useProfile } from '@/features/profile/useProfile';
 import { makeStyles, useTheme } from '@/design/theme';
@@ -115,7 +116,7 @@ export default function ExerciseDetail() {
             <Card key={i} style={styles.session}>
               <Text variant="label">{formatDay(sess.date)}</Text>
               <Text variant="caption" color="inkMuted" tabular>
-                {sess.sets.map((s) => formatSet(s, exercise.trackingType, unit)).join('  ·  ')}
+                {sess.sets.map((s) => formatSet(s, exercise.trackingType, unit, loadStyleFor(exercise).style)).join('  ·  ')}
               </Text>
             </Card>
           ))}

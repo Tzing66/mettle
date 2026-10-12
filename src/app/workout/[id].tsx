@@ -16,6 +16,7 @@ import { radii, space } from '@/design/tokens';
 import { formatDay, formatDurationMs, formatNumber, formatSet } from '@/features/format';
 import { useProfile } from '@/features/profile/useProfile';
 import { deleteFinishedWorkout } from '@/features/workout/deleteWorkout';
+import { loadStyleFor } from '@/features/workout/load';
 import { xpBreakdown } from '@/features/xpBreakdown';
 
 function readWorkout(id: string) {
@@ -146,7 +147,7 @@ export default function WorkoutDetail() {
                         {s.isWarmup ? 'W' : sets.filter((x) => !x.isWarmup && x.setIndex <= s.setIndex).length}
                       </Text>
                       <Text variant="label" tabular style={styles.flex}>
-                        {formatSet(s, exercise.trackingType, unit)}
+                        {formatSet(s, exercise.trackingType, unit, loadStyleFor(exercise).style)}
                       </Text>
                       {data.prSetIds.has(s.id) ? (
                         <Chip label="PR" tone="pr" textColor="prInk" icon={<TrophyIcon color={colors.prInk} size={12} />} />

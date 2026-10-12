@@ -6,6 +6,7 @@ import { and, eq, inArray, isNull } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { newId } from '@/db/ids';
 import { exerciseInfoMap, listExercises } from '@/db/repositories/exercises';
+import { loadStyleFor } from '@/features/workout/load';
 import { getProfile, listBodyweight } from '@/db/repositories/profile';
 import {
   completedSetsForWorkouts,
@@ -111,7 +112,9 @@ export function finishWorkout(workoutId: string): WorkoutSummary | null {
   });
 
   const xpGained = out.events.reduce((s, e) => s + e.amount, 0);
-  const names = new Map(listExercises().map((e) => [e.id, e.name]));
+  const exerciseRows = listExercises();
+  const names = new Map(exerciseRows.map((e) => [e.id, e.name]));
+  const exercisesById = new Map(exerciseRows.map((e) => [e.id, e]));
   const exerciseIds = new Set(sets.map((s) => s.exerciseId));
 
   return {
@@ -119,7 +122,13 @@ export function finishWorkout(workoutId: string): WorkoutSummary | null {
     durationMs: endedAt - workout.startedAt.getTime(),
     exerciseCount: exerciseIds.size,
     setCount: sets.filter((s) => !s.isWarmup).length,
-    volumeKg: sets.reduce((v, s) => v + (s.isWarmup ? 0 : (s.weightKg ?? 0) * (s.reps ?? 0)), 0),
+    // A pair of dumbbells moves twice the per-dumbbell weight.
+    volumeKg: sets.reduce((v, s) => {
+      if (s.isWarmup) return v;
+      const ex = exercisesById.get(s.exerciseId);
+      const implements_ = ex && loadStyleFor(ex).style === 'pair' ? 2 : 1;
+      return v + (s.weightKg ?? 0) * (s.reps ?? 0) * implements_;
+    }, 0),
     events: out.events,
     prs: out.result.records
       .filter((o): o is Extract<RecordOutcome, { kind: 'pr' }> => o.kind === 'pr')

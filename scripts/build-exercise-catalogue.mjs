@@ -395,6 +395,29 @@ const ICON_RULES = [
   ['press', /bench|chest press|push-up|floor press|dumbbell press|(in|de)cline (machine )?press/],
   ['squat', /squat|leg press|hack|leg extension|leg curl|abduction|adduction/],
 ];
+// How the weight field reads (src/features/workout/load.ts):
+//   pair   two dumbbells/kettlebells; weight is per dumbbell ("kg each")
+//   single one dumbbell/kettlebell
+//   bar    barbell, EZ bar or trap bar; weight is the total including the bar
+//   plain  machines, cables, landmine, Smith: the number you load or select
+//   added  bodyweight moves; weight is what you add ("+kg")
+const SINGLE_IMPLEMENT = new Set([
+  'goblet_squat', 'db_row', 'db_triceps_extension', 'db_pullover', 'concentration_curl', 'kettlebell_swing', 'turkish_get_up',
+  'kettlebell_windmill', 'db_side_bend', 'single_arm_db_press', 'single_arm_db_bench_press', 'single_arm_db_preacher_curl',
+  'single_arm_overhead_db_extension', 'single_arm_db_snatch', 'suitcase_carry', 'db_hip_thrust', 'sumo_squat',
+]);
+const BAR_KG = { barbell: 20, 'e-z curl bar': 10 };
+
+function loadFor(id, name, category, equipment) {
+  if (category === 'bodyweight') return { load: 'added' };
+  if (category === 'cardio') return {};
+  if (id === 'trap_bar_deadlift') return { load: 'bar', barKg: 25 };
+  if (id === 'farmers_walk') return { load: 'pair' };
+  if (equipment === 'dumbbell' || equipment === 'kettlebells') return { load: SINGLE_IMPLEMENT.has(id) ? 'single' : 'pair' };
+  if (BAR_KG[equipment] && !/landmine/i.test(name)) return { load: 'bar', barKg: BAR_KG[equipment] };
+  return { load: 'plain' };
+}
+
 const CATEGORY_ICON = { free_weight: 'press', machine: 'press', bodyweight: 'core', cardio: 'cardio' };
 
 function iconFor(name, category) {
@@ -440,6 +463,7 @@ const exercises = CATALOGUE.map(([id, datasetId, name, shortCode, category, trac
     icon: iconFor(name, category),
     equipment: extras.equipment ?? src?.equipment ?? null,
     primaryMuscles: extras.primaryMuscles ?? src?.primaryMuscles ?? [],
+    ...loadFor(id, name, category, extras.equipment ?? src?.equipment ?? null),
     ...(extras.activity ? { activity: extras.activity } : {}),
     ...(extras.benchmarkId ? { benchmarkId: extras.benchmarkId } : {}),
     source: datasetId ? `free-exercise-db:${datasetId}` : 'mettle',

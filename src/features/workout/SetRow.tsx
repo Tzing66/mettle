@@ -19,6 +19,8 @@ import { motion, radii, space } from '@/design/tokens';
 import { displayWeight, toStoredKg, type ExerciseCategory, type TrackingType, type UnitPref } from '@/engine';
 import { makeStyles, useTheme } from '@/design/theme';
 
+import { fromModeKg, toModeKg, type LoadMode } from './load';
+
 export type NumericField = 'weightKg' | 'reps' | 'durationS' | 'distanceM';
 
 export interface SetRowProps {
@@ -31,6 +33,8 @@ export interface SetRowProps {
   /** Planning: values are targets, no completion yet. */
   planning: boolean;
   isPr: boolean;
+  /** How the weight is typed (each/both dumbbells, total/per side); stored values are always standard. */
+  loadMode: LoadMode;
   /** XP shown in the float when this set is completed; null for none. */
   xpOnComplete: number | null;
   onToggleComplete: () => void;
@@ -110,7 +114,7 @@ export function SetRow(props: SetRowProps) {
     if (v === null) return null;
     switch (field) {
       case 'weightKg':
-        return displayWeight(v, unit);
+        return displayWeight(toModeKg(v, props.loadMode), unit);
       case 'distanceM':
         return swim ? v : v / 1000;
       case 'durationS':
@@ -123,7 +127,7 @@ export function SetRow(props: SetRowProps) {
     if (v === null) return null;
     switch (field) {
       case 'weightKg':
-        return toStoredKg(v, unit);
+        return fromModeKg(toStoredKg(v, unit), props.loadMode);
       case 'distanceM':
         return swim ? Math.round(v) : Math.round(v * 1000);
       case 'durationS':

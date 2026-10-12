@@ -13,6 +13,9 @@ import { formatSet } from '../format';
 import { SetRow, setColumns, type NumericField } from './SetRow';
 import { makeStyles, useTheme } from '@/design/theme';
 
+import { loadStyleFor, modeFor, modesFor, weightLabel } from './load';
+import { useLoadModes } from './loadModes';
+
 export interface ExerciseCardProps {
   exercise: ExerciseRow;
   sets: SetRowData[];
@@ -40,6 +43,18 @@ export function ExerciseCard(props: ExerciseCardProps) {
   const tone = categoryColors[exercise.category];
   const cols = setColumns(exercise.trackingType, exercise.category, exercise.activity, unit);
   const workingNumbers = numberWorkingSets(sets);
+  const load = loadStyleFor(exercise);
+  const remembered = useLoadModes((s) => s.modes[exercise.id]);
+  const setMode = useLoadModes((s) => s.setMode);
+  const mode = modeFor(exercise, remembered);
+  const modeOptions = modesFor(load.style, load.barKg);
+  const chooseMode = () => {
+    haptics.tick();
+    Alert.alert('How do you want to enter the weight?', 'Saved the standard way either way, so records and tiers stay right.', [
+      ...modeOptions.map((o) => ({ text: o.mode === mode ? `${o.title} ✓` : o.title, onPress: () => setMode(exercise.id, o.mode) })),
+      { text: 'Cancel', style: 'cancel' as const },
+    ]);
+  };
 
   return (
     <Animated.View entering={FadeInDown.duration(motion.duration.slow)} exiting={FadeOut.duration(motion.duration.fast)}>
@@ -54,7 +69,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
             </Text>
             <Text variant="caption" color="inkMuted" numberOfLines={1}>
               {lastTime.length
-                ? `Last: ${lastTime.filter((s) => !s.isWarmup).map((s) => formatSet(s, exercise.trackingType, unit)).join(', ')}`
+                ? `Last: ${lastTime.filter((s) => !s.isWarmup).map((s) => formatSet(s, exercise.trackingType, unit, load.style)).join(', ')}`
                 : 'First time: set your baseline'}
             </Text>
           </View>
@@ -76,16 +91,23 @@ export function ExerciseCard(props: ExerciseCardProps) {
             Set
           </Text>
           <View style={styles.colFields}>
-            {cols.map((c, i) => (
-              <Text
-                key={c.field}
-                variant="overline"
-                color="inkFaint"
-                align="center"
-                style={{ width: c.field === 'reps' ? 52 : 68, marginLeft: i > 0 && c.field === 'reps' ? space.lg : 0 }}>
-                {c.label}
-              </Text>
-            ))}
+            {cols.map((c, i) => {
+              const style = { width: c.field === 'reps' ? 52 : 68, marginLeft: i > 0 && c.field === 'reps' ? space.lg : 0 };
+              if (c.field === 'weightKg' && modeOptions.length > 1) {
+                return (
+                  <PressableScale key={c.field} accessibilityLabel={`Weight entry: ${weightLabel(load.style, mode, unit)}. Change`} onPress={chooseMode} style={style}>
+                    <Text variant="overline" color="accentInk" align="center" numberOfLines={1}>
+                      {weightLabel(load.style, mode, unit)} ▾
+                    </Text>
+                  </PressableScale>
+                );
+              }
+              return (
+                <Text key={c.field} variant="overline" color="inkFaint" align="center" numberOfLines={1} style={style}>
+                  {c.field === 'weightKg' ? weightLabel(load.style, mode, unit) : c.label}
+                </Text>
+              );
+            })}
           </View>
           {planning ? null : <View style={styles.colCheck} />}
         </View>
@@ -100,6 +122,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
               category={exercise.category}
               activity={exercise.activity}
               unit={unit}
+              loadMode={mode}
               planning={planning}
               isPr={props.prSetIds.has(s.id)}
               xpOnComplete={props.xpForSet(s)}
