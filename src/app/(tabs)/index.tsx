@@ -2,7 +2,9 @@ import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { planFromItems, starterRoutines, type StarterRoutine } from '@/db/repositories/routines';
+import { listRoutines, planFromItems, starterRoutines, type StarterRoutine } from '@/db/repositories/routines';
+import { useDbQuery } from '@/db/useDbQuery';
+import { startRoutine } from '@/features/routines/actions';
 import { Button, Card, Chip, PressableScale, ProgressBar, RankBadge, Ring, Screen, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronRightIcon, FlameIcon, PlusIcon } from '@/design/icons/Icons';
@@ -20,6 +22,7 @@ export default function Home() {
   const { colors } = useTheme();
   const profile = useProfile();
   const stats = useHomeStats();
+  const routines = useDbQuery(listRoutines, ['routines']);
   const { rank } = stats;
   const target = profile?.weeklyTargetDays ?? 3;
 
@@ -152,6 +155,47 @@ export default function Home() {
 
       {firstRun ? null : (
         <Animated.View entering={enter(4)} style={styles.section}>
+          <View style={styles.sectionHead}>
+            <Text variant="overline" color="inkMuted">
+              Your routines
+            </Text>
+            <PressableScale accessibilityLabel="All routines" onPress={() => router.push('/routines')}>
+              <Text variant="label" color="accentInk">
+                See all
+              </Text>
+            </PressableScale>
+          </View>
+          {routines.length ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.routineRow}>
+              {routines.map((r) => (
+                <PressableScale
+                  key={r.id}
+                  accessibilityLabel={`Open ${r.name}`}
+                  onPress={() => router.push({ pathname: '/routines/[id]', params: { id: r.id } })}>
+                  <Card style={styles.routineCard}>
+                    <Text variant="heading" numberOfLines={1}>
+                      {r.name}
+                    </Text>
+                    <Text variant="caption" color="inkMuted">
+                      {r.items.length} exercise{r.items.length === 1 ? '' : 's'}
+                    </Text>
+                    <Chip label="Start" tone="accent" textColor="onAccent" onPress={() => startRoutine(r.items)} />
+                  </Card>
+                </PressableScale>
+              ))}
+            </ScrollView>
+          ) : (
+            <PressableScale accessibilityLabel="Routines" onPress={() => router.push('/routines')}>
+              <Card>
+                <Text color="inkMuted">Save a workout you repeat as a routine, or try a starter. Tap here to see them.</Text>
+              </Card>
+            </PressableScale>
+          )}
+        </Animated.View>
+      )}
+
+      {firstRun ? null : (
+        <Animated.View entering={enter(5)} style={styles.section}>
           <Text variant="overline" color="inkMuted">
             Last workout
           </Text>
@@ -190,6 +234,9 @@ const useStyles = makeStyles((colors) => ({
   hero: { gap: space.md },
   heroOr: { marginTop: space.xs },
   starters: { gap: space.xs },
+  sectionHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  routineRow: { gap: space.sm },
+  routineCard: { width: 168, gap: space.xs, alignItems: 'flex-start' },
   greeting: { gap: space.xxs, paddingTop: space.sm },
   flex: { flex: 1, gap: space.xxs },
   rankCard: { gap: space.md },

@@ -16,3 +16,4 @@ export * from './SegmentedTabs';
 export * from './Stepper';
 export * from './Text';
 export * from './XPFloat';
+export * from './Toast';

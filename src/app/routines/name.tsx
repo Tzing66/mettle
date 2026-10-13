@@ -8,8 +8,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { createRoutine, getRoutine, renameRoutine, routineItemsFromWorkout } from '@/db/repositories/routines';
-import { Button, Text } from '@/design/components';
-import { haptics } from '@/design/haptics';
+import { Button, showToast, Text } from '@/design/components';
 import { makeStyles, useTheme } from '@/design/theme';
 import { radii, space, type } from '@/design/tokens';
 
@@ -24,13 +23,20 @@ export default function NameRoutine() {
     if (!name.trim()) return;
     if (existing) {
       renameRoutine(existing.id, name);
-    } else if (params.workoutId) {
-      const items = routineItemsFromWorkout(params.workoutId, params.completed === '1');
-      if (items.length === 0) return;
-      createRoutine(name, items);
+      router.back();
+      showToast({ title: 'Routine renamed', body: name.trim() });
+      return;
     }
-    haptics.success();
+    if (!params.workoutId) return;
+    const items = routineItemsFromWorkout(params.workoutId, params.completed === '1');
+    if (items.length === 0) return;
+    const id = createRoutine(name, items);
     router.back();
+    showToast({
+      title: 'Routine saved',
+      body: `${name.trim()} · find it on Home and under Routines`,
+      action: { label: 'View', onPress: () => router.push({ pathname: '/routines/[id]', params: { id } }) },
+    });
   };
 
   return (
@@ -55,7 +61,7 @@ export default function NameRoutine() {
             style={styles.input}
           />
           {existing ? null : (
-            <Text color="inkMuted">Saves the exercises, sets, reps and weights. Start it any time from Start → Routines.</Text>
+            <Text color="inkMuted">Saves the exercises, sets, reps and weights. Start it any time from Home or Start → Routines.</Text>
           )}
           <Button label={existing ? 'Rename' : 'Save routine'} size="lg" onPress={save} disabled={!name.trim()} />
         </View>

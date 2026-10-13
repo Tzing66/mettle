@@ -14,7 +14,7 @@ import { View } from 'react-native';
 
 import { useDatabaseMigrations } from '@/db/client';
 import { ensureSeeded } from '@/db/seed';
-import { KeyboardDoneBar, Text } from '@/design/components';
+import { KeyboardDoneBar, Text, ToastHost } from '@/design/components';
 import { space } from '@/design/tokens';
 import { SyncController } from '@/features/sync/useSync';
 import { useLatestUpdate } from '@/features/updates/useLatestUpdate';
@@ -83,6 +83,7 @@ function App() {
         <Stack.Screen name="routines/index" />
         <Stack.Screen name="routines/name" options={{ presentation: 'modal' }} />
         <Stack.Screen name="routines/import" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="routines/[id]" />
         <Stack.Screen name="workout/[id]" />
         <Stack.Screen name="workout/summary" options={{ gestureEnabled: false, animation: 'fade' }} />
         <Stack.Screen name="progress" />
@@ -92,6 +93,7 @@ function App() {
         <Stack.Screen name="group/add" options={{ presentation: 'modal' }} />
         <Stack.Screen name="group/[id]" />
       </Stack>
+      <ToastHost />
     </NavigationThemeProvider>
   );
 }

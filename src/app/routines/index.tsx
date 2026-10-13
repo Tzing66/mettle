@@ -1,20 +1,18 @@
-// Your routines: tap one to plan it; share, rename or delete from its menu.
+// Your routines and the starters: tap one to see it, Start to plan it.
 import { router } from 'expo-router';
-import { useState } from 'react';
-import { Alert, ScrollView, Share, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listExercises } from '@/db/repositories/exercises';
-import { deleteRoutine, listRoutines, planFromItems, planFromRoutine, starterRoutines, type RoutineRow, type StarterRoutine } from '@/db/repositories/routines';
-import { getActiveWorkout } from '@/db/repositories/workouts';
+import { listRoutines, starterRoutines, type RoutineRow } from '@/db/repositories/routines';
 import { useDbQuery } from '@/db/useDbQuery';
-import { Button, Card, PressableScale, Text } from '@/design/components';
+import { Button, Card, Chip, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon, DotsIcon } from '@/design/icons/Icons';
 import { makeStyles, useTheme } from '@/design/theme';
 import { radii, space } from '@/design/tokens';
-import { shareMessage, shareRoutine } from '@/features/routines/share';
+import { confirmDeleteRoutine, shareRoutineWithCode, startRoutine } from '@/features/routines/actions';
 
 function readRoutines() {
   const names = new Map(listExercises().map((e) => [e.id, e.name]));
@@ -29,57 +27,14 @@ export default function Routines() {
   const styles = useStyles();
   const { colors } = useTheme();
   const rows = useDbQuery(readRoutines, ['routines', 'exercises']);
-  const [sharing, setSharing] = useState<string | null>(null);
   const names = useDbQuery(() => new Map(listExercises().map((e) => [e.id, e.name])), ['exercises']);
 
-  const startStarter = (r: StarterRoutine) => {
-    if (!noOpenWorkout()) return;
-    haptics.success();
-    planFromItems(r.items);
-    router.replace('/workout/active');
-  };
-
-  const noOpenWorkout = () => {
-    if (!getActiveWorkout()) return true;
-    Alert.alert('You have a workout open', 'Finish or discard it before starting another.', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Go to it', onPress: () => router.replace('/workout/active') },
-    ]);
-    return false;
-  };
-
-  const start = (r: RoutineRow) => {
-    if (!noOpenWorkout()) return;
-    haptics.success();
-    if (planFromRoutine(r.id)) router.replace('/workout/active');
-  };
-
-  const share = async (r: RoutineRow, exercises: string[]) => {
-    setSharing(r.id);
-    try {
-      const code = await shareRoutine(r);
-      await Share.share({ message: shareMessage(r, code, exercises) });
-    } catch (e) {
-      Alert.alert('Couldn’t share', e instanceof Error ? e.message : String(e));
-    } finally {
-      setSharing(null);
-    }
-  };
-
-  const menu = (r: RoutineRow, exercises: string[]) => {
+  const menu = (r: RoutineRow) => {
     haptics.tick();
     Alert.alert(r.name, undefined, [
-      { text: 'Share with a code', onPress: () => share(r, exercises) },
+      { text: 'Share with a code', onPress: () => shareRoutineWithCode(r) },
       { text: 'Rename', onPress: () => router.push({ pathname: '/routines/name', params: { id: r.id } }) },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () =>
-          Alert.alert(`Delete “${r.name}”?`, 'Workouts you logged with it stay.', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Delete', style: 'destructive', onPress: () => deleteRoutine(r.id) },
-          ]),
-      },
+      { text: 'Delete', style: 'destructive', onPress: () => confirmDeleteRoutine(r) },
       { text: 'Cancel', style: 'cancel' },
     ]);
   };
@@ -111,7 +66,10 @@ export default function Routines() {
 
         {rows.map(({ routine, exercises, sets }, i) => (
           <Animated.View key={routine.id} entering={FadeInDown.delay(i * 40).duration(240)}>
-            <PressableScale accessibilityLabel={`Start ${routine.name}`} onPress={() => start(routine)} scaleTo={0.98}>
+            <PressableScale
+              accessibilityLabel={`Open ${routine.name}`}
+              onPress={() => router.push({ pathname: '/routines/[id]', params: { id: routine.id } })}
+              scaleTo={0.98}>
               <Card style={styles.card}>
                 <View style={styles.row}>
                   <View style={styles.flex}>
@@ -120,10 +78,10 @@ export default function Routines() {
                     </Text>
                     <Text variant="caption" color="inkMuted">
                       {exercises.length} exercise{exercises.length === 1 ? '' : 's'} · {sets} sets
-                      {sharing === routine.id ? ' · sharing…' : ''}
                     </Text>
                   </View>
-                  <PressableScale accessibilityLabel={`${routine.name} options`} onPress={() => menu(routine, exercises)} style={styles.menu}>
+                  <Chip label="Start" tone="accent" textColor="onAccent" onPress={() => startRoutine(routine.items)} />
+                  <PressableScale accessibilityLabel={`${routine.name} options`} onPress={() => menu(routine)} style={styles.menu}>
                     <DotsIcon color={colors.inkMuted} />
                   </PressableScale>
                 </View>
@@ -139,9 +97,14 @@ export default function Routines() {
           Starter routines
         </Text>
         {starters.map((r) => (
-          <PressableScale key={r.id} accessibilityLabel={`Start ${r.name}`} onPress={() => startStarter(r)} scaleTo={0.98}>
+          <PressableScale key={r.id} accessibilityLabel={`Start ${r.name}`} onPress={() => startRoutine(r.items)} scaleTo={0.98}>
             <Card style={styles.card}>
-              <Text variant="heading">{r.name}</Text>
+              <View style={styles.row}>
+                <Text variant="heading" style={styles.flex}>
+                  {r.name}
+                </Text>
+                <Chip label="Start" tone="accentSoft" textColor="accentInk" onPress={() => startRoutine(r.items)} />
+              </View>
               <Text color="inkMuted">{r.blurb}</Text>
               <Text variant="caption" color="inkFaint" numberOfLines={2}>
                 {r.items.map((i) => names.get(i.exerciseId) ?? i.exerciseId).join(' · ')}
