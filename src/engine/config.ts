@@ -4,7 +4,7 @@
 import ageGradingJson from '@config/age-grading.road2025.json';
 import benchmarksJson from '@config/benchmarks.v1.json';
 import ranksJson from '@config/ranks.v1.json';
-import xpRulesJson from '@config/xp-rules.v3.json';
+import xpRulesJson from '@config/xp-rules.v4.json';
 
 import type { BenchmarkTier, Sex } from './types';
 
@@ -20,7 +20,13 @@ export interface XpRules {
     workoutMinWorkingSets: number;
     workoutMinCardioMinutes: number;
     /** Working-set XP by how close the set is to your best for that exercise. */
-    setXp: { bands: { minRatio: number; xp: number }[]; firstSession: number };
+    setXp: {
+      bands: { minRatio: number; xp: number }[];
+      firstSession: number;
+      /** Extra XP per drop after a working set (one set, a little more effort). */
+      dropBonus: number;
+      maxDropsPerSet: number;
+    };
     maxSetXpPerWorkout: number;
     cardioBands: CardioBand[];
     weeklyGoal: number;

@@ -37,7 +37,7 @@ describe('computeServerLedger', () => {
     // 60×5 bench at 80 kg = 0.875× → placement score 1.75 → 6,500 XP on the ladder (D3), topped up after 85 XP.
     expect(reasons).toEqual({ workout_complete: 50, working_sets: 15, first_exercise: 20, placement: 6415 });
     expect(out.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
-    expect(out.ruleVersion).toBe('xp-rules.v3');
+    expect(out.ruleVersion).toBe('xp-rules.v4');
     expect(out.events.every((e) => e.workout_id === 'w1')).toBe(true);
   });
 

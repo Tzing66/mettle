@@ -41,6 +41,8 @@ export interface SetRowProps {
   onField: (field: NumericField, value: number | null) => void;
   onToggleWarmup: () => void;
   onDelete: () => void;
+  /** Adds a drop after this set; absent where drops don't apply. */
+  onAddDrop?: () => void;
 }
 
 /** Column layout per tracking type, shared with the card's header labels. */
@@ -99,7 +101,18 @@ export function SetRow(props: SetRowProps) {
 
   const openMenu = () => {
     haptics.tick();
+    if (set.isDrop) {
+      Alert.alert('Drop', 'Lighter weight straight after the set above, no rest.', [
+        ...(props.onAddDrop ? [{ text: 'Add another drop', onPress: props.onAddDrop }] : []),
+        { text: 'Delete drop', style: 'destructive', onPress: props.onDelete },
+        { text: 'Cancel', style: 'cancel' },
+      ]);
+      return;
+    }
     Alert.alert(`Set ${set.isWarmup ? '(warm-up)' : number}`, undefined, [
+      ...(props.onAddDrop && !set.isWarmup
+        ? [{ text: 'Add drop set', onPress: props.onAddDrop }]
+        : []),
       { text: set.isWarmup ? 'Make working set' : 'Mark as warm-up', onPress: props.onToggleWarmup },
       { text: 'Delete set', style: 'destructive', onPress: props.onDelete },
       { text: 'Cancel', style: 'cancel' },
@@ -145,9 +158,9 @@ export function SetRow(props: SetRowProps) {
       disabled={planning}
       accessibilityLabel={planning ? undefined : `Set ${number}, tap to ${done ? 'undo' : 'complete'}`}>
       <Animated.View style={[styles.row, rowStyle]}>
-        <Pressable onPress={openMenu} accessibilityLabel={`Set ${number} options`} hitSlop={6} style={[styles.index, set.isWarmup && styles.warmup]}>
-          <Text variant="caption" color={set.isWarmup ? 'xpInk' : 'inkMuted'} tabular>
-            {set.isWarmup ? 'W' : number}
+        <Pressable onPress={openMenu} accessibilityLabel={set.isDrop ? 'Drop options' : `Set ${number} options`} hitSlop={6} style={[styles.index, set.isWarmup && styles.warmup, set.isDrop && styles.drop]}>
+          <Text variant="caption" color={set.isWarmup ? 'xpInk' : set.isDrop ? 'accentInk' : 'inkMuted'} tabular>
+            {set.isWarmup ? 'W' : set.isDrop ? '↓' : number}
           </Text>
         </Pressable>
 
@@ -217,6 +230,7 @@ const useStyles = makeStyles((colors) => ({
     justifyContent: 'center',
   },
   warmup: { backgroundColor: colors.xp },
+  drop: { backgroundColor: colors.accentSoft },
   fields: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space.sm },
   fieldWrap: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   times: { marginHorizontal: -space.xxs },

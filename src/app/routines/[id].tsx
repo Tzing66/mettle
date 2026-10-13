@@ -54,7 +54,7 @@ export default function RoutineDetail() {
   }
 
   const { routine, items } = data;
-  const workingSets = items.reduce((n, { item }) => n + item.sets.filter((s) => !s.isWarmup).length, 0);
+  const workingSets = items.reduce((n, { item }) => n + item.sets.filter((s) => !s.isWarmup && !s.isDrop).length, 0);
 
   const share = async () => {
     setSharing(true);
@@ -99,7 +99,7 @@ export default function RoutineDetail() {
                 {item.sets.map((s, k) => (
                   <View key={k} style={styles.setRow}>
                     <Text variant="caption" color="inkMuted" tabular style={styles.setIndex}>
-                      {s.isWarmup ? 'W' : ++n}
+                      {s.isWarmup ? 'W' : s.isDrop ? '↓' : ++n}
                     </Text>
                     <Text variant="label" tabular style={styles.flex}>
                       {item.fillWeights && s.weightKg === null && exercise.trackingType === 'weight_reps'

@@ -56,9 +56,34 @@ function isCardio(exercise: ExerciseInfo | undefined): boolean {
   return exercise?.category === 'cardio';
 }
 
+/** Working sets: not warm-ups, not cardio, and a drop set counts once (its drops are part of it). */
 function countWorkingSets(sets: SetInput[], exercises: Record<string, ExerciseInfo>): number {
-  return sets.filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId]))
+  return sets.filter((s) => !s.isWarmup && !s.isDrop && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId]))
     .length;
+}
+
+/**
+ * Set XP for a workout's sets: each working set by how close it is to your
+ * best, plus a small bonus for each drop that follows it (up to a limit).
+ */
+export function workoutSetXp(sets: SetInput[], exercises: Record<string, ExerciseInfo>, records: PersonalRecord[], rules: XpRules = xpRules): number {
+  const { dropBonus, maxDropsPerSet } = rules.consistency.setXp;
+  let total = 0;
+  const dropsSince = new Map<string, number>(); // exercise → drops since its last working set
+  for (const s of sets) {
+    const exercise = exercises[s.exerciseId];
+    if (!exercise || isCardio(exercise) || s.isWarmup) continue;
+    if (s.isDrop) {
+      const n = dropsSince.get(s.exerciseId);
+      if (n === undefined || n >= maxDropsPerSet) continue; // no working set before it, or past the limit
+      dropsSince.set(s.exerciseId, n + 1);
+      total += dropBonus;
+    } else {
+      dropsSince.set(s.exerciseId, 0);
+      total += setXpFor(s, exercise, records, rules);
+    }
+  }
+  return total;
 }
 
 /** Whole minutes of non-warm-up cardio. */
@@ -169,9 +194,7 @@ export function computeWorkoutXp(
   if (qualifies)
     consistency.push(event({ amount: c.workoutComplete, reason: 'workout_complete', sourceType: 'workout', sourceId: workout.id, meta: workoutMeta }));
   if (workingSets > 0) {
-    const setXp = workout.sets
-      .filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId]))
-      .reduce((sum, s) => sum + setXpFor(s, exercises[s.exerciseId], ctx.records, rules), 0);
+    const setXp = workoutSetXp(workout.sets, exercises, ctx.records, rules);
     consistency.push(event({ amount: Math.min(setXp, c.maxSetXpPerWorkout), reason: 'working_sets', sourceType: 'workout', sourceId: workout.id, meta: { ...workoutMeta, sets: workingSets } }));
   }
   const cardio = cardioXp(ctx.today.cardioMinutes, cardioMinutes, rules);
@@ -232,7 +255,7 @@ export function computeWorkoutXp(
     if (!seenExercises.has(exerciseId)) {
       seenExercises.add(exerciseId);
       // Only real efforts count, and only a few per workout, so variety can't be farmed.
-      const working = workout.sets.filter((s) => s.exerciseId === exerciseId && !s.isWarmup).length;
+      const working = workout.sets.filter((s) => s.exerciseId === exerciseId && !s.isWarmup && !s.isDrop).length;
       if (firstsLeft > 0 && working >= (isCardio(exercise) ? 1 : p.firstExerciseMinSets)) {
         firstsLeft--;
         progress.push(event({ amount: p.firstExercise, reason: 'first_exercise', sourceType: 'exercise', sourceId: exerciseId, meta: workoutMeta }));

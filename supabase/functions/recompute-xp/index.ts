@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     const [profiles, workouts, sets, bodyweight, customExercises] = await Promise.all([
       all('profiles', 'sex_for_standards,birth_year,weekly_target_days,utc_offset_minutes', false),
       all('workouts', 'id,started_at,ended_at'),
-      all('workout_sets', 'id,workout_id,exercise_id,set_index,is_warmup,weight_kg,reps,duration_s,distance_m,completed_at'),
+      all('workout_sets', 'id,workout_id,exercise_id,set_index,is_warmup,is_drop,weight_kg,reps,duration_s,distance_m,completed_at'),
       all('bodyweight_logs', 'weight_kg,logged_at'),
       all('custom_exercises', 'id,category,tracking_type'),
     ]);

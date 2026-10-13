@@ -5166,9 +5166,9 @@ var ranks_v1_default = {
   sLevelSpanXp: 25e3
 };
 
-// config/xp-rules.v3.json
-var xp_rules_v3_default = {
-  version: "xp-rules.v3",
+// config/xp-rules.v4.json
+var xp_rules_v4_default = {
+  version: "xp-rules.v4",
   consistency: {
     workoutComplete: 50,
     workoutMinWorkingSets: 3,
@@ -5192,7 +5192,9 @@ var xp_rules_v3_default = {
           xp: 4
         }
       ],
-      firstSession: 5
+      firstSession: 5,
+      dropBonus: 2,
+      maxDropsPerSet: 2
     },
     maxSetXpPerWorkout: 100,
     cardioBands: [
@@ -5251,7 +5253,7 @@ var xp_rules_v3_default = {
 };
 
 // src/engine/config.ts
-var xpRules = xp_rules_v3_default;
+var xpRules = xp_rules_v4_default;
 var ranksConfig = ranks_v1_default;
 var benchmarksConfig = benchmarks_v1_default;
 var ageGrading = age_grading_road2025_default;
@@ -5635,7 +5637,7 @@ function measure(std, set, ctx, config) {
   }
 }
 function standardResults(sets, ctx, config = placementConfig, standards = placementStandards(config)) {
-  const working = sets.filter((s) => !s.isWarmup);
+  const working = sets.filter((s) => !s.isWarmup && !s.isDrop);
   const out = [];
   for (const std of standards) {
     let best = null;
@@ -5693,7 +5695,7 @@ function placementEvent(args, rules = xpRules) {
 
 // src/engine/records.ts
 function setMetrics(set, exercise, rules = xpRules) {
-  if (set.isWarmup) return [];
+  if (set.isWarmup || set.isDrop) return [];
   const out = [];
   switch (exercise.trackingType) {
     // Weight is optional on rep exercises: weighted sets set e1RM bests,
@@ -5840,7 +5842,26 @@ function isCardio(exercise) {
   return exercise?.category === "cardio";
 }
 function countWorkingSets(sets, exercises) {
-  return sets.filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId])).length;
+  return sets.filter((s) => !s.isWarmup && !s.isDrop && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId])).length;
+}
+function workoutSetXp(sets, exercises, records, rules = xpRules) {
+  const { dropBonus, maxDropsPerSet } = rules.consistency.setXp;
+  let total = 0;
+  const dropsSince = /* @__PURE__ */ new Map();
+  for (const s of sets) {
+    const exercise = exercises[s.exerciseId];
+    if (!exercise || isCardio(exercise) || s.isWarmup) continue;
+    if (s.isDrop) {
+      const n = dropsSince.get(s.exerciseId);
+      if (n === void 0 || n >= maxDropsPerSet) continue;
+      dropsSince.set(s.exerciseId, n + 1);
+      total += dropBonus;
+    } else {
+      dropsSince.set(s.exerciseId, 0);
+      total += setXpFor(s, exercise, records, rules);
+    }
+  }
+  return total;
 }
 function countCardioMinutes(sets, exercises) {
   const seconds = sets.filter((s) => !s.isWarmup && isCardio(exercises[s.exerciseId])).reduce((sum, s) => sum + (s.durationS ?? 0), 0);
@@ -5905,7 +5926,7 @@ function computeWorkoutXp(workout, ctx, rules = xpRules) {
   if (qualifies)
     consistency.push(event({ amount: c.workoutComplete, reason: "workout_complete", sourceType: "workout", sourceId: workout.id, meta: workoutMeta }));
   if (workingSets > 0) {
-    const setXp = workout.sets.filter((s) => !s.isWarmup && exercises[s.exerciseId] && !isCardio(exercises[s.exerciseId])).reduce((sum, s) => sum + setXpFor(s, exercises[s.exerciseId], ctx.records, rules), 0);
+    const setXp = workoutSetXp(workout.sets, exercises, ctx.records, rules);
     consistency.push(event({ amount: Math.min(setXp, c.maxSetXpPerWorkout), reason: "working_sets", sourceType: "workout", sourceId: workout.id, meta: { ...workoutMeta, sets: workingSets } }));
   }
   const cardio = cardioXp(ctx.today.cardioMinutes, cardioMinutes, rules);
@@ -5955,7 +5976,7 @@ function computeWorkoutXp(workout, ctx, rules = xpRules) {
     if (!exercise) continue;
     if (!seenExercises.has(exerciseId)) {
       seenExercises.add(exerciseId);
-      const working = workout.sets.filter((s) => s.exerciseId === exerciseId && !s.isWarmup).length;
+      const working = workout.sets.filter((s) => s.exerciseId === exerciseId && !s.isWarmup && !s.isDrop).length;
       if (firstsLeft > 0 && working >= (isCardio(exercise) ? 1 : p.firstExerciseMinSets)) {
         firstsLeft--;
         progress.push(event({ amount: p.firstExercise, reason: "first_exercise", sourceType: "exercise", sourceId: exerciseId, meta: workoutMeta }));
@@ -6159,6 +6180,7 @@ function computeServerLedger(input) {
       id: s.id,
       exerciseId: s.exercise_id,
       isWarmup: s.is_warmup,
+      isDrop: !!s.is_drop,
       weightKg: s.weight_kg ?? void 0,
       reps: s.reps ?? void 0,
       durationS: s.duration_s ?? void 0,

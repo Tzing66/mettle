@@ -25,11 +25,14 @@ import {
   toSharedItems,
 } from '@/db/repositories/routines';
 import {
+  addDropSet,
   addExerciseToWorkout,
   addSet,
   beginWorkout,
+  deleteSet,
   deleteWorkout,
   discardWorkout,
+  dropsOf,
   exerciseHistory,
   getActiveWorkout,
   getWorkout,
@@ -478,5 +481,59 @@ describe('routines', () => {
     expect(listRoutines().find((r) => r.id === id)?.name).toBe('Pull day');
     deleteRoutine(id);
     expect(listRoutines().some((r) => r.id === id)).toBe(false);
+  });
+});
+
+describe('drop sets', () => {
+  it('a drop goes right after its set (and its earlier drops), 20% lighter', () => {
+    at(MONDAY + 60 * DAY);
+    const id = startWorkout();
+    addExerciseToWorkout(id, getExercise('db_curl')!);
+    const [first, second] = setsForWorkout(id).sort((a, b) => a.setIndex - b.setIndex);
+    updateSet(first.id, { weightKg: 14, reps: 10 });
+    addDropSet(first.id);
+    addDropSet(first.id);
+    const ordered = setsForWorkout(id).sort((a, b) => a.setIndex - b.setIndex);
+    expect(ordered.map((s) => [s.isDrop, s.weightKg])).toEqual([
+      [false, 14],
+      [true, 11], // 14 × 0.8 = 11.2 → 11
+      [true, 8.5], // 11 × 0.8 = 8.8 → 8.5
+      [false, second.weightKg],
+      [false, second.weightKg],
+    ]);
+    expect(dropsOf(first.id)).toHaveLength(2);
+    discardWorkout(id);
+  });
+
+  it('set counts, cascades and deletes treat a drop as part of its set', () => {
+    const id = startWorkout();
+    addExerciseToWorkout(id, getExercise('db_curl')!);
+    const first = setsForWorkout(id).sort((a, b) => a.setIndex - b.setIndex)[0];
+    const drop = addDropSet(first.id)!;
+    updateSetCascade(first.id, 'reps', 7); // later real sets follow; the drop doesn't
+    const after = () => setsForWorkout(id).sort((a, b) => a.setIndex - b.setIndex);
+    expect(after().find((s) => s.id === drop)?.reps).toBeNull();
+    setSetCount(id, 'db_curl', 4); // 3 real sets → 4, drop untouched
+    expect(after().filter((s) => !s.isDrop)).toHaveLength(4);
+    expect(after().filter((s) => s.isDrop)).toHaveLength(1);
+    deleteSet(first.id);
+    expect(after().some((s) => s.isDrop)).toBe(false);
+    discardWorkout(id);
+  });
+
+  it('a finished workout pays the drop bonus and the drop never becomes a record', () => {
+    at(MONDAY + 61 * DAY);
+    const id = startWorkout();
+    addExerciseToWorkout(id, getExercise('hammer_curl')!);
+    const sets = setsForWorkout(id).sort((a, b) => a.setIndex - b.setIndex);
+    for (const s of sets) updateSet(s.id, { weightKg: 16, reps: 8 });
+    const d = addDropSet(sets[0].id)!;
+    updateSet(d, { weightKg: 30, reps: 8 }); // nonsense-heavy drop: must not become a record
+    for (const s of setsForWorkout(id)) setCompleted(s.id, true);
+    at(MONDAY + 61 * DAY + 3600_000);
+    const summary = finishWorkout(id)!;
+    expect(summary.setCount).toBe(3);
+    expect(listRecords().find((r) => r.exerciseId === 'hammer_curl' && r.metric === 'e1rm')?.value).toBeLessThan(30);
+    expect(setsForWorkout(id).find((s) => s.id === d)?.isDrop).toBe(true);
   });
 });

@@ -170,14 +170,14 @@ function measure(std: PlacementStandard, set: SetInput, ctx: StandardContext, co
   }
 }
 
-/** Best result per standard covered by these sets (warm-ups ignored). */
+/** Best result per standard covered by these sets (warm-ups and drops ignored). */
 export function standardResults(
   sets: SetInput[],
   ctx: StandardContext,
   config: PlacementConfig = placementConfig,
   standards: PlacementStandard[] = placementStandards(config),
 ): StandardResult[] {
-  const working = sets.filter((s) => !s.isWarmup);
+  const working = sets.filter((s) => !s.isWarmup && !s.isDrop);
   const out: StandardResult[] = [];
   for (const std of standards) {
     let best: StandardResult | null = null;

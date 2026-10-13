@@ -121,7 +121,7 @@ export function finishWorkout(workoutId: string): WorkoutSummary | null {
     workoutId,
     durationMs: endedAt - workout.startedAt.getTime(),
     exerciseCount: exerciseIds.size,
-    setCount: sets.filter((s) => !s.isWarmup).length,
+    setCount: sets.filter((s) => !s.isWarmup && !s.isDrop).length,
     // A pair of dumbbells moves twice the per-dumbbell weight.
     volumeKg: sets.reduce((v, s) => {
       if (s.isWarmup) return v;

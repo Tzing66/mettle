@@ -27,6 +27,7 @@ export function buildWorkoutExport(): { csv: string; setCount: number } {
       category: ex?.category ?? '',
       setNumber: s.setIndex + 1,
       isWarmup: s.isWarmup,
+      isDrop: s.isDrop,
       weightKg: s.weightKg,
       reps: s.reps,
       durationS: s.durationS,

@@ -31,7 +31,7 @@ function readHomeStats() {
           endedAt: last.endedAt!,
           durationMs: last.endedAt!.getTime() - last.startedAt.getTime(),
           exercises: lastExercises,
-          sets: lastSets.filter((s) => !s.isWarmup).length,
+          sets: lastSets.filter((s) => !s.isWarmup && !s.isDrop).length,
           xp: xpByWorkout([last.id]).get(last.id) ?? 0,
         }
       : null,

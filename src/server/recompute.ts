@@ -27,6 +27,7 @@ export interface CloudSet {
   exercise_id: string;
   set_index: number;
   is_warmup: boolean;
+  is_drop?: boolean;
   weight_kg: number | null;
   reps: number | null;
   duration_s: number | null;
@@ -106,6 +107,7 @@ export function computeServerLedger(input: {
           id: s.id,
           exerciseId: s.exercise_id,
           isWarmup: s.is_warmup,
+          isDrop: !!s.is_drop,
           weightKg: s.weight_kg ?? undefined,
           reps: s.reps ?? undefined,
           durationS: s.duration_s ?? undefined,

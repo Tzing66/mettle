@@ -19,7 +19,7 @@ function readRoutines() {
   return listRoutines().map((r) => ({
     routine: r,
     exercises: r.items.flatMap((i) => (names.has(i.exerciseId) ? [names.get(i.exerciseId)!] : [])),
-    sets: r.items.reduce((n, i) => n + i.sets.filter((s) => !s.isWarmup).length, 0),
+    sets: r.items.reduce((n, i) => n + i.sets.filter((s) => !s.isWarmup && !s.isDrop).length, 0),
   }));
 }
 

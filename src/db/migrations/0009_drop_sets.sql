@@ -1,0 +1,1 @@
+ALTER TABLE `workout_sets` ADD `is_drop` integer DEFAULT false NOT NULL;

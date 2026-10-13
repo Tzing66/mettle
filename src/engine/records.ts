@@ -13,7 +13,8 @@ export function setMetrics(
   exercise: ExerciseInfo,
   rules: XpRules = xpRules,
 ): MetricValue[] {
-  if (set.isWarmup) return [];
+  // Warm-ups and drops (done tired, straight after a set) aren't tests of your best.
+  if (set.isWarmup || set.isDrop) return [];
   const out: MetricValue[] = [];
   switch (exercise.trackingType) {
     // Weight is optional on rep exercises: weighted sets set e1RM bests,

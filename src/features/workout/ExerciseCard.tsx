@@ -9,7 +9,7 @@ import { CheckIcon, DotsIcon, TimerIcon } from '@/design/icons/Icons';
 import { motion, radii, space } from '@/design/tokens';
 import type { UnitPref } from '@/engine';
 
-import { formatSet } from '../format';
+import { formatSetList } from '../format';
 import { SetRow, setColumns, type NumericField } from './SetRow';
 import { makeStyles, useTheme } from '@/design/theme';
 
@@ -29,6 +29,8 @@ export interface ExerciseCardProps {
   onField: (setId: string, field: NumericField, value: number | null) => void;
   onToggleWarmup: (set: SetRowData) => void;
   onDeleteSet: (setId: string) => void;
+  /** Adds a drop after a set (weighted exercises). */
+  onAddDrop: (setId: string) => void;
   onSetCount: (count: number) => void;
   onRemove: () => void;
   onBonusRound: () => void;
@@ -69,7 +71,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
             </Text>
             <Text variant="caption" color="inkMuted" numberOfLines={1}>
               {lastTime.length
-                ? `Last: ${lastTime.filter((s) => !s.isWarmup).map((s) => formatSet(s, exercise.trackingType, unit, load.style)).join(', ')}`
+                ? `Last: ${formatSetList(lastTime.filter((s) => !s.isWarmup), exercise.trackingType, unit, load.style)}`
                 : 'First time: set your baseline'}
             </Text>
           </View>
@@ -130,12 +132,13 @@ export function ExerciseCard(props: ExerciseCardProps) {
               onField={(field, value) => props.onField(s.id, field, value)}
               onToggleWarmup={() => props.onToggleWarmup(s)}
               onDelete={() => props.onDeleteSet(s.id)}
+              onAddDrop={exercise.trackingType === 'weight_reps' ? () => props.onAddDrop(s.isDrop ? previousRealSet(sets, s)?.id ?? s.id : s.id) : undefined}
             />
           ))}
         </View>
 
         <View style={styles.footer}>
-          <SetCounter count={sets.length} onChange={props.onSetCount} />
+          <SetCounter count={sets.filter((s) => !s.isDrop).length} onChange={props.onSetCount} />
           {!planning && sets.some((s) => s.completedAt === null) ? (
             <Chip
               label="Complete all"
@@ -186,8 +189,13 @@ function SetCounter({ count, onChange }: { count: number; onChange: (n: number) 
 function numberWorkingSets(sets: SetRowData[]): Map<string, number> {
   const out = new Map<string, number>();
   let n = 0;
-  for (const s of sets) if (!s.isWarmup) out.set(s.id, ++n);
+  for (const s of sets) if (!s.isWarmup && !s.isDrop) out.set(s.id, ++n);
   return out;
+}
+
+/** The real set a drop belongs to. */
+function previousRealSet(sets: SetRowData[], drop: SetRowData): SetRowData | undefined {
+  return [...sets].filter((s) => !s.isDrop && s.setIndex < drop.setIndex).sort((a, b) => b.setIndex - a.setIndex)[0];
 }
 
 const useStyles = makeStyles((colors) => ({

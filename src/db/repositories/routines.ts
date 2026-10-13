@@ -40,7 +40,7 @@ export function routineItemsFromWorkout(workoutId: string, completedOnly: boolea
   const sets = setsForWorkout(workoutId).filter((s) => !completedOnly || s.completedAt);
   return groupByExercise(sets).map((g) => ({
     exerciseId: g.exerciseId,
-    sets: g.sets.map((s) => ({ isWarmup: s.isWarmup, weightKg: s.weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM })),
+    sets: g.sets.map((s) => ({ isWarmup: s.isWarmup, isDrop: s.isDrop, weightKg: s.weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM })),
   }));
 }
 
@@ -99,7 +99,7 @@ export function planFromItems(items: RoutineItem[]): string {
           weightKg = previous[i]?.weightKg ?? null;
         }
         tx.insert(workoutSets)
-          .values({ id: newId(), workoutId: id, exerciseId: exercise.id, setIndex: i, isWarmup: s.isWarmup, weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM })
+          .values({ id: newId(), workoutId: id, exerciseId: exercise.id, setIndex: i, isWarmup: s.isWarmup, isDrop: !!s.isDrop, weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM })
           .run();
       });
     }
@@ -112,7 +112,7 @@ export function planFromItems(items: RoutineItem[]): string {
 /** Wire format for supabase share_routine / get_shared_routine. Never contains weights. */
 export interface SharedItem {
   exercise_id: string;
-  sets: { is_warmup?: boolean; reps?: number; duration_s?: number; distance_m?: number }[];
+  sets: { is_warmup?: boolean; is_drop?: boolean; reps?: number; duration_s?: number; distance_m?: number }[];
   custom?: { name: string; category: string; tracking_type: string };
 }
 
@@ -125,6 +125,7 @@ export function toSharedItems(items: RoutineItem[]): SharedItem[] {
         exercise_id: exercise.id,
         sets: item.sets.map((s) => ({
           is_warmup: s.isWarmup,
+          ...(s.isDrop ? { is_drop: true } : {}),
           ...(s.reps !== null ? { reps: s.reps } : {}),
           ...(s.durationS !== null ? { duration_s: s.durationS } : {}),
           ...(s.distanceM !== null ? { distance_m: s.distanceM } : {}),
@@ -171,6 +172,7 @@ export function fromSharedItems(shared: SharedItem[]): { items: RoutineItem[]; s
       fillWeights: true,
       sets: (s.sets ?? []).slice(0, 20).map((x) => ({
         isWarmup: !!x.is_warmup,
+        isDrop: !!x.is_drop,
         weightKg: null,
         reps: typeof x.reps === 'number' ? x.reps : null,
         durationS: typeof x.duration_s === 'number' ? x.duration_s : null,

@@ -42,6 +42,8 @@ export interface SetInput {
   id: string;
   exerciseId: string;
   isWarmup: boolean;
+  /** A drop: lighter weight straight after the previous set, no rest. Part of that set. */
+  isDrop?: boolean;
   weightKg?: number;
   reps?: number;
   durationS?: number;

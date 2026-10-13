@@ -79,6 +79,8 @@ export const workoutSets = sqliteTable(
       .references(() => exercises.id),
     setIndex: integer('set_index').notNull(),
     isWarmup: integer('is_warmup', { mode: 'boolean' }).notNull().default(false),
+    /** Lighter weight straight after the previous set, no rest; part of that set. */
+    isDrop: integer('is_drop', { mode: 'boolean' }).notNull().default(false),
     weightKg: real('weight_kg'),
     reps: integer('reps'),
     durationS: real('duration_s'),
@@ -159,7 +161,7 @@ export interface RoutineItem {
   exerciseId: string;
   /** Imported from a share (no weights): fill weights from your own history when starting. */
   fillWeights?: boolean;
-  sets: { isWarmup: boolean; weightKg: number | null; reps: number | null; durationS: number | null; distanceM: number | null }[];
+  sets: { isWarmup: boolean; isDrop?: boolean; weightKg: number | null; reps: number | null; durationS: number | null; distanceM: number | null }[];
 }
 
 /** Saved workouts you can start in one tap. */

@@ -43,7 +43,7 @@ function readHistory() {
         id: w.id,
         endedAt: w.endedAt!,
         durationMs: w.endedAt!.getTime() - w.startedAt.getTime(),
-        sets: ws.filter((s) => !s.isWarmup).length,
+        sets: ws.filter((s) => !s.isWarmup && !s.isDrop).length,
         exercises: [...new Set(ws.map((s) => exercises.get(s.exerciseId)?.name ?? s.exerciseId))],
         xp: xp.get(w.id) ?? 0,
       };

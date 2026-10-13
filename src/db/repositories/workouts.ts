@@ -94,6 +94,7 @@ export function repeatWorkout(sourceId: string): string {
           exerciseId: s.exerciseId,
           setIndex: s.setIndex,
           isWarmup: s.isWarmup,
+          isDrop: s.isDrop,
           weightKg: s.weightKg,
           reps: s.reps,
           durationS: s.durationS,
@@ -153,7 +154,7 @@ export function lastSessionSets(exerciseId: string, excludeWorkoutId?: string): 
     .all();
 }
 
-type SetValues = Pick<SetRow, 'isWarmup' | 'weightKg' | 'reps' | 'durationS' | 'distanceM'>;
+type SetValues = Pick<SetRow, 'isWarmup' | 'weightKg' | 'reps' | 'durationS' | 'distanceM'> & { isDrop?: boolean };
 
 /** Starting values for an exercise you've never logged. */
 export function defaultSetValues(exercise: ExerciseRow): SetValues {
@@ -181,7 +182,7 @@ function defaultSetCount(exercise: ExerciseRow): number {
 export function addExerciseToWorkout(workoutId: string, exercise: ExerciseRow) {
   const previous = lastSessionSets(exercise.id, workoutId);
   const values: SetValues[] = previous.length
-    ? previous.map((s) => ({ isWarmup: s.isWarmup, weightKg: s.weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM }))
+    ? previous.map((s) => ({ isWarmup: s.isWarmup, isDrop: s.isDrop, weightKg: s.weightKg, reps: s.reps, durationS: s.durationS, distanceM: s.distanceM }))
     : Array.from({ length: defaultSetCount(exercise) }, () => defaultSetValues(exercise));
   db.transaction((tx) => {
     values.forEach((v, i) => {
@@ -192,19 +193,22 @@ export function addExerciseToWorkout(workoutId: string, exercise: ExerciseRow) {
 
 /** Adds one more set, copying the last set of that exercise ("repeat set"). */
 export function addSet(workoutId: string, exerciseId: string): string {
-  const existing = db
+  const all = db
     .select()
     .from(workoutSets)
     .where(and(eq(workoutSets.workoutId, workoutId), eq(workoutSets.exerciseId, exerciseId)))
     .orderBy(desc(workoutSets.setIndex))
-    .get();
+    .all();
+  const lastIndex = all[0]?.setIndex ?? -1;
+  // Copy the last real set, not a drop.
+  const existing = all.find((s) => !s.isDrop);
   const id = newId();
   db.insert(workoutSets)
     .values({
       id,
       workoutId,
       exerciseId,
-      setIndex: (existing?.setIndex ?? -1) + 1,
+      setIndex: lastIndex + 1,
       isWarmup: false,
       weightKg: existing?.weightKg ?? null,
       reps: existing?.reps ?? null,
@@ -232,6 +236,7 @@ export function updateSetCascade(id: string, field: NumericField, value: number 
   const old = target[field];
   db.transaction((tx) => {
     tx.update(workoutSets).set({ [field]: value }).where(eq(workoutSets.id, id)).run();
+    if (target.isDrop) return; // a drop's numbers are its own
     const later = tx
       .select()
       .from(workoutSets)
@@ -240,6 +245,7 @@ export function updateSetCascade(id: string, field: NumericField, value: number 
           eq(workoutSets.workoutId, target.workoutId),
           eq(workoutSets.exerciseId, target.exerciseId),
           isNull(workoutSets.completedAt),
+          eq(workoutSets.isDrop, false),
           gt(workoutSets.setIndex, target.setIndex),
         ),
       )
@@ -261,14 +267,17 @@ export function setSetCount(workoutId: string, exerciseId: string, count: number
     .where(and(eq(workoutSets.workoutId, workoutId), eq(workoutSets.exerciseId, exerciseId)))
     .orderBy(asc(workoutSets.setIndex))
     .all();
+  // Counts real sets; a drop goes with its set.
+  const real = sets.filter((s) => !s.isDrop);
   const target = Math.max(1, count);
-  if (target > sets.length) {
-    for (let i = sets.length; i < target; i++) addSet(workoutId, exerciseId);
+  if (target > real.length) {
+    for (let i = real.length; i < target; i++) addSet(workoutId, exerciseId);
     return;
   }
-  const removable = sets.filter((s) => s.completedAt === null).reverse();
-  const toRemove = removable.slice(0, Math.min(sets.length - target, removable.length, sets.length - 1));
-  if (toRemove.length) db.delete(workoutSets).where(inArray(workoutSets.id, toRemove.map((s) => s.id))).run();
+  const removable = real.filter((s) => s.completedAt === null).reverse();
+  const toRemove = removable.slice(0, Math.min(real.length - target, removable.length, real.length - 1));
+  const ids = toRemove.flatMap((s) => [s.id, ...dropsAfter(sets, s).map((d) => d.id)]);
+  if (ids.length) db.delete(workoutSets).where(inArray(workoutSets.id, ids)).run();
 }
 
 export function setCompleted(id: string, completed: boolean) {
@@ -278,8 +287,71 @@ export function setCompleted(id: string, completed: boolean) {
     .run();
 }
 
+/** Deletes a set; deleting a real set also deletes its drops. */
 export function deleteSet(id: string) {
-  db.delete(workoutSets).where(eq(workoutSets.id, id)).run();
+  const ids = [id, ...dropsOf(id).map((d) => d.id)];
+  db.delete(workoutSets).where(inArray(workoutSets.id, ids)).run();
+}
+
+/** The drops that directly follow a set (in set order), until the next real set. */
+function dropsAfter(sets: SetRow[], parent: SetRow): SetRow[] {
+  const ordered = [...sets].sort((a, b) => a.setIndex - b.setIndex);
+  const out: SetRow[] = [];
+  for (const s of ordered.slice(ordered.findIndex((x) => x.id === parent.id) + 1)) {
+    if (!s.isDrop) break;
+    out.push(s);
+  }
+  return out;
+}
+
+function siblings(set: SetRow): SetRow[] {
+  return db.select().from(workoutSets).where(and(eq(workoutSets.workoutId, set.workoutId), eq(workoutSets.exerciseId, set.exerciseId))).all();
+}
+
+/** Drops belonging to a real set (empty for a drop). */
+export function dropsOf(setId: string): SetRow[] {
+  const set = db.select().from(workoutSets).where(eq(workoutSets.id, setId)).get();
+  if (!set || set.isDrop) return [];
+  return dropsAfter(siblings(set), set);
+}
+
+/** Drop weights round down to the nearest 0.5 kg. */
+function dropWeight(kg: number | null): number | null {
+  return kg === null ? null : Math.max(0, Math.floor((kg * 0.8) / 0.5) * 0.5);
+}
+
+/**
+ * Adds a drop after a set (and after any drops it already has): about 20%
+ * lighter than the weight before it, reps left for you to fill in.
+ */
+export function addDropSet(parentId: string): string | null {
+  const parent = db.select().from(workoutSets).where(eq(workoutSets.id, parentId)).get();
+  if (!parent || parent.isDrop) return null;
+  const all = siblings(parent);
+  const drops = dropsAfter(all, parent);
+  const before = drops[drops.length - 1] ?? parent;
+  const id = newId();
+  db.transaction((tx) => {
+    // Make room right after the last drop.
+    for (const s of all) {
+      if (s.setIndex > before.setIndex) tx.update(workoutSets).set({ setIndex: s.setIndex + 1 }).where(eq(workoutSets.id, s.id)).run();
+    }
+    tx.insert(workoutSets)
+      .values({
+        id,
+        workoutId: parent.workoutId,
+        exerciseId: parent.exerciseId,
+        setIndex: before.setIndex + 1,
+        isWarmup: false,
+        isDrop: true,
+        weightKg: dropWeight(before.weightKg),
+        reps: null,
+        durationS: null,
+        distanceM: null,
+      })
+      .run();
+  });
+  return id;
 }
 
 export function removeExerciseFromWorkout(workoutId: string, exerciseId: string) {
@@ -305,6 +377,7 @@ export function toSetInput(s: SetRow): SetInput {
     id: s.id,
     exerciseId: s.exerciseId,
     isWarmup: s.isWarmup,
+    isDrop: s.isDrop,
     weightKg: s.weightKg ?? undefined,
     reps: s.reps ?? undefined,
     durationS: s.durationS ?? undefined,
@@ -344,13 +417,13 @@ export function listRecords() {
   return db.select().from(personalRecords).all();
 }
 
-/** Completed working sets for one exercise across finished workouts, oldest first. */
+/** Completed working sets (no warm-ups or drops) for one exercise across finished workouts, oldest first. */
 export function exerciseHistory(exerciseId: string): (SetRow & { endedAt: Date })[] {
   return db
     .select({ set: workoutSets, endedAt: workouts.endedAt })
     .from(workoutSets)
     .innerJoin(workouts, eq(workouts.id, workoutSets.workoutId))
-    .where(and(eq(workoutSets.exerciseId, exerciseId), isNotNull(workouts.endedAt), isNotNull(workoutSets.completedAt), eq(workoutSets.isWarmup, false)))
+    .where(and(eq(workoutSets.exerciseId, exerciseId), isNotNull(workouts.endedAt), isNotNull(workoutSets.completedAt), eq(workoutSets.isWarmup, false), eq(workoutSets.isDrop, false)))
     .orderBy(asc(workouts.endedAt))
     .all()
     .map((r) => ({ ...r.set, endedAt: r.endedAt! }));

@@ -11,6 +11,7 @@ export interface ExportSet {
   category: string;
   setNumber: number;
   isWarmup: boolean;
+  isDrop: boolean;
   weightKg: number | null;
   reps: number | null;
   durationS: number | null;
@@ -26,6 +27,7 @@ export const SET_COLUMNS = [
   'category',
   'set_number',
   'warmup',
+  'drop',
   'weight_kg',
   'reps',
   'duration_s',
@@ -48,7 +50,7 @@ export function setsToCsv(sets: ExportSet[]): string {
   return toCsv(
     SET_COLUMNS,
     sets.map((s) => {
-      const e1rm = s.isWarmup ? null : estimateOneRepMax(s.weightKg ?? undefined, s.reps ?? undefined);
+      const e1rm = s.isWarmup || s.isDrop ? null : estimateOneRepMax(s.weightKg ?? undefined, s.reps ?? undefined);
       return [
         s.workoutId,
         s.workoutStartedAt.toISOString(),
@@ -57,6 +59,7 @@ export function setsToCsv(sets: ExportSet[]): string {
         s.category,
         s.setNumber,
         s.isWarmup,
+        s.isDrop,
         s.weightKg,
         s.reps,
         s.durationS,

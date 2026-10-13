@@ -36,7 +36,7 @@ function readWorkout(id: string) {
     prSetIds,
     lines: xpBreakdown(events),
     total: events.reduce((s, e) => s + e.amount, 0),
-    setCount: sets.filter((s) => !s.isWarmup).length,
+    setCount: sets.filter((s) => !s.isWarmup && !s.isDrop).length,
   };
 }
 
@@ -144,7 +144,7 @@ export default function WorkoutDetail() {
                   {sets.map((s) => (
                     <View key={s.id} style={styles.setRow}>
                       <Text variant="caption" color="inkMuted" tabular style={styles.setIndex}>
-                        {s.isWarmup ? 'W' : sets.filter((x) => !x.isWarmup && x.setIndex <= s.setIndex).length}
+                        {s.isWarmup ? 'W' : s.isDrop ? '↓' : sets.filter((x) => !x.isWarmup && !x.isDrop && x.setIndex <= s.setIndex).length}
                       </Text>
                       <Text variant="label" tabular style={styles.flex}>
                         {formatSet(s, exercise.trackingType, unit, loadStyleFor(exercise).style)}

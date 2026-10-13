@@ -6,9 +6,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { listExercises, toExerciseInfo, type ExerciseRow } from '@/db/repositories/exercises';
 import {
+  addDropSet,
   beginWorkout,
   deleteSet,
   discardWorkout,
+  dropsOf,
   getActiveWorkout,
   groupByExercise,
   lastSessionSets,
@@ -27,7 +29,7 @@ import { Button, Chip, PressableScale, Text } from '@/design/components';
 import { haptics } from '@/design/haptics';
 import { ChevronLeftIcon, PlusIcon } from '@/design/icons/Icons';
 import { motion, radii, space } from '@/design/tokens';
-import { cardioXp, formatDuration, setBeatsRecords, setXpFor, xpRules } from '@/engine';
+import { cardioXp, formatDuration, setBeatsRecords, setXpFor, workoutSetXp, xpRules } from '@/engine';
 import { useProfile } from '@/features/profile/useProfile';
 import { ExerciseCard } from '@/features/workout/ExerciseCard';
 import { finishWorkout } from '@/features/workout/finishWorkout';
@@ -69,9 +71,12 @@ export default function ActiveWorkout() {
   const prSetIds = new Set(sets.filter((s) => byId.has(s.exerciseId) && isPrSet(s, byId.get(s.exerciseId)!)).map((s) => s.id));
 
   const setXp = (s: SetRow) => setXpFor(toSetInput(s), toExerciseInfo(byId.get(s.exerciseId)!), engineRecords);
-  const earnedSetXp = sets
-    .filter((s) => s.completedAt && !s.isWarmup && byId.has(s.exerciseId) && byId.get(s.exerciseId)!.category !== 'cardio')
-    .reduce((sum, s) => sum + setXp(s), 0);
+  const exerciseInfo = Object.fromEntries(exercises.map((e) => [e.id, toExerciseInfo(e)]));
+  const earnedSetXp = workoutSetXp(
+    sets.filter((s) => s.completedAt).sort((a, b) => a.setIndex - b.setIndex).map(toSetInput),
+    exerciseInfo,
+    engineRecords,
+  );
   const cardioMinutesDone = Math.floor(
     sets.filter((s) => s.completedAt && !s.isWarmup && byId.get(s.exerciseId)?.category === 'cardio').reduce((m, s) => m + (s.durationS ?? 0), 0) / 60,
   );
@@ -82,18 +87,21 @@ export default function ActiveWorkout() {
     if (ex.category === 'cardio') return cardioXp(cardioMinutesDone, Math.floor((s.durationS ?? 0) / 60)) || null;
     // What this set adds, within the per-workout set XP cap.
     const room = xpRules.consistency.maxSetXpPerWorkout - earnedSetXp;
-    return room > 0 ? Math.min(setXp(s), room) : null;
+    const value = s.isDrop ? xpRules.consistency.setXp.dropBonus : setXp(s);
+    return room > 0 ? Math.min(value, room) : null;
   };
 
   const complete = (s: SetRow) => {
     const finishing = s.completedAt === null;
     setCompleted(s.id, finishing);
     if (!finishing) return;
+    // Drops follow straight on, so ticking a set ticks its drops too.
+    for (const d of dropsOf(s.id)) if (d.completedAt === null) setCompleted(d.id, true);
     const ex = byId.get(s.exerciseId);
     if (ex && isPrSet(s, ex)) haptics.pr();
     else haptics.setComplete();
     const restS = profile?.restSeconds ?? 90;
-    if (ex?.category !== 'cardio' && !s.isWarmup && restS > 0) startRest(restS);
+    if (ex?.category !== 'cardio' && !s.isWarmup && !s.isDrop && restS > 0) startRest(restS);
   };
 
   /** Ticks every unfinished set of one exercise: one haptic, one rest timer. */
@@ -275,6 +283,10 @@ export default function ActiveWorkout() {
               onField={(id, field, value) => updateSetCascade(id, field, value)}
               onToggleWarmup={(s) => updateSet(s.id, { isWarmup: !s.isWarmup })}
               onDeleteSet={(id) => deleteSet(id)}
+              onAddDrop={(id) => {
+                haptics.tick();
+                addDropSet(id);
+              }}
               onSetCount={(n) => setSetCount(workout.id, exerciseId, n)}
               onRemove={() => removeExerciseFromWorkout(workout.id, exerciseId)}
               onBonusRound={() => bonusRound(exerciseId)}

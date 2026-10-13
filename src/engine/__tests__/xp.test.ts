@@ -1,6 +1,6 @@
-import { cardioXp, computeWorkoutXp, prXpFor, setXpFor } from '../xp';
+import { cardioXp, computeWorkoutXp, prXpFor, setXpFor, workoutSetXp } from '../xp';
 import type { XpEventDraft } from '../types';
-import { context, daysAgo, lift, record, set, workout } from './fixtures';
+import { context, daysAgo, exercises, lift, record, set, workout } from './fixtures';
 
 const byReason = (events: XpEventDraft[]) =>
   Object.fromEntries(events.map((e) => [e.reason, e.amount]));
@@ -225,7 +225,7 @@ describe('engine guarantees', () => {
   it('tags every event with the rule version and workout end time', () => {
     const w = workout(strengthSets(3));
     const r = computeWorkoutXp(w, context());
-    expect(r.events.every((e) => e.ruleVersion === 'xp-rules.v3' && e.createdAt === w.endedAt)).toBe(true);
+    expect(r.events.every((e) => e.ruleVersion === 'xp-rules.v4' && e.createdAt === w.endedAt)).toBe(true);
   });
 
   it('a typical session lands near the plan’s ~85 XP', () => {
@@ -276,5 +276,38 @@ describe('v2: benchmark XP can be deferred (placement)', () => {
     const r = computeWorkoutXp(workout([lift('bench_press', 104, 1)]), context({ deferBenchmarkXp: true, seenExerciseIds: ['bench_press'] }));
     expect(r.benchmarkUnlocks.map((u) => u.tier)).toEqual(['beginner', 'novice', 'intermediate']);
     expect(r.events.some((e) => e.reason === 'benchmark_tier')).toBe(false);
+  });
+});
+
+describe('drop sets (v4)', () => {
+  const best = [record('curl', 'e1rm', 20)];
+  const drop = (kg: number, reps: number) => lift('curl', kg, reps, { isDrop: true });
+
+  it('each drop adds 2 XP to its set, up to 2 drops', () => {
+    // 15 × 12 → e1RM 21 ≥ 95% of 20: 12 XP; then three drops, two of which pay.
+    const sets = [lift('curl', 15, 12), drop(12, 8), drop(9, 8), drop(6, 10)];
+    expect(workoutSetXp(sets, exercises, best)).toBe(12 + 2 + 2);
+  });
+
+  it('a drop set is still one set: it doesn’t complete a workout or count as a working set', () => {
+    const r = computeWorkoutXp(workout([lift('curl', 15, 12), drop(12, 8), drop(9, 8)]), context({ records: best }));
+    expect(r.workingSets).toBe(1);
+    expect(r.qualifies).toBe(false);
+  });
+
+  it('drops never set records', () => {
+    // The drop's e1RM (35) would beat the best (20) if drops counted.
+    const r = computeWorkoutXp(workout([lift('curl', 15, 8), drop(30, 5)]), context({ records: best }));
+    expect(r.records).toEqual([]);
+    expect(r.events.some((e) => e.reason === 'personal_record')).toBe(false);
+  });
+
+  it('a drop with no working set before it earns nothing', () => {
+    expect(workoutSetXp([drop(10, 10)], exercises, best)).toBe(0);
+  });
+
+  it('drop bonuses stay inside the per-workout set XP cap', () => {
+    const many = Array.from({ length: 12 }, () => [lift('curl', 15, 12), drop(12, 8), drop(9, 8)]).flat();
+    expect(computeWorkoutXp(workout(many), context({ records: best })).events.find((e) => e.reason === 'working_sets')?.amount).toBe(100);
   });
 });

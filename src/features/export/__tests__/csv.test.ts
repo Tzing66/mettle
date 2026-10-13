@@ -8,6 +8,7 @@ const base: ExportSet = {
   category: 'free_weight',
   setNumber: 1,
   isWarmup: false,
+  isDrop: false,
   weightKg: 100,
   reps: 5,
   durationS: null,
@@ -27,18 +28,20 @@ describe('CSV export', () => {
     const lines = setsToCsv([base]).trim().split('\n');
     expect(lines[0]).toBe(SET_COLUMNS.join(','));
     expect(lines[1]).toBe(
-      'w1,2026-10-07T17:00:00.000Z,2026-10-07T18:00:00.000Z,Bench press,free_weight,1,false,100,5,,,116.7,2026-10-07T17:20:00.000Z',
+      'w1,2026-10-07T17:00:00.000Z,2026-10-07T18:00:00.000Z,Bench press,free_weight,1,false,false,100,5,,,116.7,2026-10-07T17:20:00.000Z',
     );
   });
 
-  it('leaves e1RM empty for warm-ups and non-lifts', () => {
+  it('leaves e1RM empty for warm-ups, drops and non-lifts', () => {
     const csv = setsToCsv([
       { ...base, isWarmup: true },
+      { ...base, isDrop: true },
       { ...base, exerciseName: 'Run', category: 'cardio', weightKg: null, reps: null, durationS: 1500, distanceM: 5000 },
     ]);
-    const [, warm, run] = csv.trim().split('\n');
-    expect(warm.split(',')[11]).toBe('');
-    expect(run.split(',')[11]).toBe('');
+    const [, warm, drop, run] = csv.trim().split('\n');
+    expect(warm.split(',')[12]).toBe('');
+    expect(drop.split(',')[12]).toBe('');
+    expect(run.split(',')[12]).toBe('');
     expect(run).toContain(',1500,5000,');
   });
 });

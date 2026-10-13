@@ -53,6 +53,20 @@ export function formatSet(
   }
 }
 
+/** Sets as one line, drops tucked onto their set: "60 kg × 8 ↓ 48 kg × 6, 60 kg × 7". */
+export function formatSetList(
+  sets: { weightKg: number | null; reps: number | null; durationS: number | null; distanceM: number | null; isDrop?: boolean }[],
+  tracking: TrackingType,
+  unit: UnitPref,
+  load?: string,
+): string {
+  return sets.reduce((line, s, i) => {
+    const text = formatSet(s, tracking, unit, load);
+    if (i === 0) return text;
+    return line + (s.isDrop ? ` ↓ ${text}` : `, ${text}`);
+  }, '');
+}
+
 export function formatDurationMs(ms: number): string {
   const min = Math.round(ms / 60000);
   return min >= 60 ? `${Math.floor(min / 60)}h ${min % 60}m` : `${min} min`;
