@@ -17,6 +17,11 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Bench",
+        "Flat bench",
+        "Barbell bench press"
+      ],
       benchmarkId: "bench_press",
       source: "free-exercise-db:Barbell_Bench_Press_-_Medium_Grip"
     },
@@ -33,6 +38,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Incline Bench",
+        "Incline Press"
+      ],
       source: "free-exercise-db:Barbell_Incline_Bench_Press_-_Medium_Grip"
     },
     {
@@ -48,6 +57,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Close Grip Bench Press",
+        "Close Grip Bench"
+      ],
       source: "free-exercise-db:Close-Grip_Barbell_Bench_Press"
     },
     {
@@ -62,6 +75,10 @@ var exercises_default = {
         "chest"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Bench",
+        "Dumbbell Chest Press"
+      ],
       source: "free-exercise-db:Dumbbell_Bench_Press"
     },
     {
@@ -76,6 +93,9 @@ var exercises_default = {
         "chest"
       ],
       load: "pair",
+      aliases: [
+        "Incline Dumbbell Bench Press"
+      ],
       source: "free-exercise-db:Incline_Dumbbell_Press"
     },
     {
@@ -90,6 +110,10 @@ var exercises_default = {
         "chest"
       ],
       load: "pair",
+      aliases: [
+        "Fly",
+        "Dumbbell Chest Fly"
+      ],
       source: "free-exercise-db:Dumbbell_Flyes"
     },
     {
@@ -105,6 +129,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Squat",
+        "Barbell squat"
+      ],
       benchmarkId: "back_squat",
       source: "free-exercise-db:Barbell_Full_Squat"
     },
@@ -121,6 +149,11 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Barbell Front Squat",
+        "Clean Grip Front Squat",
+        "Cross Grip Front Squat"
+      ],
       source: "free-exercise-db:Front_Barbell_Squat"
     },
     {
@@ -150,6 +183,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Conventional deadlift",
+        "Barbell deadlift"
+      ],
       benchmarkId: "deadlift",
       source: "free-exercise-db:Barbell_Deadlift"
     },
@@ -166,6 +203,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Straight Leg Deadlift",
+        "RDL"
+      ],
       source: "free-exercise-db:Romanian_Deadlift"
     },
     {
@@ -196,6 +237,11 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 25,
+      aliases: [
+        "Hex Bar Deadlift",
+        "Trapbar Deadlift",
+        "Hex Bar Squat"
+      ],
       source: "free-exercise-db:Trap_Bar_Deadlift"
     },
     {
@@ -211,6 +257,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Barbell Hip Thrust"
+      ],
       source: "free-exercise-db:Barbell_Hip_Thrust"
     },
     {
@@ -256,6 +305,12 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Shoulder Press",
+        "OHP",
+        "Military press",
+        "Barbell shoulder press"
+      ],
       benchmarkId: "overhead_press",
       source: "free-exercise-db:Standing_Military_Press"
     },
@@ -271,6 +326,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Press"
+      ],
       source: "free-exercise-db:Dumbbell_Shoulder_Press"
     },
     {
@@ -299,6 +357,11 @@ var exercises_default = {
         "shoulders"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Lateral Raise",
+        "Side raise",
+        "Side lateral raise"
+      ],
       source: "free-exercise-db:Side_Lateral_Raise"
     },
     {
@@ -313,6 +376,13 @@ var exercises_default = {
         "shoulders"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Reverse Fly",
+        "Bent Over Lateral Raise",
+        "Bent Over Raise",
+        "Reverse Fly",
+        "Bent Over Lateral Raise With Dumbbell"
+      ],
       source: "free-exercise-db:Reverse_Flyes"
     },
     {
@@ -343,6 +413,12 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Bent Over Row",
+        "Row",
+        "Bent-over row",
+        "BB row"
+      ],
       source: "free-exercise-db:Bent_Over_Barbell_Row"
     },
     {
@@ -357,6 +433,12 @@ var exercises_default = {
         "middle back"
       ],
       load: "single",
+      aliases: [
+        "Dumbbell Bent Over Row",
+        "One Arm Dumbbell Row",
+        "One Arm Row",
+        "Dumbbell Rear Delt Row"
+      ],
       source: "free-exercise-db:One-Arm_Dumbbell_Row"
     },
     {
@@ -372,6 +454,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "T Bar Row"
+      ],
       source: "free-exercise-db:T-Bar_Row_with_Handle"
     },
     {
@@ -401,6 +486,10 @@ var exercises_default = {
         "traps"
       ],
       load: "pair",
+      aliases: [
+        "Shoulder Shrug",
+        "Shrug"
+      ],
       source: "free-exercise-db:Dumbbell_Shrug"
     },
     {
@@ -416,6 +505,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Bicep Curl",
+        "Curl"
+      ],
       source: "free-exercise-db:Barbell_Curl"
     },
     {
@@ -444,6 +537,10 @@ var exercises_default = {
         "biceps"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Hammer Curl",
+        "Hammer Curls"
+      ],
       source: "free-exercise-db:Hammer_Curls"
     },
     {
@@ -459,6 +556,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Barbell Preacher Curl"
+      ],
       source: "free-exercise-db:Preacher_Curl"
     },
     {
@@ -474,6 +574,11 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 10,
+      aliases: [
+        "Lying Tricep Extension",
+        "Skull Crusher",
+        "Lying triceps extension"
+      ],
       source: "free-exercise-db:EZ-Bar_Skullcrusher"
     },
     {
@@ -488,6 +593,10 @@ var exercises_default = {
         "triceps"
       ],
       load: "single",
+      aliases: [
+        "Dumbbell Tricep Extension",
+        "One Arm Dumbbell Tricep Extension"
+      ],
       source: "free-exercise-db:Standing_Dumbbell_Triceps_Extension"
     },
     {
@@ -502,6 +611,11 @@ var exercises_default = {
         "triceps"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Tricep Kickback",
+        "Tricep Kickback",
+        "Dumbbell Kickback"
+      ],
       source: "free-exercise-db:Tricep_Dumbbell_Kickback"
     },
     {
@@ -516,6 +630,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Lunges"
+      ],
       source: "free-exercise-db:Dumbbell_Lunges"
     },
     {
@@ -545,6 +662,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Split Squat"
+      ],
       source: "free-exercise-db:Split_Squat_with_Dumbbells"
     },
     {
@@ -587,6 +707,9 @@ var exercises_default = {
         "forearms"
       ],
       load: "pair",
+      aliases: [
+        "Farmers carry"
+      ],
       source: "free-exercise-db:Farmers_Walk"
     },
     {
@@ -602,6 +725,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Powerclean"
+      ],
       source: "free-exercise-db:Power_Clean"
     },
     {
@@ -616,6 +742,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "plain",
+      aliases: [
+        "Sled Leg Press"
+      ],
       source: "free-exercise-db:Leg_Press"
     },
     {
@@ -686,6 +815,10 @@ var exercises_default = {
         "hamstrings"
       ],
       load: "plain",
+      aliases: [
+        "Leg Curl",
+        "Hamstring Curl"
+      ],
       source: "free-exercise-db:Seated_Leg_Curl"
     },
     {
@@ -700,6 +833,11 @@ var exercises_default = {
         "calves"
       ],
       load: "plain",
+      aliases: [
+        "Machine Calf Raise",
+        "Calf Raise",
+        "Calf raise machine"
+      ],
       source: "free-exercise-db:Standing_Calf_Raises"
     },
     {
@@ -756,6 +894,12 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Pulldown",
+        "Machine Pulldown",
+        "Back Lat Pulldown",
+        "Lateral Pulldown"
+      ],
       source: "free-exercise-db:Wide-Grip_Lat_Pulldown"
     },
     {
@@ -770,6 +914,9 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Close Grip Lat Pulldown"
+      ],
       source: "free-exercise-db:Close-Grip_Front_Lat_Pulldown"
     },
     {
@@ -784,6 +931,10 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Straight Arm Pulldown",
+        "Straight Arm Lat Pulldown"
+      ],
       source: "free-exercise-db:Straight-Arm_Pulldown"
     },
     {
@@ -798,6 +949,11 @@ var exercises_default = {
         "middle back"
       ],
       load: "plain",
+      aliases: [
+        "Seated Row",
+        "Cable Row",
+        "Low Row"
+      ],
       source: "free-exercise-db:Seated_Cable_Rows"
     },
     {
@@ -826,6 +982,9 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Chest Press"
+      ],
       source: "free-exercise-db:Leverage_Chest_Press"
     },
     {
@@ -840,6 +999,14 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Pec Deck Fly",
+        "Butterfly",
+        "Machine Fly",
+        "Fly Machine",
+        "Pec Fly",
+        "Chest fly machine"
+      ],
       source: "free-exercise-db:Butterfly"
     },
     {
@@ -854,6 +1021,12 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Cable Middle Fly",
+        "Mid Level Cable Fly",
+        "Middle Cable Chest Fly",
+        "Standing Cable Fly"
+      ],
       source: "free-exercise-db:Cable_Crossover"
     },
     {
@@ -882,6 +1055,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "plain",
+      aliases: [
+        "One Arm Cable Lateral Raise"
+      ],
       source: "free-exercise-db:Cable_Seated_Lateral_Raise"
     },
     {
@@ -896,6 +1072,13 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Tricep Pushdown",
+        "Tricep Pressdown",
+        "Pushdown",
+        "Cable Tricep Extension",
+        "Cable pushdown"
+      ],
       source: "free-exercise-db:Triceps_Pushdown"
     },
     {
@@ -910,6 +1093,9 @@ var exercises_default = {
         "biceps"
       ],
       load: "plain",
+      aliases: [
+        "Cable Hammer Curl"
+      ],
       source: "free-exercise-db:Cable_Hammer_Curls_-_Rope_Attachment"
     },
     {
@@ -924,6 +1110,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "plain",
+      aliases: [
+        "Cable Crunches"
+      ],
       source: "free-exercise-db:Cable_Crunch"
     },
     {
@@ -952,6 +1141,12 @@ var exercises_default = {
         "chest"
       ],
       load: "added",
+      aliases: [
+        "Push Ups",
+        "Press Up",
+        "Pushup",
+        "Press-up"
+      ],
       benchmarkId: "push_ups",
       source: "free-exercise-db:Pushups"
     },
@@ -967,6 +1162,11 @@ var exercises_default = {
         "lats"
       ],
       load: "added",
+      aliases: [
+        "Pull Ups",
+        "Pullup",
+        "Assisted Pull Up Machine"
+      ],
       benchmarkId: "pull_ups",
       source: "free-exercise-db:Pullups"
     },
@@ -982,6 +1182,10 @@ var exercises_default = {
         "lats"
       ],
       load: "added",
+      aliases: [
+        "Chin Ups",
+        "Chinup"
+      ],
       source: "free-exercise-db:Chin-Up"
     },
     {
@@ -996,6 +1200,13 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "Dips",
+        "Tricep Dips",
+        "Chest Dip",
+        "Kneeling Assisted Chest Dip",
+        "Parallel bar dip"
+      ],
       source: "free-exercise-db:Dips_-_Triceps_Version"
     },
     {
@@ -1010,6 +1221,10 @@ var exercises_default = {
         "middle back"
       ],
       load: "added",
+      aliases: [
+        "Supine Row",
+        "Australian Pull Ups"
+      ],
       source: "free-exercise-db:Inverted_Row"
     },
     {
@@ -1024,6 +1239,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "added",
+      aliases: [
+        "Bodyweight Squat"
+      ],
       source: "free-exercise-db:Bodyweight_Squat"
     },
     {
@@ -1038,6 +1256,10 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Front Plank",
+        "Elbow Plank"
+      ],
       source: "free-exercise-db:Plank"
     },
     {
@@ -1066,6 +1288,10 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Crunches",
+        "Ab Crunch"
+      ],
       source: "free-exercise-db:Crunches"
     },
     {
@@ -1080,6 +1306,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Sit Ups"
+      ],
       source: "free-exercise-db:Sit-Up"
     },
     {
@@ -1122,6 +1351,10 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Ab Wheel Rollout",
+        "Ab Roller"
+      ],
       source: "free-exercise-db:Ab_Roller"
     },
     {
@@ -1136,6 +1369,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "added",
+      aliases: [
+        "Mountain Climbers"
+      ],
       source: "free-exercise-db:Mountain_Climbers"
     },
     {
@@ -1150,6 +1386,10 @@ var exercises_default = {
         "lower back"
       ],
       load: "added",
+      aliases: [
+        "Hyper Extension",
+        "Hyperextension"
+      ],
       source: "free-exercise-db:Hyperextensions_Back_Extensions"
     },
     {
@@ -1180,6 +1420,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "added",
+      aliases: [
+        "Burpees"
+      ],
       source: "mettle"
     },
     {
@@ -1196,6 +1439,10 @@ var exercises_default = {
         "calves"
       ],
       activity: "run",
+      aliases: [
+        "Running",
+        "Jog"
+      ],
       benchmarkId: "run",
       source: "mettle"
     },
@@ -1211,6 +1458,9 @@ var exercises_default = {
         "quadriceps"
       ],
       activity: "run",
+      aliases: [
+        "Treadmill"
+      ],
       benchmarkId: "run",
       source: "free-exercise-db:Running_Treadmill"
     },
@@ -1254,6 +1504,10 @@ var exercises_default = {
         "quadriceps"
       ],
       activity: "cycle",
+      aliases: [
+        "Cycling",
+        "Bike ride"
+      ],
       source: "free-exercise-db:Bicycling"
     },
     {
@@ -1282,6 +1536,11 @@ var exercises_default = {
         "quadriceps"
       ],
       activity: "row",
+      aliases: [
+        "Erg",
+        "Rower",
+        "Indoor row"
+      ],
       source: "free-exercise-db:Rowing_Stationary"
     },
     {
@@ -1354,6 +1613,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Wide Grip Bench Press"
+      ],
       source: "free-exercise-db:Wide-Grip_Barbell_Bench_Press"
     },
     {
@@ -1369,6 +1631,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Decline Press"
+      ],
       source: "free-exercise-db:Decline_Barbell_Bench_Press"
     },
     {
@@ -1384,6 +1649,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Barbell Floor Press"
+      ],
       source: "free-exercise-db:Floor_Press"
     },
     {
@@ -1398,6 +1666,9 @@ var exercises_default = {
         "chest"
       ],
       load: "pair",
+      aliases: [
+        "Decline Dumbbell Bench Press"
+      ],
       source: "free-exercise-db:Decline_Dumbbell_Bench_Press"
     },
     {
@@ -1440,6 +1711,11 @@ var exercises_default = {
         "chest"
       ],
       load: "single",
+      aliases: [
+        "Pullover",
+        "Straight Arm Pullover",
+        "Dumbbell Straight Arm Pullover"
+      ],
       source: "free-exercise-db:Straight-Arm_Dumbbell_Pullover"
     },
     {
@@ -1454,6 +1730,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "pair",
+      aliases: [
+        "Seated Dumbbell Shoulder Press"
+      ],
       source: "free-exercise-db:Seated_Dumbbell_Press"
     },
     {
@@ -1469,6 +1748,11 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Seated Shoulder Press",
+        "Seated Barbell Shoulder Press",
+        "Seated Barbell Overhead Press"
+      ],
       source: "free-exercise-db:Seated_Barbell_Military_Press"
     },
     {
@@ -1483,6 +1767,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Front Raise"
+      ],
       source: "free-exercise-db:Front_Dumbbell_Raise"
     },
     {
@@ -1512,6 +1799,10 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Landmine Chest Press",
+        "Standing Landmine Press"
+      ],
       source: "mettle"
     },
     {
@@ -1559,6 +1850,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Paused Squat"
+      ],
       source: "mettle"
     },
     {
@@ -1602,6 +1896,9 @@ var exercises_default = {
         "glutes"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Bulgarian Split Squat"
+      ],
       source: "mettle"
     },
     {
@@ -1631,6 +1928,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Lunges"
+      ],
       source: "free-exercise-db:Dumbbell_Rear_Lunge"
     },
     {
@@ -1661,6 +1961,11 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Stiff Leg Deadlift",
+        "Stiff Legged Deadlift",
+        "Straight Legged Deadlift"
+      ],
       source: "free-exercise-db:Stiff-Legged_Barbell_Deadlift"
     },
     {
@@ -1675,6 +1980,9 @@ var exercises_default = {
         "hamstrings"
       ],
       load: "pair",
+      aliases: [
+        "DB RDL"
+      ],
       source: "free-exercise-db:Stiff-Legged_Dumbbell_Deadlift"
     },
     {
@@ -1778,6 +2086,11 @@ var exercises_default = {
         "middle back"
       ],
       load: "pair",
+      aliases: [
+        "Chest Supported Dumbbell Row",
+        "Chest Supported Row",
+        "Incline Dumbbell Row"
+      ],
       source: "free-exercise-db:Dumbbell_Incline_Row"
     },
     {
@@ -1792,6 +2105,9 @@ var exercises_default = {
         "middle back"
       ],
       load: "pair",
+      aliases: [
+        "Bent Over Dumbbell Row"
+      ],
       source: "free-exercise-db:Bent_Over_Two-Dumbbell_Row"
     },
     {
@@ -1821,6 +2137,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 10,
+      aliases: [
+        "EZ Bar Curl"
+      ],
       source: "free-exercise-db:EZ-Bar_Curl"
     },
     {
@@ -1835,6 +2154,10 @@ var exercises_default = {
         "biceps"
       ],
       load: "pair",
+      aliases: [
+        "Incline Curl",
+        "Incline Curl With Dumbbell"
+      ],
       source: "free-exercise-db:Incline_Dumbbell_Curl"
     },
     {
@@ -1849,6 +2172,9 @@ var exercises_default = {
         "biceps"
       ],
       load: "single",
+      aliases: [
+        "Dumbbell Concentration Curl"
+      ],
       source: "free-exercise-db:Concentration_Curls"
     },
     {
@@ -1879,6 +2205,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Reverse Barbell Curl"
+      ],
       source: "free-exercise-db:Reverse_Barbell_Curl"
     },
     {
@@ -1908,6 +2237,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Forearm Curl",
+        "Wrist Curl Palm Up"
+      ],
       source: "free-exercise-db:Palms-Up_Barbell_Wrist_Curl_Over_A_Bench"
     },
     {
@@ -1937,6 +2270,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "pair",
+      aliases: [
+        "Lying Dumbbell Tricep Extension"
+      ],
       source: "free-exercise-db:Lying_Dumbbell_Tricep_Extension"
     },
     {
@@ -2080,6 +2416,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "single",
+      aliases: [
+        "Side Bend"
+      ],
       source: "free-exercise-db:Dumbbell_Side_Bend"
     },
     {
@@ -2192,6 +2531,9 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Hammer Strength Row"
+      ],
       source: "free-exercise-db:Leverage_Iso_Row"
     },
     {
@@ -2234,6 +2576,12 @@ var exercises_default = {
         "shoulders"
       ],
       load: "plain",
+      aliases: [
+        "Machine Reverse Fly",
+        "Machine Rear Deltoid Fly",
+        "Rear Delt Machine",
+        "Reverse Pec Deck Fly"
+      ],
       source: "free-exercise-db:Reverse_Machine_Flyes"
     },
     {
@@ -2248,6 +2596,10 @@ var exercises_default = {
         "biceps"
       ],
       load: "plain",
+      aliases: [
+        "Machine Bicep Curl",
+        "Machine Curl"
+      ],
       source: "free-exercise-db:Machine_Bicep_Curl"
     },
     {
@@ -2262,6 +2614,10 @@ var exercises_default = {
         "biceps"
       ],
       load: "plain",
+      aliases: [
+        "Machine Bicep Curl",
+        "Machine Curl"
+      ],
       source: "free-exercise-db:Machine_Preacher_Curls"
     },
     {
@@ -2276,6 +2632,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Machine Tricep Extension"
+      ],
       source: "free-exercise-db:Machine_Triceps_Extension"
     },
     {
@@ -2290,6 +2649,13 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Seated Dip Machine",
+        "Seated Dip",
+        "Tricep Press",
+        "Machine Dip",
+        "Machine Tricep Press"
+      ],
       source: "free-exercise-db:Dip_Machine"
     },
     {
@@ -2304,6 +2670,11 @@ var exercises_default = {
         "abdominals"
       ],
       load: "plain",
+      aliases: [
+        "Machine Seated Crunch",
+        "Machine Crunches",
+        "Abdominal Crunch"
+      ],
       source: "free-exercise-db:Ab_Crunch_Machine"
     },
     {
@@ -2332,6 +2703,9 @@ var exercises_default = {
         "calves"
       ],
       load: "plain",
+      aliases: [
+        "Sled Press Calf Raise"
+      ],
       source: "free-exercise-db:Calf_Press_On_The_Leg_Press_Machine"
     },
     {
@@ -2374,6 +2748,12 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Cable Middle Fly",
+        "Mid Level Cable Fly",
+        "Middle Cable Chest Fly",
+        "Standing Cable Fly"
+      ],
       source: "free-exercise-db:Flat_Bench_Cable_Flyes"
     },
     {
@@ -2402,6 +2782,12 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Cable Middle Fly",
+        "Mid Level Cable Fly",
+        "Middle Cable Chest Fly",
+        "Standing Cable Fly"
+      ],
       source: "free-exercise-db:Low_Cable_Crossover"
     },
     {
@@ -2430,6 +2816,11 @@ var exercises_default = {
         "biceps"
       ],
       load: "plain",
+      aliases: [
+        "Cable Bicep Curl",
+        "Biceps Cable Curl",
+        "Standing Cable Curl"
+      ],
       source: "free-exercise-db:Standing_Biceps_Cable_Curl"
     },
     {
@@ -2458,6 +2849,12 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Cable Overhead Tricep Extension",
+        "Overhead Tricep Cable Extension",
+        "Overhead Cable Tricep Extension",
+        "Tricep Overhead Extension"
+      ],
       source: "free-exercise-db:Cable_Rope_Overhead_Triceps_Extension"
     },
     {
@@ -2472,6 +2869,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Tricep Rope Pushdown"
+      ],
       source: "free-exercise-db:Triceps_Pushdown_-_Rope_Attachment"
     },
     {
@@ -2486,6 +2886,10 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Reverse Grip Tricep Pushdown",
+        "Reverse Grip Tricep Extension"
+      ],
       source: "free-exercise-db:Reverse_Grip_Triceps_Pushdown"
     },
     {
@@ -2500,6 +2904,9 @@ var exercises_default = {
         "middle back"
       ],
       load: "plain",
+      aliases: [
+        "One Arm Seated Cable Row"
+      ],
       source: "free-exercise-db:Seated_One-arm_Cable_Pulley_Rows"
     },
     {
@@ -2514,6 +2921,9 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "One Arm Lat Pulldown"
+      ],
       source: "free-exercise-db:One_Arm_Lat_Pulldown"
     },
     {
@@ -2528,6 +2938,11 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Reverse Grip Lat Pulldown",
+        "Reverse Grip Pulldown",
+        "Palm Up Pulldown"
+      ],
       source: "free-exercise-db:Underhand_Cable_Pulldowns"
     },
     {
@@ -2542,6 +2957,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "plain",
+      aliases: [
+        "Cable Reverse Fly"
+      ],
       source: "free-exercise-db:Cable_Rear_Delt_Fly"
     },
     {
@@ -2612,6 +3030,10 @@ var exercises_default = {
         "glutes"
       ],
       load: "plain",
+      aliases: [
+        "Cable Kickback",
+        "Cable Standing Glute Kickback"
+      ],
       source: "free-exercise-db:One-Legged_Cable_Kickback"
     },
     {
@@ -2626,6 +3048,9 @@ var exercises_default = {
         "glutes"
       ],
       load: "plain",
+      aliases: [
+        "Cable Pull Through"
+      ],
       source: "free-exercise-db:Pull_Through"
     },
     {
@@ -2640,6 +3065,12 @@ var exercises_default = {
         "abdominals"
       ],
       load: "plain",
+      aliases: [
+        "Cable Woodchopper",
+        "Wood Chopper",
+        "Cable Wood Chop",
+        "Cable Woodchoppers"
+      ],
       source: "free-exercise-db:Standing_Cable_Wood_Chop"
     },
     {
@@ -2682,6 +3113,10 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "Diamond Push Ups",
+        "Diamond Pushups"
+      ],
       source: "free-exercise-db:Push-Ups_-_Close_Triceps_Position"
     },
     {
@@ -2696,6 +3131,10 @@ var exercises_default = {
         "chest"
       ],
       load: "added",
+      aliases: [
+        "Decline Push Up",
+        "Decline Press Up"
+      ],
       source: "free-exercise-db:Push-Ups_With_Feet_Elevated"
     },
     {
@@ -2710,6 +3149,10 @@ var exercises_default = {
         "chest"
       ],
       load: "added",
+      aliases: [
+        "Incline Push Up",
+        "Incline Press Up"
+      ],
       source: "free-exercise-db:Incline_Push-Up"
     },
     {
@@ -2738,6 +3181,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "Bench Dips"
+      ],
       source: "free-exercise-db:Bench_Dips"
     },
     {
@@ -2752,6 +3198,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "Ring Dips"
+      ],
       source: "free-exercise-db:Ring_Dips"
     },
     {
@@ -2809,6 +3258,9 @@ var exercises_default = {
         "lats"
       ],
       load: "added",
+      aliases: [
+        "Muscle Ups"
+      ],
       source: "free-exercise-db:Muscle_Up"
     },
     {
@@ -2838,6 +3290,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "Handstand Push Ups"
+      ],
       source: "mettle"
     },
     {
@@ -2867,6 +3322,10 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "added",
+      aliases: [
+        "Squat Jump",
+        "Squat Jumps"
+      ],
       source: "free-exercise-db:Freehand_Jump_Squat"
     },
     {
@@ -2924,6 +3383,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "added",
+      aliases: [
+        "Star Jump"
+      ],
       source: "mettle"
     },
     {
@@ -2938,6 +3400,9 @@ var exercises_default = {
         "hamstrings"
       ],
       load: "added",
+      aliases: [
+        "Nordic Hamstring Curl"
+      ],
       source: "free-exercise-db:Natural_Glute_Ham_Raise"
     },
     {
@@ -2966,6 +3431,10 @@ var exercises_default = {
         "glutes"
       ],
       load: "added",
+      aliases: [
+        "Bridging",
+        "Bridge"
+      ],
       source: "free-exercise-db:Butt_Lift_Bridge"
     },
     {
@@ -2980,6 +3449,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Reverse Crunches"
+      ],
       source: "free-exercise-db:Reverse_Crunch"
     },
     {
@@ -2994,6 +3466,10 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Twisting Crunch",
+        "Air Bike"
+      ],
       source: "free-exercise-db:Air_Bike"
     },
     {
@@ -3008,6 +3484,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Leg Raise"
+      ],
       source: "free-exercise-db:Flat_Bench_Lying_Leg_Raise"
     },
     {
@@ -3022,6 +3501,9 @@ var exercises_default = {
         "glutes"
       ],
       load: "added",
+      aliases: [
+        "Flutter Kick"
+      ],
       source: "free-exercise-db:Flutter_Kicks"
     },
     {
@@ -3207,6 +3689,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "single",
+      aliases: [
+        "Dumbbell Press"
+      ],
       source: "mettle"
     },
     {
@@ -3221,6 +3706,10 @@ var exercises_default = {
         "chest"
       ],
       load: "single",
+      aliases: [
+        "Dumbbell Bench",
+        "Dumbbell Chest Press"
+      ],
       source: "mettle"
     },
     {
@@ -3235,6 +3724,9 @@ var exercises_default = {
         "biceps"
       ],
       load: "single",
+      aliases: [
+        "One Arm Dumbbell Preacher Curl"
+      ],
       source: "mettle"
     },
     {
@@ -3249,6 +3741,10 @@ var exercises_default = {
         "triceps"
       ],
       load: "single",
+      aliases: [
+        "Dumbbell Tricep Extension",
+        "One Arm Dumbbell Tricep Extension"
+      ],
       source: "mettle"
     },
     {
@@ -3264,6 +3760,10 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "One Arm Landmine Press",
+        "Single Arm Landmine Press"
+      ],
       source: "mettle"
     },
     {
@@ -3279,6 +3779,9 @@ var exercises_default = {
         "hamstrings"
       ],
       load: "single",
+      aliases: [
+        "One Arm Dumbbell Snatch"
+      ],
       source: "mettle"
     },
     {
@@ -3324,6 +3827,11 @@ var exercises_default = {
         "biceps"
       ],
       load: "plain",
+      aliases: [
+        "One Arm Cable Bicep Curl",
+        "One Arm Cable Curl",
+        "Behind The Back Cable Curl"
+      ],
       source: "mettle"
     },
     {
@@ -3422,6 +3930,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "plain",
+      aliases: [
+        "One Arm Cable Lateral Raise"
+      ],
       source: "mettle"
     },
     {
@@ -3436,6 +3947,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "plain",
+      aliases: [
+        "Cable Reverse Fly"
+      ],
       source: "mettle"
     },
     {
@@ -3494,6 +4008,10 @@ var exercises_default = {
         "glutes"
       ],
       load: "plain",
+      aliases: [
+        "Single Leg Press",
+        "Single Leg Leg Press"
+      ],
       source: "mettle"
     },
     {
@@ -3536,6 +4054,9 @@ var exercises_default = {
         "calves"
       ],
       load: "plain",
+      aliases: [
+        "Single Leg Seated Calf Raise"
+      ],
       source: "mettle"
     },
     {
@@ -3551,6 +4072,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "One Arm Push Ups"
+      ],
       source: "mettle"
     },
     {
@@ -3566,6 +4090,9 @@ var exercises_default = {
         "biceps"
       ],
       load: "added",
+      aliases: [
+        "One Arm Pull Ups"
+      ],
       source: "mettle"
     },
     {
@@ -3623,6 +4150,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "plain",
+      aliases: [
+        "Horizontal Leg Press"
+      ],
       source: "mettle"
     },
     {
@@ -3665,6 +4195,9 @@ var exercises_default = {
         "lower back"
       ],
       load: "plain",
+      aliases: [
+        "Machine Back Extension"
+      ],
       source: "mettle"
     },
     {
@@ -3679,6 +4212,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "plain",
+      aliases: [
+        "Nautilus Lateral Raise"
+      ],
       source: "mettle"
     },
     {
@@ -3763,6 +4299,12 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Pulldown",
+        "Machine Pulldown",
+        "Back Lat Pulldown",
+        "Lateral Pulldown"
+      ],
       source: "mettle"
     },
     {
@@ -3819,6 +4361,13 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Pec Deck Fly",
+        "Butterfly",
+        "Machine Fly",
+        "Fly Machine",
+        "Pec Fly"
+      ],
       source: "mettle"
     },
     {
@@ -3876,6 +4425,9 @@ var exercises_default = {
         "forearms"
       ],
       load: "plain",
+      aliases: [
+        "Cable Hammer Curl"
+      ],
       source: "mettle"
     },
     {
@@ -3904,6 +4456,9 @@ var exercises_default = {
         "biceps"
       ],
       load: "plain",
+      aliases: [
+        "Low Pulley Lying Cable Curl"
+      ],
       source: "mettle"
     },
     {
@@ -3946,6 +4501,12 @@ var exercises_default = {
         "triceps"
       ],
       load: "plain",
+      aliases: [
+        "Tricep Pushdown",
+        "Tricep Pressdown",
+        "Pushdown",
+        "Cable Tricep Extension"
+      ],
       source: "mettle"
     },
     {
@@ -4016,6 +4577,12 @@ var exercises_default = {
         "chest"
       ],
       load: "plain",
+      aliases: [
+        "Cable Middle Fly",
+        "Mid Level Cable Fly",
+        "Middle Cable Chest Fly",
+        "Standing Cable Fly"
+      ],
       source: "mettle"
     },
     {
@@ -4044,6 +4611,9 @@ var exercises_default = {
         "lats"
       ],
       load: "plain",
+      aliases: [
+        "Close Grip Lat Pulldown"
+      ],
       source: "mettle"
     },
     {
@@ -4058,6 +4628,11 @@ var exercises_default = {
         "middle back"
       ],
       load: "plain",
+      aliases: [
+        "Seated Row",
+        "Cable Row",
+        "Low Row"
+      ],
       source: "mettle"
     },
     {
@@ -4072,6 +4647,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "plain",
+      aliases: [
+        "Cable Crunches"
+      ],
       source: "mettle"
     },
     {
@@ -4129,6 +4707,10 @@ var exercises_default = {
         "triceps"
       ],
       load: "pair",
+      aliases: [
+        "Close Grip Dumbbell Bench Press",
+        "Close Grip Dumbbell Press"
+      ],
       source: "mettle"
     },
     {
@@ -4158,6 +4740,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Pause Bench Press"
+      ],
       source: "mettle"
     },
     {
@@ -4258,6 +4843,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "pair",
+      aliases: [
+        "Seated Dumbbell Tricep Extension"
+      ],
       source: "mettle"
     },
     {
@@ -4273,6 +4861,10 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 10,
+      aliases: [
+        "Tricep Extension",
+        "French Press"
+      ],
       source: "mettle"
     },
     {
@@ -4388,6 +4980,9 @@ var exercises_default = {
         "shoulders"
       ],
       load: "pair",
+      aliases: [
+        "Dumbbell Lateral Raise"
+      ],
       source: "mettle"
     },
     {
@@ -4449,6 +5044,12 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Ssb Squat",
+        "Safety Squat Bar",
+        "Safety Squat",
+        "Safety Squat Bar Squat"
+      ],
       source: "mettle"
     },
     {
@@ -4465,6 +5066,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Thruster"
+      ],
       source: "mettle"
     },
     {
@@ -4496,6 +5100,9 @@ var exercises_default = {
       ],
       load: "bar",
       barKg: 20,
+      aliases: [
+        "Bench Pull"
+      ],
       source: "mettle"
     },
     {
@@ -4510,6 +5117,11 @@ var exercises_default = {
         "lats"
       ],
       load: "added",
+      aliases: [
+        "Neutral Grip Pull Ups",
+        "Parallel Grip Pull Ups",
+        "Hammer Pull Ups"
+      ],
       source: "mettle"
     },
     {
@@ -4524,6 +5136,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Knee Raise"
+      ],
       source: "mettle"
     },
     {
@@ -4538,6 +5153,9 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Toes To Bar"
+      ],
       source: "mettle"
     },
     {
@@ -4553,6 +5171,9 @@ var exercises_default = {
         "triceps"
       ],
       load: "added",
+      aliases: [
+        "Pike Push Up"
+      ],
       source: "mettle"
     },
     {
@@ -4567,6 +5188,9 @@ var exercises_default = {
         "chest"
       ],
       load: "added",
+      aliases: [
+        "Archer Push Ups"
+      ],
       source: "mettle"
     },
     {
@@ -4581,6 +5205,9 @@ var exercises_default = {
         "quadriceps"
       ],
       load: "added",
+      aliases: [
+        "Lunge"
+      ],
       source: "mettle"
     },
     {
@@ -4624,6 +5251,10 @@ var exercises_default = {
         "abdominals"
       ],
       load: "added",
+      aliases: [
+        "Decline Sit Up",
+        "Incline Bench Sit Up"
+      ],
       source: "mettle"
     },
     {

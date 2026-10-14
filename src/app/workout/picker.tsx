@@ -13,6 +13,7 @@ import { CheckIcon, PlusIcon, SearchIcon } from '@/design/icons/Icons';
 import { radii, space, type } from '@/design/tokens';
 import type { ExerciseCategory } from '@/engine';
 import { makeStyles, useTheme } from '@/design/theme';
+import { searchExercises } from '@/features/exercises/search';
 
 const TABS: { key: ExerciseCategory; label: string }[] = [
   { key: 'free_weight', label: 'Free weights' },
@@ -37,10 +38,7 @@ export default function Picker() {
 
   const tileWidth = (width - space.lg * 2 - space.md * (COLUMNS - 1)) / COLUMNS;
   const byId = new Map(exercises.map((e) => [e.id, e]));
-  const q = query.trim().toLowerCase();
-  const searchResults = q
-    ? exercises.filter((e) => e.name.toLowerCase().includes(q) || e.primaryMuscles.some((m) => m.includes(q)))
-    : null;
+  const searchResults = query.trim() ? searchExercises(exercises, query) : null;
   const favourites = exercises.filter((e) => e.isFavourite);
   const recent = recentIds.map((id) => byId.get(id)).filter((e): e is ExerciseRow => !!e);
 
